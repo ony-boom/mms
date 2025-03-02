@@ -1,5 +1,5 @@
 //https://nitro.unjs.io/config
-defineNitroConfig({
+export default defineNitroConfig({
   srcDir: "server",
   compatibilityDate: "2025-02-22",
 
