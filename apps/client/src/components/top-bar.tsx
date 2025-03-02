@@ -64,7 +64,7 @@ export function TopBar() {
           <Search />
 
           {hasSearch && (
-            <span className="bg-primary absolute top-2 right-2 h-1 w-1 rounded-full"></span>
+            <span className="bg-primary absolute right-2 top-2 h-1 w-1 rounded-full"></span>
           )}
         </Button>
 

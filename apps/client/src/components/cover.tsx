@@ -5,12 +5,7 @@ interface CoverProps extends ImgHTMLAttributes<HTMLImageElement> {
   src: string;
 }
 
-export function Cover({
-  src,
-  alt,
-  className = "",
-  ...imgProps
-}: CoverProps) {
+export function Cover({ src, alt, className = "", ...imgProps }: CoverProps) {
   const [isLoaded, setIsLoaded] = useState(false);
 
   const handleImageLoad = () => {
@@ -26,7 +21,7 @@ export function Cover({
         alt={alt}
         onLoad={handleImageLoad}
         className={cn(
-          "object-cover aspect-square",
+          "aspect-square object-cover",
           isLoaded ? "animate-fade-in opacity-100" : "opacity-0",
           className,
         )}

@@ -68,9 +68,9 @@ export const usePlayerStore = create<PlayerState>()(
         const state = get();
         return state.currentTrackId
           ? {
-            id: state.currentTrackId,
-            src: state.playlists.get(state.currentTrackId)!,
-          }
+              id: state.currentTrackId,
+              src: state.playlists.get(state.currentTrackId)!,
+            }
           : undefined;
       },
 

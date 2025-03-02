@@ -67,7 +67,7 @@ export function GlobalSearch() {
           exit={{ opacity: 0 }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="bg-background/60 fixed top-0 left-0 z-[60] grid h-full w-full justify-center"
+          className="bg-background/60 fixed left-0 top-0 z-[60] grid h-full w-full justify-center"
           onClick={() => setOpenSearchComponent(false)}
         >
           <form
@@ -79,7 +79,7 @@ export function GlobalSearch() {
               value={inputVal ?? ""}
               onChange={handleInputChange}
               placeholder="Search..."
-              className="border-b-foreground/10 focus-visible:border-b-foreground/30 h-12 min-w-xl rounded-none focus-visible:ring-0"
+              className="border-b-foreground/10 focus-visible:border-b-foreground/30 min-w-xl h-12 rounded-none focus-visible:ring-0"
               onClick={(e) => e.stopPropagation()}
             />
 

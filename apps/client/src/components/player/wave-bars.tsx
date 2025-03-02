@@ -3,7 +3,7 @@ import { motion, useAnimation } from "motion/react"; // Keeping the import as is
 import { usePlayerStore } from "@/stores";
 
 export function WaveBars() {
-  const isPlaying = usePlayerStore(state => state.isPlaying);
+  const isPlaying = usePlayerStore((state) => state.isPlaying);
   const controls = useAnimation();
 
   useEffect(() => {
@@ -24,7 +24,7 @@ export function WaveBars() {
   }, [isPlaying, controls]);
 
   return (
-    <div className="h-6 flex gap-1 items-end">
+    <div className="flex h-6 items-end gap-1">
       {[0, 1, 2].map((index) => (
         <motion.div
           key={index}

@@ -7,7 +7,7 @@ export type Track = {
   isFavorite?: boolean;
 };
 
-export type LoadedTracks = { current: number; total: number; };
+export type LoadedTracks = { current: number; total: number };
 
 export type LyricsResponse = {
   isSync: boolean;

@@ -1,5 +1,5 @@
 //https://nitro.unjs.io/config
-export default defineNitroConfig({
+defineNitroConfig({
   srcDir: "server",
   compatibilityDate: "2025-02-22",
 
@@ -8,8 +8,7 @@ export default defineNitroConfig({
       cors: true,
       headers: {
         "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods":
-          "GET,POST,OPTIONS",
+        "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
         "Access-Control-Allow-Headers": "*",
       },
     },

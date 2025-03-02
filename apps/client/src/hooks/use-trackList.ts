@@ -11,7 +11,7 @@ export const useTrackList = () => {
       playlistOrder: state.playlistOrder,
     })),
   );
-  
+
   const { sort, query } = useFilterStore();
   const { useTracks, getTrackAudioSrc } = useApiClient();
 

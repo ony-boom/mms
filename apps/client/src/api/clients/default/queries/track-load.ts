@@ -7,7 +7,7 @@ export const TRACK_LOAD = /*GraphQL*/ `
   }
 `;
 
-export const LOAD_TRACK = /*GraphQL*/  `
+export const LOAD_TRACK = /*GraphQL*/ `
     mutation {
         loadTracks
     }

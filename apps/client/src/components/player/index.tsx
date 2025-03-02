@@ -123,7 +123,7 @@ export function Player() {
                 onClick={() => setPlaylistsExpanded((prev) => !prev)}
               />
             </div>
-            <div className="relative flex items-center justify-between gap-16 px-3 pt-1 pb-4">
+            <div className="relative flex items-center justify-between gap-16 px-3 pb-4 pt-1">
               <TrackInfo
                 currentTrack={currentTrack!}
                 openLyricsView={openLyricsView}
@@ -186,7 +186,7 @@ const TrackInfo = memo(
                 size="icon"
                 title={openLyricsView ? "Hide lyrics" : "Show lyrics"}
                 onClick={onFullScreenToggle}
-                className="absolute right-0 bottom-0 opacity-0 transition-opacity group-hover:opacity-100"
+                className="absolute bottom-0 right-0 opacity-0 transition-opacity group-hover:opacity-100"
               >
                 {<MessageSquareQuote />}
               </Button>
@@ -194,14 +194,14 @@ const TrackInfo = memo(
             <div className="w-[148px] space-y-1 text-nowrap">
               <p
                 title={currentTrack.title}
-                className="overflow-hidden font-bold text-ellipsis"
+                className="overflow-hidden text-ellipsis font-bold"
               >
                 {currentTrack.title}
               </p>
 
               <p
                 title={artists}
-                className="overflow-hidden text-xs text-ellipsis"
+                className="overflow-hidden text-ellipsis text-xs"
               >
                 {artists}
               </p>
@@ -212,7 +212,7 @@ const TrackInfo = memo(
             className="flex items-end gap-4"
             variants={skeletonVariants}
           >
-            <div className="bg-muted aspect-square w-18 rounded-xl" />
+            <div className="bg-muted w-18 aspect-square rounded-xl" />
             <div className="w-[148px]">
               <Skeleton className="w-full" />
               <Skeleton className="w-full" />

@@ -33,7 +33,7 @@ const SyncedLyrics = ({ lrc }: SyncedLyricsProps) => {
     observerRef.current = new IntersectionObserver(
       (entries) => {
         const [entry] = entries;
-        if (!entry.isIntersecting && activeLyricRef.current && isPlaying) {
+        if (!entry?.isIntersecting && activeLyricRef.current && isPlaying) {
           activeLyricRef.current.scrollIntoView({
             behavior: "smooth",
             block: "center",
@@ -174,7 +174,7 @@ export const Lyrics = memo(({ onClose }: LyricsProps) => {
         transition={{ delay: 0.3 }}
         className="w-full space-y-4 overflow-auto p-12 pt-0 text-3xl font-black"
       >
-        <SyncedLyrics lrc={lrc?.lyrics!} />
+        <SyncedLyrics lrc={lrc!.lyrics} />
       </motion.div>
     );
   };
