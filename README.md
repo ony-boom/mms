@@ -1,4 +1,4 @@
-# A monorepo containing my music software projects. (mms)
+# My music app
 
 
 ![Demo](./apps/client/assets/screenshot.png)
