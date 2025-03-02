@@ -38,7 +38,7 @@ export function Player() {
   const currentTrack = data?.length === 1 ? data?.[0] : undefined;
 
   const handleLyricsToggle = useCallback((value?: boolean) => {
-    if (value !== undefined) {
+    if (typeof value === "boolean") {
       setOpenLyricsView(value);
     } else {
       setOpenLyricsView((prev) => !prev);
