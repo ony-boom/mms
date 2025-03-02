@@ -1,0 +1,26 @@
+{
+  "name": "@repo/server",
+  "private": true,
+  "scripts": {
+    "build": "nitro build",
+    "dev": "nitro dev",
+    "lint": "eslint .",
+    "prepare": "nitro prepare",
+    "preview": "node .output/server/index.mjs",
+    "db:push": "prisma db push"
+  },
+  "devDependencies": {
+    "@types/lodash.throttle": "^4.1.9",
+    "nitropack": "latest",
+    "prisma": "^6.4.1"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.4.1",
+    "glob": "^11.0.1",
+    "lodash.throttle": "^4.1.1",
+    "music-metadata": "^10.7.0",
+    "node-watch": "^0.7.4",
+    "p-limit": "^6.2.0",
+    "uuid": "^11.0.5"
+  }
+}
