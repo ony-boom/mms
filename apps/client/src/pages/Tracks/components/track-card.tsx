@@ -1,6 +1,6 @@
 import { memo } from "react";
 import { Track } from "@/api";
-import { usePlayerStore } from "@/stores";
+import { useFilterStore, usePlayerStore } from "@/stores";
 import { TrackCover } from "./track-cover";
 import { Pause, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -8,7 +8,8 @@ import { TrackContextMenu } from "@/components";
 import { useShallow } from "zustand/react/shallow";
 
 function Card({ track, index, onTrackPlay }: TrackCardProps) {
-  const artistNames = track.artists.map((artist) => artist.name).join(", ");
+  const artistNames = track.artists.map((artist) => artist.name);
+  const { setQueryField, setQuery } = useFilterStore.getState();
   const { currentTrackId, isPlaying } = usePlayerStore(
     useShallow((state) => ({
       currentTrackId: state.currentTrackId,
@@ -20,6 +21,12 @@ function Card({ track, index, onTrackPlay }: TrackCardProps) {
 
   const onPlayButtonClick = () => {
     onTrackPlay(index, track.id);
+  };
+
+  const onArtistClick = (index: number) => {
+    const artistName = track.artists[index].name;
+    setQueryField("artistName");
+    setQuery({ artistName });
   };
 
   return (
@@ -36,11 +43,16 @@ function Card({ track, index, onTrackPlay }: TrackCardProps) {
         >
           {track.title}
         </p>
-        <p
-          title={artistNames}
-          className="overflow-hidden text-ellipsis text-nowrap text-sm"
-        >
-          {artistNames}
+        <p className="overflow-hidden text-ellipsis text-nowrap text-sm">
+          {artistNames.map((name, index) => (
+            <Button
+              variant="link"
+              className="text-foreground p-0"
+              onClick={() => onArtistClick(index)}
+            >
+              {index === artistNames.length - 1 ? name : `${name}, `}
+            </Button>
+          ))}
         </p>
       </TrackContextMenu>
       <Button
