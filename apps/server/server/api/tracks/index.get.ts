@@ -29,6 +29,25 @@ const buildWhere = (
   }
 };
 
+const buildSortBy = (
+  query: RequestQuery,
+): Prisma.TrackOrderByWithRelationInput => {
+  const direction = query.orderByDirection || "asc";
+  if (!query.orderByField) return;
+
+  if (query.orderByField === "album") {
+    return {
+      album: {
+        title: direction,
+      },
+    };
+  }
+
+  return {
+    [query.orderByField]: direction,
+  };
+};
+
 export default defineEventHandler(async (event) => {
   const query = getQuery<RequestQuery>(event);
   const orderByDirection = query.orderByField
@@ -38,9 +57,7 @@ export default defineEventHandler(async (event) => {
   try {
     const tracks = await prisma.track.findMany({
       where: buildWhere(query),
-      orderBy: query.orderByField && {
-        [query.orderByField]: orderByDirection,
-      },
+      orderBy: buildSortBy(query),
       include: {
         artists: true,
         album: true,
