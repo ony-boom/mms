@@ -17,6 +17,8 @@ const run = async () => {
   await copyExampleEnvFile(clientDir);
   await copyExampleEnvFile(serverDir);
 
+  console.info("Do not forget to fill the .env files with your own values");
+
   // launch db:push script in server
   spawn("pnpm", ["db:push"], { cwd: serverDir, stdio: "inherit" });
 };
