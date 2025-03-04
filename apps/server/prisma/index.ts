@@ -1,5 +1,5 @@
 import * as path from "node:path";
-import { BASE_CONFIG_DIR } from "../config";
+import { BASE_CONFIG_DIR } from "@repo/config";
 import { PrismaClient } from "@prisma/client";
 
 export const prisma = new PrismaClient({

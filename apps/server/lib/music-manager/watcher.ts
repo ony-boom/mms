@@ -1,14 +1,14 @@
 import watch from "node-watch";
 import { musicLibrary } from ".";
-import { config } from "~~/config";
-import throttle from "lodash.throttle";
+import { config } from "@repo/config";
+import debounce from "lodash.debounce";
 
 export const startWatcher = () => {
-  const handleUpdate = throttle(async (path: string) => {
+  const handleUpdate = debounce(async (path: string) => {
     musicLibrary.emit("update", path);
   }, 1000);
 
-  const handleRemove = throttle(async (path: string) => {
+  const handleRemove = debounce(async (path: string) => {
     musicLibrary.emit("remove", path);
   }, 1000);
 

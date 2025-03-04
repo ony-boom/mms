@@ -5,6 +5,7 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "setup": "tsx packages/bin/setup.ts",
+    "clean": "tsx packages/bin/clean.ts",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {

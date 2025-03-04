@@ -46,6 +46,7 @@ function Card({ track, index, onTrackPlay }: TrackCardProps) {
         <p className="overflow-hidden text-ellipsis text-nowrap text-sm">
           {artistNames.map((name, index) => (
             <Button
+              key={name}
               variant="link"
               className="text-foreground p-0"
               onClick={() => onArtistClick(index)}

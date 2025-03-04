@@ -5,7 +5,7 @@ import * as path from "node:path";
 import * as mm from "music-metadata";
 import * as crypto from "node:crypto";
 import EventEmitter from "node:events";
-import { config } from "~~/config";
+import { config } from "@repo/config";
 import { TrackSaver } from "./track-saver";
 import { startWatcher } from "./watcher";
 import { prisma, StateKey } from "~~/prisma";
@@ -62,15 +62,16 @@ class MusicLibraryManager extends EventEmitter {
 
   async *loadTracks(): AsyncGenerator<LoadedMetadata> {
     const tracks = await glob(this.globPattern, { nodir: true, stat: true });
-    const batchCount = Math.ceil(tracks.length / this.BATCH_SIZE);
+    const normalizedTracks = Array.from(new Set(tracks.map((track) => path.normalize(track).replace(/\\/g, "/"))));
+    const batchCount = Math.ceil(normalizedTracks.length / this.BATCH_SIZE);
     const limit = pLimit(50);
 
-    await this.trackSaver.deleteDeletedTracks(tracks);
+    await this.trackSaver.deleteDeletedTracks(normalizedTracks);
 
     for (let i = 0; i < batchCount; i++) {
       const start = i * this.BATCH_SIZE;
-      const end = Math.min(start + this.BATCH_SIZE, tracks.length);
-      const batch = tracks.slice(start, end);
+      const end = Math.min(start + this.BATCH_SIZE, normalizedTracks.length);
+      const batch = normalizedTracks.slice(start, end);
 
       const metadataPromises = batch.map((track, index) =>
         limit(async () => {
@@ -87,8 +88,8 @@ class MusicLibraryManager extends EventEmitter {
               path: track,
               state: {
                 current: currentIndex + 1,
-                total: tracks.length,
-                done: currentIndex === tracks.length - 1,
+                total: normalizedTracks.length,
+                done: currentIndex === normalizedTracks.length - 1,
               },
             };
           } catch (error) {

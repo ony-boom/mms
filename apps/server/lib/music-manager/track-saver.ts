@@ -2,7 +2,7 @@ import fs from "node:fs";
 import * as uuid from "uuid";
 import * as mm from "music-metadata";
 import { basename } from "node:path";
-import { config } from "~~/config";
+import { config } from "@repo/config";
 import { prisma } from "~~/prisma";
 import type { LoadedMetadata } from ".";
 
@@ -140,7 +140,6 @@ export class TrackSaver {
   }
 
   async updateTrack(path: string) {
-    // @ts-ignore
     const { common } = await mm.parseFile(path);
     const dateAdded = await fs.promises
       .stat(path)

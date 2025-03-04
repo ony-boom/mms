@@ -1,0 +1,19 @@
+{
+  "name": "@repo/config",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "exports": {
+    ".": "./index.ts",
+    "./types": "./types.ts"
+  },
+  "packageManager": "pnpm@10.5.2",
+  "dependencies": {
+    "@repo/config": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.1"
+  }
+}
