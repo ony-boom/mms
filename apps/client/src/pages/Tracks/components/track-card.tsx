@@ -1,6 +1,6 @@
 import { memo } from "react";
 import { Track } from "@/api";
-import { useFilterStore, usePlayerStore } from "@/stores";
+import { usePlayerStore } from "@/stores";
 import { TrackCover } from "./track-cover";
 import { Pause, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,7 +9,6 @@ import { useShallow } from "zustand/react/shallow";
 
 function Card({ track, index, onTrackPlay }: TrackCardProps) {
   const artistNames = track.artists.map((artist) => artist.name);
-  const { setQueryField, setQuery } = useFilterStore.getState();
   const { currentTrackId, isPlaying } = usePlayerStore(
     useShallow((state) => ({
       currentTrackId: state.currentTrackId,
@@ -24,9 +23,7 @@ function Card({ track, index, onTrackPlay }: TrackCardProps) {
   };
 
   const onArtistClick = (index: number) => {
-    const artistName = track.artists[index].name;
-    setQueryField("artistName");
-    setQuery({ artistName });
+    console.log("Artist clicked", index);
   };
 
   return (
@@ -39,11 +36,11 @@ function Card({ track, index, onTrackPlay }: TrackCardProps) {
         />
         <p
           title={track.title}
-          className="overflow-hidden text-ellipsis text-nowrap font-bold"
+          className="overflow-hidden font-bold text-nowrap text-ellipsis"
         >
           {track.title}
         </p>
-        <p className="overflow-hidden text-ellipsis text-nowrap text-sm">
+        <p className="overflow-hidden text-sm text-nowrap text-ellipsis">
           {artistNames.map((name, index) => (
             <Button
               key={name}
@@ -59,7 +56,7 @@ function Card({ track, index, onTrackPlay }: TrackCardProps) {
       <Button
         size="icon"
         onClick={onPlayButtonClick}
-        className="absolute bottom-20 right-2 z-20 opacity-0 shadow-xl transition group-hover:opacity-100"
+        className="absolute right-2 bottom-20 z-20 opacity-0 shadow-xl transition group-hover:opacity-100"
       >
         {isCurrent && isPlaying ? <Pause /> : <Play />}
       </Button>

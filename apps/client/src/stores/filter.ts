@@ -1,56 +1,108 @@
 import { create } from "zustand/react";
 import { persist } from "zustand/middleware";
-import { GetTrackSortByInput, GetTrackWhereInput } from "@/api/Api.ts";
 import { TrackSortField } from "@/api";
+import { GetTrackSortByInput, GetTrackWhereInput } from "@/api/Api";
 
+// Types
 export type QueryField = "artistName" | "albumTitle" | "*";
 
+// Store interface
 interface FilterStore {
   query?: GetTrackWhereInput;
   sort?: GetTrackSortByInput;
   queryField: QueryField;
+  openSearchComponent: boolean;
+  searchValue: string;
+
+  // Actions
+  setQueryField: (field: QueryField) => void;
+  setSort: (sort?: GetTrackSortByInput) => void;
+  setQuery: (query?: GetTrackWhereInput) => void;
+  setSearchValue: (value: string) => void;
   setFilter: (filter: {
     query?: GetTrackWhereInput;
     sort?: GetTrackSortByInput;
   }) => void;
-  setQuery: (query?: GetTrackWhereInput) => void;
-  setSort: (sort?: GetTrackSortByInput) => void;
-  setQueryField: (field: QueryField) => void;
-
-  openSearchComponent: boolean;
   setOpenSearchComponent: (open: boolean) => void;
 }
 
 export const useFilterStore = create<FilterStore>()(
   persist(
-    (set) => ({
-      openSearchComponent: false,
-      setOpenSearchComponent: (open) => set({ openSearchComponent: open }),
+    (set, get) => ({
       query: undefined,
       sort: undefined,
       queryField: "*",
+      openSearchComponent: false,
+      searchValue: "",
 
       setQueryField: (queryField) => {
-        set({ queryField });
+        const { searchValue } = get();
+        let newQuery: GetTrackWhereInput = {};
+
+        if (searchValue) {
+          if (queryField === "*") {
+            newQuery = { title: searchValue };
+          } else {
+            newQuery = { [queryField]: searchValue };
+          }
+        }
+
+        set({
+          queryField,
+          query: newQuery,
+        });
       },
 
-      setSort: (sort) => {
-        if (sort?.field === TrackSortField.NONE) {
-          set({ sort: undefined });
-          return;
+      setSearchValue: (value) => {
+        const { queryField } = get();
+        let newQuery: GetTrackWhereInput = {};
+
+        if (value) {
+          if (queryField === "*") {
+            newQuery = { title: value };
+          } else {
+            newQuery = { [queryField]: value };
+          }
         }
-        set({ sort });
+
+        set({
+          searchValue: value,
+          query: value ? newQuery : undefined,
+        });
       },
-      setQuery: (query) => set({ query }),
+
+      setSort: (sort) =>
+        set({
+          sort: sort?.field === TrackSortField.NONE ? undefined : sort,
+        }),
+
+      setQuery: (query) => {
+        const { queryField } = get();
+        let value = "";
+
+        if (query) {
+          if (queryField === "*") {
+            value = query.title || "";
+          } else if (query[queryField]) {
+            value = query[queryField] || "";
+          }
+        }
+
+        set({
+          query,
+          searchValue: value,
+        });
+      },
+
       setFilter: (filter) => set(filter),
+      setOpenSearchComponent: (open) => set({ openSearchComponent: open }),
     }),
     {
       name: "filter",
-      partialize(state) {
-        return {
-          sort: state.sort,
-        };
-      },
+      partialize: (state) => ({
+        sort: state.sort,
+        queryField: state.queryField,
+      }),
     },
   ),
 );

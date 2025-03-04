@@ -39,7 +39,7 @@ export const rest: Api = {
     });
   },
 
-  useTracks: (where, sortBy) => {
+  useTracks: (where, sortBy, options) => {
     return useQuery({
       queryKey: [CACHE_KEY.TRACKS, where, sortBy],
       queryFn: async () => {
@@ -56,7 +56,7 @@ export const rest: Api = {
           for (const key of Object.keys(fields)) {
             const typedKey = key as keyof typeof where;
             if (where[typedKey]) {
-              newUrl.searchParams.append("field", fields[typedKey]);
+              newUrl.searchParams.append("field", fields[typedKey] ?? "*");
               newUrl.searchParams.append("query", where[typedKey] ?? "");
               break;
             }
@@ -78,10 +78,11 @@ export const rest: Api = {
         const { data } = await response.json();
         return data;
       },
+      ...options,
     });
   },
 
-  useTrackLoadEvent: (_debounce) => {
+  useTrackLoadEvent: () => {
     const [state, setState] = useState<LoadedTracks>({
       current: 0,
       total: 0,

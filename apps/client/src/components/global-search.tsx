@@ -1,33 +1,50 @@
+import clsx from "clsx";
 import { Badge } from "./ui/badge";
 import { QueryField, useFilterStore } from "@/stores";
 import { Input } from "@/components/ui/input";
 import { AnimatePresence, motion } from "motion/react";
-import { ChangeEvent, FormEvent, useEffect } from "react";
-import clsx from "clsx";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { useApiClient, useDebounce } from "@/hooks";
+import { Loader } from "lucide-react";
+import { Virtuoso } from "react-virtuoso";
+import { TrackListElement } from "@/components/track-list-element.tsx";
 
 export function GlobalSearch() {
   const {
-    query,
-    setQuery,
+    setSearchValue,
     setOpenSearchComponent,
     setQueryField,
     queryField,
+    query,
     openSearchComponent,
   } = useFilterStore();
 
-  const inputVal = queryField === "*" ? query?.title : query?.[queryField];
+  const [localValue, setLocalValue] = useState(
+    (queryField === "*" ? query?.title : query?.[queryField]) ?? "",
+  );
+  const [localSearchField, setLocalSearchField] = useState(queryField);
+
+  const debouncedValue = useDebounce(localValue, 500);
+  const filter =
+    localSearchField === "*"
+      ? { title: debouncedValue }
+      : { [localSearchField]: debouncedValue };
+
+  const { data, isLoading } = useApiClient().useTracks(filter, undefined, {
+    enabled: !!localValue,
+  });
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    if (queryField === "*") {
-      setQuery({ title: event.target.value });
-      return;
-    }
-    setQuery({ [queryField]: event.target.value });
+    setLocalValue(event.target.value);
   };
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setOpenSearchComponent(false);
+    if (localValue) {
+      setSearchValue(localValue);
+      setQueryField(localSearchField);
+      setOpenSearchComponent(false);
+    }
   };
 
   useEffect(() => {
@@ -49,13 +66,8 @@ export function GlobalSearch() {
   }, [setOpenSearchComponent]);
 
   const onBadgeClick = (field: string) => {
-    if (field === "*" && queryField === "*") return;
-    if (field === queryField) {
-      setQueryField("*");
-      setQuery({ [queryField]: "" });
-      return;
-    }
-    setQueryField(field as QueryField);
+    if (field === localSearchField) return;
+    setLocalSearchField(field as QueryField);
   };
 
   return (
@@ -67,43 +79,101 @@ export function GlobalSearch() {
           exit={{ opacity: 0 }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="bg-background/60 fixed left-0 top-0 z-[60] grid h-full w-full justify-center"
+          className="bg-background/60 fixed top-0 left-0 z-[60] grid h-full w-full justify-center"
           onClick={() => setOpenSearchComponent(false)}
         >
-          <form
-            onSubmit={handleSubmit}
-            className="with-blur mt-32 h-max overflow-hidden rounded-md"
-          >
-            <Input
-              autoFocus
-              value={inputVal ?? ""}
-              onChange={handleInputChange}
-              placeholder="Search..."
-              className="border-b-foreground/10 focus-visible:border-b-foreground/30 min-w-xl h-12 rounded-none focus-visible:ring-0"
-              onClick={(e) => e.stopPropagation()}
-            />
+          <div className="with-blur mt-32 h-max overflow-hidden rounded-md">
+            <form onSubmit={handleSubmit}>
+              <Input
+                autoFocus
+                value={localValue}
+                onChange={handleInputChange}
+                placeholder="Search..."
+                className="border-b-foreground/10 focus-visible:border-b-foreground/30 h-12 min-w-xl rounded-none focus-visible:ring-0"
+                onClick={(e) => e.stopPropagation()}
+              />
 
-            <div
-              className="flex gap-2 px-2 py-4"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {searchField.map((field) => {
-                const isActive = queryField === field.value;
-                return (
-                  <Badge
-                    key={field.value}
-                    className={clsx("cursor-pointer", {
-                      "hover:bg-accent": !isActive,
-                    })}
-                    onClick={() => onBadgeClick(field.value)}
-                    variant={isActive ? "default" : "outline"}
-                  >
-                    {field.label}
-                  </Badge>
-                );
-              })}
-            </div>
-          </form>
+              <div
+                className="flex gap-2 px-2 py-4"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {searchField.map((field) => {
+                  const isActive = localSearchField === field.value;
+                  return (
+                    <Badge
+                      key={field.value}
+                      className={clsx("cursor-pointer", {
+                        "hover:bg-accent": !isActive,
+                      })}
+                      onClick={() => onBadgeClick(field.value)}
+                      variant={isActive ? "default" : "outline"}
+                    >
+                      {field.label}
+                    </Badge>
+                  );
+                })}
+              </div>
+            </form>
+
+            {/*TODO: Move this to it's own filer*/}
+            <AnimatePresence>
+              {localValue && (
+                <motion.div
+                  layout
+                  initial={{
+                    opacity: 0,
+                  }}
+                  animate={{
+                    opacity: 1,
+                  }}
+                  exit={{
+                    opacity: 0,
+                  }}
+                  style={{ height: 400 }}
+                  className="flex flex-col py-2"
+                >
+                  {isLoading ? (
+                    <div className="flex w-full justify-center">
+                      <Loader className="animate-spin" />
+                    </div>
+                  ) : (
+                    data &&
+                    (data.length ? (
+                      <Virtuoso
+                        data={data}
+                        style={{ height: "100%" }}
+                        className={"overflow-x-hidden will-change-transform"}
+                        totalCount={data.length}
+                        itemContent={(index, data) => {
+                          return (
+                            <AnimatePresence>
+                              <motion.div
+                                initial={{
+                                  opacity: 0,
+                                }}
+                                animate={{
+                                  opacity: 1,
+                                }}
+                                exit={{
+                                  opacity: 0,
+                                }}
+                              >
+                                <TrackListElement track={data} index={index} />
+                              </motion.div>
+                            </AnimatePresence>
+                          );
+                        }}
+                      />
+                    ) : (
+                      <div className="flex w-full justify-center">
+                        <p className="text-foreground">No results found</p>
+                      </div>
+                    ))
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </motion.div>
       )}
     </AnimatePresence>
