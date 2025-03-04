@@ -22,7 +22,7 @@
 		"type": "git",
 		"url": "https://github.com/ony-boom/mms"
 	},
-	"author": "Bambanah",
+	"author": "titoo-dev",
 	"license": "GPL-3.0-or-later",
 	"dependencies": {
 		"got": "^14.4.2",
