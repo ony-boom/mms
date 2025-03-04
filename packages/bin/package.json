@@ -6,6 +6,9 @@
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.5.2",
+  "dependencies": {
+    "@repo/config": "*"
+  },
   "devDependencies": {
     "@types/node": "^22.13.1"
   }
