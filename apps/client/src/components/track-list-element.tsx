@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, MouseEventHandler } from "react";
 import { usePlayerStore } from "@/stores";
 import { TrackContextMenu } from "@/components/track-context-menu.tsx";
 import { TrackCover } from "@/pages/Tracks/components/track-cover.tsx";
@@ -13,7 +13,8 @@ export const TrackListElement = memo(
 
     if (!track) return <div className="h-[64px]"></div>;
 
-    const handleClick = () => {
+    const handleClick: MouseEventHandler<HTMLLIElement> = (event) => {
+      event.stopPropagation();
       onClick?.(index);
     };
 

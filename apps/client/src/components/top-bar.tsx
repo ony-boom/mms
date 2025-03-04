@@ -1,5 +1,5 @@
 import { Sort } from "./sort.tsx";
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 import { CloudDownload, Search, Shuffle } from "lucide-react";
 import { Button } from "./ui/button.tsx";
 import { SortOrder, TrackSortField } from "@/api";
@@ -11,7 +11,7 @@ import { DrawerTrigger } from "./ui/drawer.tsx";
 
 export function TopBar() {
   const { resetPlaylist, trackList } = useTrackList();
-  const { setSort, sort, query } = useFilterStore();
+  const { setSort, sort } = useFilterStore();
   const { setOpenSearchComponent } = useFilterStore();
 
   const { toggleShuffle, playTrackAtIndex } = usePlayerStore.getState();
@@ -32,11 +32,6 @@ export function TopBar() {
   const handleSearchClick = () => {
     setOpenSearchComponent(true);
   };
-
-  const hasSearch = useMemo(() => {
-    if (!query) return false;
-    return Object.values(query).some((value) => value);
-  }, [query]);
 
   return (
     <div className="relative flex w-full items-center justify-between gap-2 overflow-hidden rounded-md px-4 py-2">
@@ -63,10 +58,6 @@ export function TopBar() {
           disabled={!data || !data.length}
         >
           <Search />
-
-          {hasSearch && (
-            <span className="bg-primary absolute right-2 top-2 h-1 w-1 rounded-full"></span>
-          )}
         </Button>
 
         <DrawerTrigger asChild>

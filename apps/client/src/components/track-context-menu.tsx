@@ -8,7 +8,7 @@ import {
 import { usePlayerStore } from "@/stores";
 import { ListEnd, Redo2 } from "lucide-react";
 import { useApiClient } from "@/hooks";
-import { memo, ReactNode } from "react";
+import { memo, MouseEventHandler, ReactNode } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 export const TrackContextMenu = memo(
@@ -22,23 +22,25 @@ export const TrackContextMenu = memo(
     );
     const { getTrackAudioSrc } = useApiClient();
 
-    const onPlayNextClick = () => {
-      const src = getTrackAudioSrc([track.id])[0];
+    const onPlayNextClick: MouseEventHandler<HTMLDivElement> = (event) => {
+      event.stopPropagation();
+      const src = getTrackAudioSrc([track.id])[0]!;
       playAfter({
         src,
         id: track.id,
       });
     };
 
-    const onAddToQueueClick = () => {
-      const trackSrc = getTrackAudioSrc([track.id])[0];
+    const onAddToQueueClick: MouseEventHandler<HTMLDivElement> = (event) => {
+      event.stopPropagation();
+      const trackSrc = getTrackAudioSrc([track.id])[0]!;
       addToQueue({ id: track.id, src: trackSrc });
     };
 
     return (
       <ContextMenu>
         <ContextMenuTrigger>{children}</ContextMenuTrigger>
-        <ContextMenuContent className="with-blur w-36 space-y-1 p-0 transition-all">
+        <ContextMenuContent className="with-blur z-50 w-36 space-y-1 p-0 transition-all">
           <ContextMenuItem
             className="w-full"
             onClick={onPlayNextClick}

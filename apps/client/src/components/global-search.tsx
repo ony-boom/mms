@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { Badge } from "./ui/badge";
-import { QueryField, useFilterStore } from "@/stores";
+import { QueryField, useFilterStore, usePlayerStore } from "@/stores";
 import { Input } from "@/components/ui/input";
 import { AnimatePresence, motion } from "motion/react";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
@@ -8,16 +8,21 @@ import { useApiClient, useDebounce } from "@/hooks";
 import { Loader } from "lucide-react";
 import { Virtuoso } from "react-virtuoso";
 import { TrackListElement } from "@/components/track-list-element.tsx";
+import { Track } from "@/api";
 
 export function GlobalSearch() {
   const {
-    setSearchValue,
+    // setSearchValue,
     setOpenSearchComponent,
-    setQueryField,
+    // setQueryField,
     queryField,
     query,
     openSearchComponent,
   } = useFilterStore();
+
+  const { setPlaylists, toggleShuffle, playTrackAtIndex } =
+    usePlayerStore.getState();
+  const { getTrackAudioSrc } = useApiClient();
 
   const [localValue, setLocalValue] = useState(
     (queryField === "*" ? query?.title : query?.[queryField]) ?? "",
@@ -40,11 +45,11 @@ export function GlobalSearch() {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (localValue) {
-      setSearchValue(localValue);
-      setQueryField(localSearchField);
-      setOpenSearchComponent(false);
-    }
+    /*
+        setSearchValue(localValue);
+        setQueryField(localSearchField);
+    */
+    setOpenSearchComponent(false);
   };
 
   useEffect(() => {
@@ -70,6 +75,19 @@ export function GlobalSearch() {
     setLocalSearchField(field as QueryField);
   };
 
+  const handleResultClick = (track: Track[]) => {
+    const newPlaylist = track.map((t) => {
+      const src = getTrackAudioSrc([t.id])[0]!;
+      return {
+        src,
+        id: t.id,
+      };
+    });
+    setPlaylists(newPlaylist);
+    toggleShuffle(false);
+    playTrackAtIndex(0);
+  };
+
   return (
     <AnimatePresence>
       {openSearchComponent && (
@@ -79,7 +97,7 @@ export function GlobalSearch() {
           exit={{ opacity: 0 }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="bg-background/60 fixed top-0 left-0 z-[60] grid h-full w-full justify-center"
+          className="bg-background/60 fixed top-0 left-0 z-50 grid h-full w-full justify-center"
           onClick={() => setOpenSearchComponent(false)}
         >
           <div className="with-blur mt-32 h-max overflow-hidden rounded-md">
@@ -144,7 +162,7 @@ export function GlobalSearch() {
                         style={{ height: "100%" }}
                         className={"overflow-x-hidden will-change-transform"}
                         totalCount={data.length}
-                        itemContent={(index, data) => {
+                        itemContent={(index, track) => {
                           return (
                             <AnimatePresence>
                               <motion.div
@@ -158,7 +176,12 @@ export function GlobalSearch() {
                                   opacity: 0,
                                 }}
                               >
-                                <TrackListElement track={data} index={index} />
+                                <TrackListElement
+                                  track={track}
+                                  index={index}
+                                  showWaveBars
+                                  onClick={() => handleResultClick(data)}
+                                />
                               </motion.div>
                             </AnimatePresence>
                           );

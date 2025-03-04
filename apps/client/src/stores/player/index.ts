@@ -8,7 +8,7 @@ const updateCurrentTrack = (state: PlayerStateProperties, index: number) => {
   const trackId = state.isShuffle
     ? state.shuffleOrder[index]
     : state.playlistOrder[index];
-  const trackSrc = state.playlists.get(trackId);
+  const trackSrc = state.playlists.get(trackId!);
   if (trackSrc) {
     return {
       playingIndex: index,
@@ -156,7 +156,7 @@ export const usePlayerStore = create<PlayerState>()(
           newPlaylistOrder.splice(currentIndex + 1, 0, id);
         } else {
           const [removedId] = newPlaylistOrder.splice(sourceIndex, 1);
-          newPlaylistOrder.splice(currentIndex + 1, 0, removedId);
+          newPlaylistOrder.splice(currentIndex + 1, 0, removedId!);
         }
 
         set({
@@ -170,7 +170,7 @@ export const usePlayerStore = create<PlayerState>()(
           ? state.shuffleOrder
           : state.playlistOrder;
         const trackId = order[index];
-        const trackSrc = state.playlists.get(trackId);
+        const trackSrc = state.playlists.get(trackId!);
         if (!trackSrc) return console.warn("Invalid track index:", index);
 
         set({

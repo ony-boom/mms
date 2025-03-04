@@ -24,7 +24,7 @@ export const useTrackList = () => {
     if (!tracks) return [];
     return tracks.map((track) => ({
       id: track.id,
-      src: getTrackAudioSrc([track.id])[0],
+      src: getTrackAudioSrc([track.id])[0]!,
     }));
   }, [tracks, getTrackAudioSrc]);
 
@@ -37,7 +37,9 @@ export const useTrackList = () => {
 
     if (playlistOrder?.length) {
       const src = getTrackAudioSrc(playlistOrder);
-      setPlaylists(playlistOrder.map((id, index) => ({ id, src: src[index] })));
+      setPlaylists(
+        playlistOrder.map((id, index) => ({ id, src: src[index]! })),
+      );
     } else {
       resetPlaylist();
     }
