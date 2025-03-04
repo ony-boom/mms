@@ -2,6 +2,7 @@ import type {
   UseQueryResult,
   UseMutationResult,
   DefaultError,
+  UseQueryOptions,
 } from "@tanstack/react-query";
 import {
   LoadedTracks,
@@ -27,10 +28,16 @@ export interface Api {
   useTracks: (
     where?: GetTrackWhereInput,
     sortBy?: GetTrackSortByInput,
+    options?: Omit<UseQueryOptions<Track[]>, "queryFn" | "queryKey">,
   ) => UseQueryResult<Track[]>;
 
-  useLoadTracks: () => UseMutationResult<boolean>;
-  useTrackLyrics: (trackId: string) => UseQueryResult<LyricsResponse>;
+  useLoadTracks: (
+    options?: Omit<UseQueryOptions, "queryFn" | "queryKey">,
+  ) => UseMutationResult<boolean>;
+  useTrackLyrics: (
+    trackId: string,
+    options?: Omit<UseQueryOptions, "queryFn" | "queryKey">,
+  ) => UseQueryResult<LyricsResponse>;
   useFavoriteTrack: <TError = DefaultError>() => UseMutationResult<
     Partial<Track>,
     TError,
