@@ -6,10 +6,11 @@ import {
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
 import { usePlayerStore } from "@/stores";
-import { ListEnd, Redo2 } from "lucide-react";
+import { ListEnd, Redo2, Edit2 } from "lucide-react";
 import { useApiClient } from "@/hooks";
-import { memo, MouseEventHandler, ReactNode } from "react";
+import { memo, MouseEventHandler, ReactNode, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
+import { TagEditor } from "./tag-editor";
 
 export const TrackContextMenu = memo(
   ({ track, children }: TrackContextMenuProps) => {
@@ -20,6 +21,7 @@ export const TrackContextMenu = memo(
         addToQueue: state.addToQueue,
       })),
     );
+    const [isTagEditorOpen, setIsTagEditorOpen] = useState(false);
     const { getTrackAudioSrc } = useApiClient();
 
     const onPlayNextClick: MouseEventHandler<HTMLDivElement> = (event) => {
@@ -37,25 +39,40 @@ export const TrackContextMenu = memo(
       addToQueue({ id: track.id, src: trackSrc });
     };
 
-    return (
-      <ContextMenu>
-        <ContextMenuTrigger>{children}</ContextMenuTrigger>
-        <ContextMenuContent className="with-blur z-50 w-36 space-y-1 p-0 transition-all">
-          <ContextMenuItem
-            className="w-full"
-            onClick={onPlayNextClick}
-            disabled={!currentTrackId || currentTrackId === track.id}
-          >
-            Play next
-            <Redo2 size={16} className="ml-auto" />
-          </ContextMenuItem>
+    const openTagEditor = () => setIsTagEditorOpen(true);
 
-          <ContextMenuItem className="w-full" onClick={onAddToQueueClick}>
-            Add to queue
-            <ListEnd size={16} className="ml-auto" />
-          </ContextMenuItem>
-        </ContextMenuContent>
-      </ContextMenu>
+    return (
+      <>
+        <ContextMenu>
+          <ContextMenuTrigger>{children}</ContextMenuTrigger>
+          <ContextMenuContent className="with-blur z-50 w-36 space-y-1 p-0 transition-all">
+            <ContextMenuItem
+              className="w-full"
+              onClick={onPlayNextClick}
+              disabled={!currentTrackId || currentTrackId === track.id}
+            >
+              Play next
+              <Redo2 size={16} className="ml-auto" />
+            </ContextMenuItem>
+
+            <ContextMenuItem className="w-full" onClick={onAddToQueueClick}>
+              Add to queue
+              <ListEnd size={16} className="ml-auto" />
+            </ContextMenuItem>
+
+            <ContextMenuItem className="w-full" onClick={openTagEditor}>
+              Edit tags
+              <Edit2 size={16} className="ml-auto" />
+            </ContextMenuItem>
+          </ContextMenuContent>
+        </ContextMenu>
+
+        <TagEditor
+          trackId={track.id}
+          open={isTagEditorOpen}
+          onOpenChange={setIsTagEditorOpen}
+        />
+      </>
     );
   },
 );
