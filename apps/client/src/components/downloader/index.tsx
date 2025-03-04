@@ -3,6 +3,7 @@ import { DrawerContent, DrawerHeader } from "../ui/drawer";
 import { Input } from "../ui/input";
 import { DownloaderTrackItem } from "./downloader-track-item";
 import { VirtuosoGrid } from "react-virtuoso";
+import { Separator } from "../ui/separator";
 
 export const Downloader = memo(() => {
   return (
@@ -15,6 +16,8 @@ export const Downloader = memo(() => {
             onClick={(e) => e.stopPropagation()}
           />
         </DrawerHeader>
+
+        <Separator className="bg-foreground/[8%]" />
 
         <div className="flex-1">
           <VirtuosoGrid
