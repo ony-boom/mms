@@ -117,17 +117,21 @@ export class TrackSaver {
         .map((name) => artistMap.get(name.trim()))
         .filter(Boolean);
 
+      const trackData = {
+        title: trackTitle,
+        album: { connect: { id: albumId } },
+        dateAdded: metadata.dateAdded,
+        artists: {
+          connect: trackArtists.map((artist) => ({ id: artist.id })),
+        },
+      };
+
       return prisma.track.upsert({
         where: { path: metadata.path },
-        update: {},
+        update: trackData,
         create: {
-          title: trackTitle,
+          ...trackData,
           path: metadata.path,
-          album: { connect: { id: albumId } },
-          dateAdded: metadata.dateAdded,
-          artists: {
-            connect: trackArtists.map((artist) => ({ id: artist.id })),
-          },
         },
       });
     });

@@ -1,5 +1,5 @@
 {
-  "name": "monorepo",
+  "name": "mms",
   "private": true,
   "scripts": {
     "build": "turbo run build",
