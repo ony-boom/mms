@@ -1,6 +1,5 @@
 import { CantStream, NotLoggedIn } from "@/helpers/errors.js";
 import { logger } from "@/helpers/logger.js";
-import { GUI_VERSION, WEBUI_PACKAGE_VERSION } from "@/helpers/versions.js";
 import {
   Collection,
   Convertable,
@@ -99,24 +98,6 @@ export class DeemixApp {
     return this.deezerAvailabilityStatus;
   }
 
-  async getLatestVersion(force = false): Promise<string | null> {
-    if (this.latestVersion === null || force) {
-      try {
-        const responseJson = await got
-          .get(
-            `https://raw.githubusercontent.com/bambanah/deemix/main/${GUI_VERSION !== undefined ? "gui" : "webui"}/package.json`,
-          )
-          .json();
-        this.latestVersion = JSON.parse(JSON.stringify(responseJson)).version;
-      } catch (e) {
-        logger.error(e);
-        this.latestVersion = "NotFound";
-        return this.latestVersion;
-      }
-    }
-    return this.latestVersion;
-  }
-
   parseVersion(version: string | null): any {
     if (version === null || version === "continuous" || version === "NotFound")
       return null;
@@ -134,18 +115,6 @@ export class DeemixApp {
       logger.error(e);
       return null;
     }
-  }
-
-  isUpdateAvailable(): boolean {
-    return (
-      this.latestVersion.localeCompare(
-        GUI_VERSION ?? WEBUI_PACKAGE_VERSION,
-        undefined,
-        {
-          numeric: true,
-        },
-      ) === 1
-    );
   }
 
   getSettings() {
