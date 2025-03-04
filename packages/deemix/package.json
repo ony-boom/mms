@@ -1,13 +1,13 @@
 {
-	"name": "@repo/mms-downloader",
+	"name": "@repo/deemix",
 	"version": "3.12.2",
 	"private": true,
-	"description": "Deezer downloader library",
+	"description": "A barebones deezer downloader library",
 	"type": "module",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"scripts": {
-		"develop": "run-p watch:*",
+		"dev": "run-p watch:*",
 		"watch:build": "tsup src/index.ts --format esm --watch",
 		"watch:tsc": "tsc --emitDeclarationOnly -w",
 		"build": "run-s build:*",
@@ -18,7 +18,7 @@
 		"lint": "eslint .",
 		"type-check": "tsc --noEmit"
 	},
-	"author": "titoo-dev",
+	"author": "Bambanah",
 	"license": "GPL-3.0-or-later",
 	"dependencies": {
 		"@spotify/web-api-ts-sdk": "^1.2.0",
