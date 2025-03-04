@@ -24,6 +24,6 @@
     "node-watch": "^0.7.4",
     "p-limit": "^6.2.0",
     "uuid": "^11.0.5",
-    "@repo/config": "*"
+    "@repo/config": "workspace:*"
   }
 }
