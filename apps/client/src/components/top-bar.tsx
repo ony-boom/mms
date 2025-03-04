@@ -1,12 +1,13 @@
 import { Sort } from "./sort.tsx";
 import { useCallback, useMemo } from "react";
-import { Search, Shuffle } from "lucide-react";
+import { CloudDownload, Search, Shuffle } from "lucide-react";
 import { Button } from "./ui/button.tsx";
 import { SortOrder, TrackSortField } from "@/api";
 import { useApiClient, useTrackList } from "@/hooks";
 import { TrackLoadToast } from "./track-load-toast";
 import { ModeToggle } from "@/components/mode-toggle";
 import { useFilterStore, usePlayerStore } from "@/stores";
+import { DrawerTrigger } from "./ui/drawer.tsx";
 
 export function TopBar() {
   const { resetPlaylist, trackList } = useTrackList();
@@ -67,6 +68,12 @@ export function TopBar() {
             <span className="bg-primary absolute right-2 top-2 h-1 w-1 rounded-full"></span>
           )}
         </Button>
+
+        <DrawerTrigger asChild>
+          <Button size={"icon"} variant={"ghost"} className="relative">
+            <CloudDownload />
+          </Button>
+        </DrawerTrigger>
 
         <TrackLoadToast variant={"ghost"} />
 
