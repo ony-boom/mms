@@ -1,0 +1,37 @@
+{
+	"name": "@repo/deezer-sdk",
+	"version": "1.10.0",
+	"private": true,
+	"description": "A wrapper for all Deezer's APIs",
+	"type": "module",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"scripts": {
+		"dev": "run-p watch:*",
+		"watch:build": "tsup src/index.ts --format esm --watch",
+		"watch:tsc": "tsc --emitDeclarationOnly -w",
+		"build": "run-s build:*",
+		"build:tsup": "tsup src/index.ts --format esm",
+		"build:tsc": "tsc --emitDeclarationOnly",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"lint": "eslint .",
+		"type-check": "tsc --noEmit"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/ony-boom/mms"
+	},
+	"author": "Bambanah",
+	"license": "GPL-3.0-or-later",
+	"dependencies": {
+		"got": "^14.4.2",
+		"nanostores": "^0.11.3",
+		"tough-cookie": "^4.0.0",
+		"zod": "^3.23.8"
+	},
+	"devDependencies": {
+		"@types/tough-cookie": "^4.0.5",
+		"tsup": "^8.2.4"
+	}
+}
