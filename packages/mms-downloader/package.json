@@ -7,7 +7,7 @@
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"scripts": {
-		"dev": "run-p watch:*",
+		"develop": "run-p watch:*",
 		"watch:build": "tsup src/index.ts --format esm --watch",
 		"watch:tsc": "tsc --emitDeclarationOnly -w",
 		"build": "run-s build:*",
