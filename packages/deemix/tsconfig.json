@@ -4,8 +4,11 @@
 		"rootDir": "./src",
 		"outDir": "./dist",
 		"strict": false,
-		"strictNullChecks": true,
-		"declaration": true
+		// "strictNullChecks": true,
+		"declaration": true,
+		"paths": {
+			"@/*": ["./src/*"]
+		}
 	},
 	"include": ["./src/**/*.ts"]
 }
