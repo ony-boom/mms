@@ -14,7 +14,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DialogProps } from "@radix-ui/react-dialog";
 import { Input } from "./ui/input";
-import { useState } from "react";
+import {
+  ChangeEventHandler,
+  ElementRef,
+  MouseEventHandler,
+  useRef,
+  useState,
+} from "react";
 import { Button } from "./ui/button";
 import { Track } from "@/api";
 
@@ -65,10 +71,7 @@ export const TagEditor = ({ trackId, ...dialogProps }: TagEditorProps) => {
                 <p>Tags are used to categorize your tracks.</p>
               </DialogDescription>
 
-              <div
-                data-scroller={true}
-                className="mt-4 max-h-[400px] overflow-y-auto px-1"
-              >
+              <div data-scroller={true} className="mt-4">
                 <TagsForm track={track} />
               </div>
             </>
@@ -83,7 +86,7 @@ const TagsForm = ({ track }: { track: Track }) => {
   const { getTrackCoverSrc } = useApiClient();
   const defaultCoverSrc = getTrackCoverSrc(track.id);
   const [coverPreview, setCoverPreview] = useState<string>(defaultCoverSrc);
-  // const coverHasChanged = coverPreview !== defaultCoverSrc;
+  const imageInputRef = useRef<ElementRef<"input">>(null);
 
   const tagsForm = useForm<z.infer<typeof tagsFormSchema>>({
     resolver: zodResolver(tagsFormSchema),
@@ -91,12 +94,33 @@ const TagsForm = ({ track }: { track: Track }) => {
       title: track.title ?? "",
       album: track.album.title ?? "",
       artist: track.artists.map((a) => a.name).join(", "),
-      cover: "no-change",
+      cover: "", // since it's accept a Filename
     },
   });
 
-  const onSubmit = (values: z.infer<typeof tagsFormSchema>) => {
-    console.log(values);
+  const onSubmit = async (values: z.infer<typeof tagsFormSchema>) => {
+    // replace cover in values to cover preview but in base64
+    const blob = await fetch(coverPreview).then((res) => res.blob());
+    const reader = new FileReader();
+    reader.readAsDataURL(blob);
+    reader.onloadend = () => {
+      const base64data = reader.result;
+      values.cover = base64data as string;
+
+      //TODO: send the values to the server
+      console.log(values);
+    };
+  };
+
+  const handleImageClick: MouseEventHandler<HTMLImageElement> = () => {
+    imageInputRef.current?.click();
+  };
+
+  const handleCoverChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    const file = e.target.files?.[0];
+    setCoverPreview(file ? URL.createObjectURL(file) : defaultCoverSrc);
+
+    tagsForm.setValue("cover", e.target.value);
   };
 
   return (
@@ -108,37 +132,22 @@ const TagsForm = ({ track }: { track: Track }) => {
           render={({ field }) => {
             return (
               <FormItem>
-                <img
-                  alt={track.title}
-                  src={coverPreview}
-                  className="mx-auto my-2 max-h-72 rounded-md object-cover"
-                  onClick={(e) => {
-                    (
-                      (e.target as HTMLImageElement)
-                        .nextSibling as HTMLInputElement
-                    ).click();
-                  }}
-                />
+                <div className="h-64 overflow-hidden rounded-md">
+                  <img
+                    alt={track.title}
+                    src={coverPreview}
+                    className="mx-auto my-2 rounded-md object-center"
+                    onClick={handleImageClick}
+                  />
+                </div>
                 <FormControl>
                   <Input
                     {...field}
+                    ref={imageInputRef}
                     type="file"
                     className="hidden"
                     accept="image/*"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      setCoverPreview(
-                        file ? URL.createObjectURL(file) : defaultCoverSrc,
-                      );
-
-                      field.onChange({
-                        target: {
-                          name: e.target.name,
-                          value: e.target.value,
-                        },
-                        type: "change",
-                      });
-                    }}
+                    onChange={handleCoverChange}
                   />
                 </FormControl>
               </FormItem>
@@ -195,7 +204,6 @@ const TagsForm = ({ track }: { track: Track }) => {
     </Form>
   );
 };
-
 export type TagEditorProps = {
   trackId: string;
 } & DialogProps;
