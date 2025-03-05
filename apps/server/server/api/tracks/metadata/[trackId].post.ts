@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { config } from '@repo/config';
+import { error } from 'node:console';
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -24,7 +25,12 @@ export default defineEventHandler(async (event) => {
     }
     try {
         const savedTrack = await saveTracks(payload, trackId);
-        
+        fs.unlink(path.join(config.musicPath, savedTrack.title), (error) => {
+            setResponseStatus(event, 500);
+            return {
+                message: `Something wrong happen caused by :: ${error.message}`
+            }
+        });
         return {
             message: "Updated successfully",
             data: { savedTrack },
