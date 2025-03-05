@@ -1,9 +1,9 @@
 import { Track } from "@/api";
 import {
-	ContextMenu,
-	ContextMenuContent,
-	ContextMenuItem,
-	ContextMenuTrigger,
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
 } from "@/components/ui/context-menu";
 import { useApiClient } from "@/hooks";
 import { memo, MouseEventHandler, ReactNode } from "react";
@@ -14,17 +14,16 @@ import { usePlayerStore } from "@/stores";
 import { useSongMetadataStore } from "@/stores/song";
 
 export const TrackContextMenu = memo(
-	({ track, children }: TrackContextMenuProps) => {
-		const { playAfter, currentTrackId, addToQueue } = usePlayerStore(
-			useShallow((state) => ({
-				currentTrackId: state.currentTrackId,
-				playAfter: state.playAfter,
-				addToQueue: state.addToQueue,
-			})),
-		);
-		const { getTrackAudioSrc } = useApiClient();
-		const { showSongEdition } = useSongMetadataStore();
-
+  ({ track, children }: TrackContextMenuProps) => {
+    const { playAfter, currentTrackId, addToQueue } = usePlayerStore(
+      useShallow((state) => ({
+        currentTrackId: state.currentTrackId,
+        playAfter: state.playAfter,
+        addToQueue: state.addToQueue,
+      })),
+    );
+    const { getTrackAudioSrc } = useApiClient();
+    const { showSongEdition } = useSongMetadataStore();
 
     const onPlayNextClick: MouseEventHandler<HTMLDivElement> = (event) => {
       event.stopPropagation();
@@ -41,42 +40,42 @@ export const TrackContextMenu = memo(
       addToQueue({ id: track.id, src: trackSrc });
     };
 
-	const onEditClick = () => {
-		showSongEdition(track.id);
-	}
+    const onEditClick = () => {
+      showSongEdition(track.id);
+    };
 
-		return (
-			<>
-				<ContextMenu>
-					<ContextMenuTrigger>{children}</ContextMenuTrigger>
-					<ContextMenuContent className="with-blur w-36 space-y-1 p-0 transition-all">
-						<ContextMenuItem
-							className="w-full"
-							onClick={onPlayNextClick}
-							disabled={!currentTrackId || currentTrackId === track.id}
-						>
-							Play next
-							<Redo2 size={16} className="ml-auto" />
-						</ContextMenuItem>
+    return (
+      <>
+        <ContextMenu>
+          <ContextMenuTrigger>{children}</ContextMenuTrigger>
+          <ContextMenuContent className="with-blur w-36 space-y-1 p-0 transition-all">
+            <ContextMenuItem
+              className="w-full"
+              onClick={onPlayNextClick}
+              disabled={!currentTrackId || currentTrackId === track.id}
+            >
+              Play next
+              <Redo2 size={16} className="ml-auto" />
+            </ContextMenuItem>
 
-						<ContextMenuItem className="w-full" onClick={onAddToQueueClick}>
-							Add to queue
-							<ListEnd size={16} className="ml-auto" />
-						</ContextMenuItem>
+            <ContextMenuItem className="w-full" onClick={onAddToQueueClick}>
+              Add to queue
+              <ListEnd size={16} className="ml-auto" />
+            </ContextMenuItem>
 
-						<ContextMenuItem className="w-full" onClick={onEditClick}>
-							Edit
-							<Pencil className="ml-auto" />
-						</ContextMenuItem>
-					</ContextMenuContent>
-				</ContextMenu>
-				<SongEdition />
-			</>
-		);
-	},
+            <ContextMenuItem className="w-full" onClick={onEditClick}>
+              Edit
+              <Pencil size={16} className="ml-auto" />
+            </ContextMenuItem>
+          </ContextMenuContent>
+        </ContextMenu>
+        <SongEdition />
+      </>
+    );
+  },
 );
 
 export type TrackContextMenuProps = {
-	track: Track;
-	children: ReactNode;
+  track: Track;
+  children: ReactNode;
 };
