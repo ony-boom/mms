@@ -1,5 +1,5 @@
 import { Api } from "@/api/Api.ts";
-import { LoadedTracks, Track, TrackSortField } from "@/api";
+import { LoadedTracks, TrackSortField } from "@/api";
 import { CACHE_KEY } from "@/api/constant.ts";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";

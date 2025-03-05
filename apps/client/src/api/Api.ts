@@ -24,11 +24,11 @@ export type GetTrackSortByInput = {
   order: SortOrder;
 };
 
-export type Payload  {
-    title: string;
-    album: string;
-    artist: string;
-    cover: string;
+export type Payload = {
+  title: string;
+  album: string;
+  artist: string;
+  cover: string;
 };
 
 export interface Api {
