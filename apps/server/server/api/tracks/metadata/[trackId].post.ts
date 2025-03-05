@@ -43,7 +43,6 @@ const buildCoverSave = (payload: MetadataPayload, albumId) => {
         const buffer = Buffer.from(base64Data, 'base64');
         const imagePath = path.join(config.coverPath, `${albumId}.jpeg`);
         fs.writeFileSync(imagePath, buffer);
-        console.log('imagePath', imagePath);
         return imagePath;
     }
     return '';
