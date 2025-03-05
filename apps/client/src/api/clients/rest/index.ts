@@ -1,5 +1,5 @@
 import { Api } from "@/api/Api.ts";
-import { LoadedTracks, TrackSortField } from "@/api";
+import { LoadedTracks, Track, TrackSortField } from "@/api";
 import { CACHE_KEY } from "@/api/constant.ts";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -79,6 +79,49 @@ export const rest: Api = {
         return data;
       },
       ...options,
+    });
+  },
+
+  useSingleTrack: (where, sortBy) => {
+    return useQuery({
+      queryKey: [CACHE_KEY.TRACKS, where, sortBy],
+      enabled: !!where,
+      queryFn: async () => {
+        const newUrl = new URL(`${BASE_URL}/api/tracks`);
+
+        if (where) {
+          const fields: Record<string, string> = {
+            id: "id",
+            title: "*",
+            albumTitle: "album",
+            artistName: "artist",
+          };
+
+          for (const key of Object.keys(fields)) {
+            const typedKey = key as keyof typeof where;
+            if (where[typedKey]) {
+              newUrl.searchParams.append("field", fields[typedKey]);
+              newUrl.searchParams.append("query", where[typedKey] ?? "");
+              break;
+            }
+          }
+        }
+
+        if (sortBy) {
+          newUrl.searchParams.append(
+            "orderByField",
+            mapTrackSortField(sortBy.field),
+          );
+          newUrl.searchParams.append(
+            "orderByDirection",
+            sortBy.order.toLowerCase(),
+          );
+        }
+
+        const response = await fetch(newUrl.toString());
+        const { data } = await response.json();
+        return data?.[0] as Track;
+      },
     });
   },
 

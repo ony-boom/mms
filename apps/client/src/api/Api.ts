@@ -38,6 +38,10 @@ export interface Api {
     trackId: string,
     options?: Omit<UseQueryOptions, "queryFn" | "queryKey">,
   ) => UseQueryResult<LyricsResponse>;
+  useSingleTrack: (
+    where?: GetTrackWhereInput,
+    sortBy?: GetTrackSortByInput,
+  ) => UseQueryResult<Track>;
   useFavoriteTrack: <TError = DefaultError>() => UseMutationResult<
     Partial<Track>,
     TError,

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { LoadedTracks, LyricsResponse, Track } from "@/api";
 import { CACHE_KEY } from "@/api/constant.ts";
 import { axiosClient, BASE_URL } from "./axios-client";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, UseQueryResult } from "@tanstack/react-query";
 import {
   FAVORITE_TRACK,
   GET_LYRICS,
@@ -28,6 +28,10 @@ export const defaultApi: Api = {
         return responseData.data.tracks;
       },
     });
+  },
+
+  useSingleTrack: (where, sortBy) => {
+    return {} as UseQueryResult<Track>;
   },
 
   useLoadTracks: () => {
