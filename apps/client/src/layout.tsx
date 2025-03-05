@@ -7,8 +7,6 @@ import { Toaster } from "./components/ui/sonner";
 import { AudioProvider } from "./context/audio-ref-context";
 import { ThemeProvider } from "./context/theme";
 import { apiClients } from "./api";
-import { Drawer } from "./components/ui/drawer";
-import { Downloader } from "./components/downloader";
 
 const DEFAULT_API_CLIENT: keyof typeof apiClients =
   import.meta.env.VITE_DEFAULT_API_NAME_TO_USE ?? "default";
@@ -21,13 +19,10 @@ function Layout() {
         <WithColorFlow>
           <main className="w-full">
             <AudioProvider>
-              <Drawer>
-                <Outlet />
+              <Outlet />
 
-                <Player />
-                <Downloader />
-                <Toaster />
-              </Drawer>
+              <Player />
+              <Toaster />
             </AudioProvider>
           </main>
         </WithColorFlow>
