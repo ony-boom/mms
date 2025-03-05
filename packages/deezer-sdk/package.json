@@ -4,8 +4,12 @@
 	"private": true,
 	"description": "A wrapper for all Deezer's APIs",
 	"type": "module",
-	"main": "dist/index.js",
-	"types": "dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./src/index.ts",
+			"default": "./dist/index.js"
+		}
+	},
 	"scripts": {
 		"dev": "run-p watch:*",
 		"watch:build": "tsup src/index.ts --format esm --watch",
