@@ -1,5 +1,5 @@
 import { Api } from "@/api/Api.ts";
-import { LoadedTracks, TrackSortField } from "@/api";
+import { LoadedTracks, Track, TrackSortField } from "@/api";
 import { CACHE_KEY } from "@/api/constant.ts";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -80,6 +80,18 @@ export const rest: Api = {
       },
       ...options,
     });
+  },
+
+  updateTrack: async (payload, trackId) => {
+    const newUrl = new URL(`${BASE_URL}/api/tracks/metadata/${trackId}`);
+    const response = await fetch(newUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload)
+    });
+    return response.json()
   },
 
   useTrackLoadEvent: () => {

@@ -88,6 +88,8 @@ const TagsForm = ({ track }: { track: Track }) => {
   const [coverPreview, setCoverPreview] = useState<string>(defaultCoverSrc);
   const imageInputRef = useRef<ElementRef<"input">>(null);
 
+  const { updateTrack } = useApiClient();
+
   const tagsForm = useForm<z.infer<typeof tagsFormSchema>>({
     resolver: zodResolver(tagsFormSchema),
     defaultValues: {
@@ -107,8 +109,7 @@ const TagsForm = ({ track }: { track: Track }) => {
       const base64data = reader.result;
       values.cover = base64data as string;
 
-      //TODO: send the values to the server
-      console.log(values);
+      updateTrack?.(values, track.id);
     };
   };
 

@@ -24,6 +24,13 @@ export type GetTrackSortByInput = {
   order: SortOrder;
 };
 
+export type Payload  {
+    title: string;
+    album: string;
+    artist: string;
+    cover: string;
+};
+
 export interface Api {
   useTracks: (
     where?: GetTrackWhereInput,
@@ -48,6 +55,7 @@ export interface Api {
       value?: boolean;
     }
   >;
+  updateTrack?: (payload: Payload, trackId: string) => Promise<any>;
 
   getTrackCoverSrc: (trackId: string) => string;
   getTrackAudioSrc: (trackIds: string[]) => string[];
