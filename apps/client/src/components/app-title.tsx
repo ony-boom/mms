@@ -9,7 +9,7 @@ export function AppTitle() {
 
   useEffect(() => {
     if (currentTrackId && data?.length) {
-      const { title, artists } = data[0];
+      const { title, artists } = data[0]!;
       document.title = `${title} - ${artists.map((artist) => artist.name).join(", ")}`;
     }
   }, [currentTrackId, data]);

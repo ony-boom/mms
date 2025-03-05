@@ -33,9 +33,11 @@ export function WithColorFlow({ children }: { children: ReactNode }) {
     if (!colorFlow) return;
     const color = colorFlow.schemes[currentTheme];
     const acccentRgba = rgbaFromArgb(color.primary);
-    acccentRgba.a = 0.1;
+    const borderRgba = rgbaFromArgb(color.onBackground);
 
-    setCssVar({
+    acccentRgba.a = 0.1;
+    borderRgba.a = 0.08;
+   setCssVar({
       "--color-background": hexFromArgb(color.background),
       "--color-foreground": hexFromArgb(color.onBackground),
       "--color-primary": hexFromArgb(color.primary),
@@ -48,6 +50,7 @@ export function WithColorFlow({ children }: { children: ReactNode }) {
       "--color-secondary-foreground": hexFromArgb(color.onSecondaryContainer),
       "--color-accent": `rgba(${acccentRgba.r}, ${acccentRgba.g}, ${acccentRgba.b}, ${acccentRgba.a})`,
       "--color-border": hexFromArgb(color.secondary),
+      "--color-input": `rgba(${borderRgba.r}, ${borderRgba.g}, ${borderRgba.b}, ${borderRgba.a})`,
     });
   }, [colorFlow, currentTheme]);
 
