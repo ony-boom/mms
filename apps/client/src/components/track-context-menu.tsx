@@ -5,13 +5,12 @@ import {
   ContextMenuItem,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
-import { useApiClient } from "@/hooks";
-import { memo, MouseEventHandler, ReactNode } from "react";
-import { useShallow } from "zustand/react/shallow";
-import { SongEdition } from "./song-edition";
-import { ListEnd, Pencil, Redo2 } from "lucide-react";
 import { usePlayerStore } from "@/stores";
-import { useSongMetadataStore } from "@/stores/song";
+import { ListEnd, Redo2, Edit2 } from "lucide-react";
+import { useApiClient } from "@/hooks";
+import { memo, MouseEventHandler, ReactNode, useState } from "react";
+import { useShallow } from "zustand/react/shallow";
+import { TagEditor } from "./tag-editor";
 
 export const TrackContextMenu = memo(
   ({ track, children }: TrackContextMenuProps) => {
@@ -22,8 +21,8 @@ export const TrackContextMenu = memo(
         addToQueue: state.addToQueue,
       })),
     );
+    const [isTagEditorOpen, setIsTagEditorOpen] = useState(false);
     const { getTrackAudioSrc } = useApiClient();
-    const { showSongEdition } = useSongMetadataStore();
 
     const onPlayNextClick: MouseEventHandler<HTMLDivElement> = (event) => {
       event.stopPropagation();
@@ -40,15 +39,13 @@ export const TrackContextMenu = memo(
       addToQueue({ id: track.id, src: trackSrc });
     };
 
-    const onEditClick = () => {
-      showSongEdition(track.id);
-    };
+    const openTagEditor = () => setIsTagEditorOpen(true);
 
     return (
       <>
         <ContextMenu>
           <ContextMenuTrigger>{children}</ContextMenuTrigger>
-          <ContextMenuContent className="with-blur w-36 space-y-1 p-0 transition-all">
+          <ContextMenuContent className="with-blur z-50 w-36 space-y-1 p-0 transition-all">
             <ContextMenuItem
               className="w-full"
               onClick={onPlayNextClick}
@@ -63,13 +60,18 @@ export const TrackContextMenu = memo(
               <ListEnd size={16} className="ml-auto" />
             </ContextMenuItem>
 
-            <ContextMenuItem className="w-full" onClick={onEditClick}>
-              Edit
-              <Pencil size={16} className="ml-auto" />
+            <ContextMenuItem className="w-full" onClick={openTagEditor}>
+              Edit tags
+              <Edit2 size={16} className="ml-auto" />
             </ContextMenuItem>
           </ContextMenuContent>
         </ContextMenu>
-        <SongEdition />
+
+        <TagEditor
+          trackId={track.id}
+          open={isTagEditorOpen}
+          onOpenChange={setIsTagEditorOpen}
+        />
       </>
     );
   },

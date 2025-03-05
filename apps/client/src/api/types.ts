@@ -3,6 +3,8 @@ export type Track = {
   title: string;
   path: string;
   artists: Artist[];
+  albumId?: string;
+  album: Album;
   dateAdded?: string;
   isFavorite?: boolean;
 };
@@ -12,6 +14,12 @@ export type LoadedTracks = { current: number; total: number };
 export type LyricsResponse = {
   isSync: boolean;
   text: string;
+};
+
+export type Album = {
+  id: string;
+  title: string;
+  coverPath: string;
 };
 
 export type Artist = {
