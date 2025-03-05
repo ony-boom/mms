@@ -17,7 +17,7 @@ function Layout() {
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
         <AppTitle />
         <WithColorFlow>
-          <main className="w-full">
+          <main className="mx-auto w-full">
             <AudioProvider>
               <Outlet />
 
