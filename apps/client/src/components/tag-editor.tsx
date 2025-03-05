@@ -1,6 +1,7 @@
 import { z } from "zod";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -25,14 +26,20 @@ const tagsFormSchema = z.object({
 
 export const TagEditor = ({ trackId, ...dialogProps }: TagEditorProps) => {
   const { useTracks, getTrackCoverSrc } = useApiClient();
-  const { data, isLoading } = useTracks({
-    id: trackId,
-  });
+  const { data, isLoading } = useTracks(
+    {
+      id: trackId,
+    },
+    undefined,
+    {
+      enabled: dialogProps.open,
+    },
+  );
 
   const track = data?.at(0);
-  const [coverPreview, setCoverPreview] = useState<string | undefined>(
-    getTrackCoverSrc(trackId),
-  );
+  const defaultCoverSrc = getTrackCoverSrc(trackId);
+  const [coverPreview, setCoverPreview] = useState<string>(defaultCoverSrc);
+  // const coverHasChanged = coverPreview !== defaultCoverSrc;
 
   const tagsForm = useForm<z.infer<typeof tagsFormSchema>>({
     resolver: zodResolver(tagsFormSchema),
@@ -40,6 +47,7 @@ export const TagEditor = ({ trackId, ...dialogProps }: TagEditorProps) => {
       title: track?.title ?? "",
       album: track?.album.title ?? "",
       artist: track?.artists.map((a) => a.name).join(", "),
+      cover: "",
     },
   });
 
@@ -73,7 +81,10 @@ export const TagEditor = ({ trackId, ...dialogProps }: TagEditorProps) => {
                 <p>Tags are used to categorize your tracks.</p>
               </DialogDescription>
 
-              <div className="mt-4 max-h-[400px] overflow-y-auto px-1" data-scroller>
+              <div
+                data-scroller={true}
+                className="mt-4 max-h-[400px] overflow-y-auto px-1"
+              >
                 <Form {...tagsForm}>
                   <form
                     onSubmit={tagsForm.handleSubmit(onSubmit)}
@@ -85,25 +96,29 @@ export const TagEditor = ({ trackId, ...dialogProps }: TagEditorProps) => {
                       render={({ field }) => {
                         return (
                           <FormItem>
-                            <FormLabel>Cover</FormLabel>
-                            {coverPreview && (
-                              <img
-                                className="my-2 aspect-square max-h-72 rounded-md object-cover"
-                                src={coverPreview}
-                              />
-                            )}
+                            <img
+                              alt={track.title}
+                              src={coverPreview}
+                              className="mx-auto my-2 max-h-72 rounded-md object-cover"
+                              onClick={(e) => {
+                                (
+                                  (e.target as HTMLImageElement)
+                                    .nextSibling as HTMLInputElement
+                                ).click();
+                              }}
+                            />
                             <FormControl>
                               <Input
                                 {...field}
-                                placeholder="Choose cover"
                                 type="file"
+                                className="hidden"
                                 accept="image/*"
                                 onChange={(e) => {
                                   const file = e.target.files?.[0];
                                   setCoverPreview(
                                     file
                                       ? URL.createObjectURL(file)
-                                      : undefined,
+                                      : defaultCoverSrc,
                                   );
 
                                   field.onChange({
@@ -139,7 +154,7 @@ export const TagEditor = ({ trackId, ...dialogProps }: TagEditorProps) => {
                       name="album"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Title</FormLabel>
+                          <FormLabel>Albums</FormLabel>
                           <FormControl>
                             <Input {...field} />
                           </FormControl>
@@ -152,7 +167,7 @@ export const TagEditor = ({ trackId, ...dialogProps }: TagEditorProps) => {
                       name="artist"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Title</FormLabel>
+                          <FormLabel>Artists</FormLabel>
                           <FormControl>
                             <Input {...field} />
                           </FormControl>
@@ -161,7 +176,9 @@ export const TagEditor = ({ trackId, ...dialogProps }: TagEditorProps) => {
                     />
 
                     <div className="flex justify-end gap-4">
-                      <Button variant="secondary">Cancel</Button>
+                      <DialogClose asChild>
+                        <Button variant="secondary">Cancel</Button>
+                      </DialogClose>
                       <Button type="submit">Apply</Button>
                     </div>
                   </form>
