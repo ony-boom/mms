@@ -1,15 +1,11 @@
 {
-	"name": "@repo/deezer-sdk",
-	"version": "1.10.0",
+	"name": "@repo/deemix",
+	"version": "3.12.2",
 	"private": true,
-	"description": "A wrapper for all Deezer's APIs",
+	"description": "A barebones deezer downloader library",
 	"type": "module",
-	"exports": {
-		".": {
-			"types": "./src/index.ts",
-			"default": "./dist/index.js"
-		}
-	},
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
 	"scripts": {
 		"dev": "run-p watch:*",
 		"watch:build": "tsup src/index.ts --format esm --watch",
@@ -21,20 +17,21 @@
 		"lint": "eslint .",
 		"type-check": "tsc --noEmit"
 	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/ony-boom/mms"
-	},
-	"author": "titoo-dev",
+	"author": "Bambanah",
 	"license": "GPL-3.0-or-later",
 	"dependencies": {
+		"@spotify/web-api-ts-sdk": "^1.2.0",
+		"async": "^3.2.0",
+		"browser-id3-writer": "^6.1.0",
+		"@repo/deezer-sdk": "workspace:*",
 		"got": "^14.4.2",
-		"nanostores": "^0.11.3",
-		"tough-cookie": "^4.0.0",
-		"zod": "^3.23.8"
+		"html-entities": "^2.3.3",
+		"metaflac-js2": "^1.0.8",
+		"tough-cookie": "^4.0.0"
 	},
 	"devDependencies": {
-		"@types/tough-cookie": "^4.0.5",
-		"tsup": "^8.2.4"
+		"@types/async": "^3.2.24",
+		"tsup": "^8.2.4",
+		"vite-tsconfig-paths": "^5.0.1"
 	}
 }

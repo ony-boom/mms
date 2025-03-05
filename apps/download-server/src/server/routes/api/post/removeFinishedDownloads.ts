@@ -1,0 +1,13 @@
+import { type ApiHandler } from "../../../types.js";
+
+const path = "/removeFinishedDownloads";
+
+const handler: ApiHandler["handler"] = (req, res) => {
+	const deemix = req.app.get("deemix");
+	deemix.clearCompletedDownloads();
+	res.send({ result: true });
+};
+
+const apiHandler = { path, handler };
+
+export default apiHandler;

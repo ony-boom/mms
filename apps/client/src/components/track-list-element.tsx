@@ -4,6 +4,7 @@ import { TrackContextMenu } from "@/components/track-context-menu.tsx";
 import { TrackCover } from "@/pages/Tracks/components/track-cover.tsx";
 import { WaveBars } from "@/components/player/wave-bars.tsx";
 import { Track } from "@/api";
+import { cn } from "@/lib/utils";
 
 export const TrackListElement = memo(
   ({ track, index, onClick, showWaveBars }: TrackListElementProps) => {
@@ -21,7 +22,12 @@ export const TrackListElement = memo(
     return (
       <TrackContextMenu track={track}>
         <li
-          className="hover:bg-foreground/[5%] mt-2 flex cursor-pointer items-center justify-between p-2"
+          className={cn(
+            "hover:bg-foreground/[5%] mt-2 flex cursor-pointer items-center justify-between p-2",
+            {
+              "bg-foreground/[3%]": isCurrent,
+            },
+          )}
           onClick={handleClick}
         >
           <div className="flex items-end gap-3">

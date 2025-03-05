@@ -75,7 +75,7 @@ export function GlobalSearch() {
     setLocalSearchField(field as QueryField);
   };
 
-  const handleResultClick = (track: Track[]) => {
+  const handleResultClick = (track: Track[], index: number) => {
     const newPlaylist = track.map((t) => {
       const src = getTrackAudioSrc([t.id])[0]!;
       return {
@@ -85,7 +85,7 @@ export function GlobalSearch() {
     });
     setPlaylists(newPlaylist);
     toggleShuffle(false);
-    playTrackAtIndex(0);
+    playTrackAtIndex(index);
   };
 
   return (
@@ -180,7 +180,7 @@ export function GlobalSearch() {
                                   track={track}
                                   index={index}
                                   showWaveBars
-                                  onClick={() => handleResultClick(data)}
+                                  onClick={() => handleResultClick(data, index)}
                                 />
                               </motion.div>
                             </AnimatePresence>
