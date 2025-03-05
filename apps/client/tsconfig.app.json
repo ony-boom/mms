@@ -1,5 +1,4 @@
 {
-  "extends": "@repo/typescript-config/react-library.json",
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "target": "ES2020",
