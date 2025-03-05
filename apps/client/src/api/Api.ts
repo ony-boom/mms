@@ -24,6 +24,13 @@ export type GetTrackSortByInput = {
   order: SortOrder;
 };
 
+export type Payload = {
+  title: string;
+  album: string;
+  artist: string;
+  cover: string;
+};
+
 export interface Api {
   useTracks: (
     where?: GetTrackWhereInput,
@@ -34,14 +41,12 @@ export interface Api {
   useLoadTracks: (
     options?: Omit<UseQueryOptions, "queryFn" | "queryKey">,
   ) => UseMutationResult<boolean>;
+
   useTrackLyrics: (
     trackId: string,
     options?: Omit<UseQueryOptions, "queryFn" | "queryKey">,
   ) => UseQueryResult<LyricsResponse>;
-  useSingleTrack: (
-    where?: GetTrackWhereInput,
-    sortBy?: GetTrackSortByInput,
-  ) => UseQueryResult<Track>;
+
   useFavoriteTrack: <TError = DefaultError>() => UseMutationResult<
     Partial<Track>,
     TError,
@@ -50,6 +55,7 @@ export interface Api {
       value?: boolean;
     }
   >;
+  updateTrack?: (payload: Payload, trackId: string) => Promise<any>;
 
   getTrackCoverSrc: (trackId: string) => string;
   getTrackAudioSrc: (trackIds: string[]) => string[];
