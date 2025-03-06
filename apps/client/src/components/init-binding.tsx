@@ -21,11 +21,10 @@ async function startApp() {
   let arl = localStorage.getItem("arl");
   let accessToken = localStorage.getItem("accessToken");
 
-  if (connectResponse.singleUser) {
-    if (connectResponse.singleUser.arl) arl = connectResponse.singleUser.arl;
-    if (connectResponse.singleUser.accessToken)
-      accessToken = connectResponse.singleUser.accessToken;
-  }
+  if (connectResponse.singleUser.arl) arl = connectResponse.singleUser.arl;
+
+  if (connectResponse.singleUser.accessToken)
+    accessToken = connectResponse.singleUser.accessToken;
 
   if (connectResponse.autologin) {
     const accountNum = localStorage.getItem("accountNum");
