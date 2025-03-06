@@ -56,8 +56,6 @@ export interface Api {
     }
   >;
 
-  updateTrack?: (payload: Payload, trackId: string) => Promise<Track>;
-
   useUpdateTrack: <TError = DefaultError>() => UseMutationResult<
     Track,
     TError,

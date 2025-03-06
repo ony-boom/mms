@@ -82,18 +82,6 @@ export const rest: Api = {
     });
   },
 
-  updateTrack: async (payload, trackId) => {
-    const newUrl = new URL(`${BASE_URL}/api/tracks/metadata/${trackId}`);
-    const response = await fetch(newUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
-    return response.json();
-  },
-
   useUpdateTrack: () => {
     return useMutation({
       mutationFn: async (payload) => {
