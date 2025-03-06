@@ -1,13 +1,14 @@
 import { memo } from "react";
-import { Track } from "@/api";
+import { cn } from "@/lib/utils.ts";
+import { Slider } from "../ui/slider";
 import { motion } from "motion/react";
 import { usePlayerStore } from "@/stores";
-import { MouseEventHandler } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { useAudioRef } from "@/hooks/use-audio-ref";
-import { Progress } from "@/components/ui/progress.tsx";
+import { SliderProps } from "@radix-ui/react-slider";
 
-export const TrackProgress = memo(({ currentTrack }: TrackProgressProps) => {
+export const TrackProgress = memo((props: TrackProgressProps) => {
+  const audioRef = useAudioRef();
   const { position, duration } = usePlayerStore(
     useShallow((state) => ({
       position: state.position,
@@ -15,34 +16,28 @@ export const TrackProgress = memo(({ currentTrack }: TrackProgressProps) => {
     })),
   );
 
-  const progress = (position * 100) / duration;
-  const audioRef = useAudioRef();
-
-  const onProgressClick: MouseEventHandler<HTMLDivElement> = (event) => {
-    if (!audioRef.current || !currentTrack) return;
-
-    const progressBar = event.currentTarget;
-    const rect = progressBar.getBoundingClientRect();
-    const clickX = event.clientX - rect.left;
-    const percentage = clickX / rect.width;
-    audioRef.current.currentTime = percentage * audioRef.current.duration;
+  const handlePositionChange = (value: number[]) => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = value[0];
+    }
   };
 
   return (
     <motion.div
       whileHover={{
         scaleY: 2,
+        backfaceVisibility: "hidden",
       }}
     >
-      <Progress
-        value={progress}
-        onClick={onProgressClick}
-        className="z-50 h-1 w-full rounded-none hover:cursor-pointer"
+      <Slider
+        {...props}
+        max={duration}
+        value={[position]}
+        onValueChange={handlePositionChange}
+        className={cn("w-full will-change-transform", props.className)}
       />
     </motion.div>
   );
 });
 
-export type TrackProgressProps = {
-  currentTrack: Track | undefined;
-};
+export type TrackProgressProps = SliderProps;

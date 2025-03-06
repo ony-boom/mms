@@ -1,30 +1,19 @@
 import { motion } from "motion/react";
-import { useAudioRef } from "@/hooks";
 import { Progress } from "../ui/progress";
 import { usePlayerStore } from "@/stores";
-import { WheelEventHandler } from "react";
+import {
+  useVolumeCompClickEventHandler,
+  useVolumeCompWheelEventHandler,
+} from "@/hooks";
 import { Volume, Volume1, Volume2, VolumeOff } from "lucide-react";
 
 export const Extra = () => {
-  const audioRef = useAudioRef();
   const volume = usePlayerStore((state) => state.volume);
   const muted = usePlayerStore((state) => state.muted);
 
-  const handleMouseWheel: WheelEventHandler<HTMLDivElement> = (e) => {
-    if (!audioRef.current) return;
-
-    const audio = audioRef.current;
-    const delta = e.deltaY > 0 ? -0.1 : 0.1;
-
-    audio.volume = Math.min(1, Math.max(0, +(audio.volume + delta).toFixed(2)));
-  };
-
   const volumeValue = volume * 100;
-
-  const handleIconClick = () => {
-    if (!audioRef.current) return;
-    audioRef.current.muted = !audioRef.current.muted;
-  };
+  const handleIconClick = useVolumeCompClickEventHandler();
+  const handleMouseWheel = useVolumeCompWheelEventHandler();
 
   return (
     <motion.div className="flex w-full justify-end">
@@ -47,7 +36,13 @@ export const Extra = () => {
   );
 };
 
-const VolumeComp = ({ volume, muted }: { volume: number; muted: boolean }) => {
+export const VolumeComp = ({
+  volume,
+  muted,
+}: {
+  volume: number;
+  muted: boolean;
+}) => {
   const SIZE = 18;
 
   if (volume === 0 || muted) {

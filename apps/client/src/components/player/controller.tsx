@@ -1,7 +1,6 @@
-import { Pause, Play, Shuffle, SkipBack, SkipForward } from "lucide-react";
+import { Pause, Play, SkipBack, SkipForward } from "lucide-react";
 import { usePlayerStore } from "@/stores";
 import { Button } from "@/components/ui/button";
-import { FavouriteButton } from "@/components";
 import { useShallow } from "zustand/react/shallow";
 import { memo } from "react";
 
@@ -22,24 +21,11 @@ export const Controller = memo(({ shouldPlay }: ControllerProps) => {
     })),
   );
 
-  const handleShuffle = () => {
-    playerState.toggleShuffle();
-  };
-
   return (
-    <div aria-labelledby="controller" className="flex items-center gap-2">
-      <FavouriteButton variant={"ghost"} />
-      <Button
-        onClick={handleShuffle}
-        className={
-          playerState.isShuffle ? "text-foreground" : "text-foreground/50"
-        }
-        size="icon"
-        variant="ghost"
-        disabled={playerState.getCurrentPlaylist().length === 0}
-      >
-        <Shuffle />
-      </Button>
+    <div
+      aria-labelledby="controller"
+      className="flex items-center justify-center gap-2"
+    >
       <Button
         onClick={playerState.playPrev}
         disabled={!playerState.hasPrev() || !playerState.currentTrackId}
@@ -49,7 +35,7 @@ export const Controller = memo(({ shouldPlay }: ControllerProps) => {
         <SkipBack />
       </Button>
       <Button
-        disabled={Boolean(shouldPlay)}
+        disabled={Boolean(shouldPlay) || !playerState.currentTrackId}
         onClick={playerState.toggle}
         size="icon"
       >

@@ -5,3 +5,4 @@ export * from "./use-trackList";
 export * from "./use-audio-ref";
 export * from "./use-api-client";
 export * from "./use-color-flow";
+export * from "./use-volume-comp-event-handler";

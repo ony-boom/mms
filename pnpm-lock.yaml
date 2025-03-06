@@ -448,7 +448,7 @@ importers:
         version: 4.1.9
       nitropack:
         specifier: latest
-        version: 2.11.2(typescript@5.7.3)
+        version: 2.11.3(typescript@5.7.3)
       prisma:
         specifier: ^6.4.1
         version: 6.4.1(typescript@5.7.3)
@@ -4801,8 +4801,8 @@ packages:
       react: ^16.8 || ^17 || ^18 || ^19 || ^19.0.0-rc
       react-dom: ^16.8 || ^17 || ^18 || ^19 || ^19.0.0-rc
 
-  nitropack@2.11.2:
-    resolution: {integrity: sha512-NyXw88hkrigXYo0iDodEbWdLyv8iF69LAj63eS+FDLg8+IDEKv1y58eMKmzk8vW/hwHoi2aimqHTfsZbqFAWrg==}
+  nitropack@2.11.3:
+    resolution: {integrity: sha512-ArhXs3+39cXXJdgOhhKumEYtFK/n3b0MRWyU/ltDy8KGqke61rH+aoenK/WDlfNu4tX51Wi66/PUa+HMlWE0Sg==}
     engines: {node: ^16.11.0 || >=17.0.0}
     hasBin: true
     peerDependencies:
@@ -10891,7 +10891,7 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  nitropack@2.11.2(typescript@5.7.3):
+  nitropack@2.11.3(typescript@5.7.3):
     dependencies:
       '@cloudflare/kv-asset-handler': 0.3.4
       '@netlify/functions': 3.0.0

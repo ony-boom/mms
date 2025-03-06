@@ -1,12 +1,10 @@
 import { Lrc, Lyric } from "lrc-kit";
 import { cn } from "@/lib/utils";
-import { motion } from "motion/react";
 import { LyricsResponse } from "@/api";
 import { usePlayerStore } from "@/stores";
-import { useMemo, useRef, useEffect, memo, ReactNode } from "react";
+import { useMemo, useRef, useEffect, memo, ReactNode, HTMLProps } from "react";
 import { useApiClient, useAudioRef } from "@/hooks";
 import { Button } from "../ui/button";
-import { Minimize2 as Minimize } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
 
 interface SyncedLyricsProps {
@@ -63,7 +61,7 @@ const SyncedLyrics = ({ lrc }: SyncedLyricsProps) => {
         title={isActive ? "" : "Click to seek to this position"}
         ref={isActive ? activeLyricRef : null}
         className={cn(
-          "text-foreground/50 w-max max-w-6xl cursor-pointer leading-10 transition-all",
+          "text-foreground/50 cursor-pointer leading-10 transition-all",
           { "text-foreground text-4xl": isActive },
         )}
         key={lyric.timestamp}
@@ -75,18 +73,6 @@ const SyncedLyrics = ({ lrc }: SyncedLyricsProps) => {
   });
 };
 
-interface LyricsHeaderProps {
-  onClose: () => void;
-}
-
-const LyricsHeader = ({ onClose }: LyricsHeaderProps) => (
-  <div className="sticky top-2 flex justify-end px-12 py-2">
-    <Button onClick={onClose} variant="ghost" size="icon">
-      <Minimize className="h-6 w-6" />
-    </Button>
-  </div>
-);
-
 interface LyricsContainerProps {
   children: ReactNode;
   className?: string;
@@ -96,14 +82,15 @@ const LyricsContainer = ({
   children,
   className = "",
 }: LyricsContainerProps) => (
-  <div className={cn("p-12 pt-0", className)}>{children}</div>
+  <div
+    data-scroller={true}
+    className={cn("lyrics-gradient p-12 pt-0", className)}
+  >
+    {children}
+  </div>
 );
 
-export interface LyricsProps {
-  onClose: () => void;
-}
-
-export const Lyrics = memo(({ onClose }: LyricsProps) => {
+export const Lyrics = memo((props: HTMLProps<HTMLDivElement>) => {
   const currentTrackId = usePlayerStore((state) => state.currentTrackId);
   const { useTrackLyrics, useTracks } = useApiClient();
   const { data, isLoading } = useTrackLyrics(currentTrackId!);
@@ -132,57 +119,64 @@ export const Lyrics = memo(({ onClose }: LyricsProps) => {
     window.open(url.toString(), "_blank");
   };
 
-  const renderContent = () => {
-    if (isLoading) {
-      return (
-        <LyricsContainer className="flex h-full w-full place-items-center text-xl font-black">
-          <p className="w-full text-center">
-            Fetching lyrics for you, just a moment...
-          </p>
-        </LyricsContainer>
-      );
-    }
-
-    if (!lyrics.text) {
-      return (
-        <LyricsContainer className="flex h-full w-full place-items-center text-xl font-black">
-          <p className="w-full text-center">
-            Looks like we don't have the lyrics for this one
-            <br />
-            <Button onClick={handleGoogleSearch} variant="link">
-              Search on Google
-            </Button>
-          </p>
-        </LyricsContainer>
-      );
-    }
-
-    if (typeof lrc === "string") {
-      return (
-        <LyricsContainer className="space-y-2 text-xl">
-          {lyrics.text.split("\n").map((line, index) => (
-            <p key={index}>{line}</p>
-          ))}
-        </LyricsContainer>
-      );
-    }
-
+  if (isLoading) {
     return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.3 }}
-        className="w-full space-y-4 overflow-auto p-12 pt-0 text-3xl font-black"
+      <LyricsContainer
+        {...props}
+        className={cn(
+          "flex h-full w-full place-items-center text-xl font-black",
+          props.className,
+        )}
       >
-        <SyncedLyrics lrc={lrc!.lyrics} />
-      </motion.div>
+        <p className="w-full text-center">
+          Fetching lyrics for you, just a moment...
+        </p>
+      </LyricsContainer>
     );
-  };
+  }
+
+  if (!lyrics.text) {
+    return (
+      <LyricsContainer
+        {...props}
+        className={cn(
+          "flex h-full w-full place-items-center text-xl font-black",
+          props.className,
+        )}
+      >
+        <p className="w-full text-center">
+          Looks like we don't have the lyrics for this one
+          <br />
+          <Button onClick={handleGoogleSearch} variant="link">
+            Search on Google
+          </Button>
+        </p>
+      </LyricsContainer>
+    );
+  }
+
+  if (typeof lrc === "string") {
+    return (
+      <LyricsContainer
+        {...props}
+        className={cn("space-y-2 overflow-auto text-xl", props.className)}
+      >
+        {lyrics.text.split("\n").map((line, index) => (
+          <p key={index}>{line}</p>
+        ))}
+      </LyricsContainer>
+    );
+  }
 
   return (
-    <>
-      <LyricsHeader onClose={onClose} />
-      {renderContent()}
-    </>
+    <LyricsContainer
+      {...props}
+      className={cn(
+        "w-max space-y-4 overflow-auto pt-0 text-3xl font-black",
+        props.className,
+      )}
+    >
+      <SyncedLyrics lrc={lrc!.lyrics} />
+    </LyricsContainer>
   );
 });

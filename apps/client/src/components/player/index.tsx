@@ -1,7 +1,6 @@
 import { Track } from "@/api";
 import { Audio } from "./audio";
 import { cn } from "@/lib/utils";
-import { Lyrics } from "./lyrics";
 import { Extra } from "./extra";
 import { usePlayerStore } from "@/stores";
 import { Controller } from "./controller";
@@ -15,10 +14,11 @@ import { Skeleton } from "@/components/ui/skeleton.tsx";
 import { Playlists } from "@/components/player/playlists";
 import { TrackCover } from "@/pages/Tracks/components/track-cover";
 import { motion, AnimatePresence, type Variants } from "motion/react";
+import { Fullscreen } from "./fullscreen";
 
 export function Player() {
   const [openExtra, setOpenExtra] = useState(false);
-  const [openLyricsView, setOpenLyricsView] = useState(false);
+  const [openFullscreen, setOpenFullscreen] = useState(false);
   const [playlistsExpanded, setPlaylistsExpanded] = useState(false);
 
   const { useTracks } = useApiClient();
@@ -33,19 +33,19 @@ export function Player() {
   );
 
   const audioRef = useAudioRef();
-  const { data } = useTracks({ id: currentTrackId });
+  const { data, isLoading } = useTracks({ id: currentTrackId });
 
   const currentTrack = data?.length === 1 ? data?.[0] : undefined;
 
   const handleLyricsToggle = useCallback((value?: boolean) => {
     if (typeof value === "boolean") {
-      setOpenLyricsView(value);
+      setOpenFullscreen(value);
     } else {
-      setOpenLyricsView((prev) => !prev);
+      setOpenFullscreen((prev) => !prev);
     }
   }, []);
 
-  const closeLyricsView = useCallback(() => {
+  const closeFullscreenView = useCallback(() => {
     handleLyricsToggle(false);
   }, [handleLyricsToggle]);
 
@@ -61,32 +61,46 @@ export function Player() {
     })();
   }, [audioRef, isPlaying, src]);
 
+  useEffect(() => {
+    setOpenExtra(false);
+  }, [openFullscreen]);
+
   return (
     <>
       <AnimatePresence>
-        {openLyricsView && (
+        {openFullscreen && (
           <motion.div
             key="lyrics"
             variants={lyricsVariants}
             initial="initial"
             animate="animate"
             exit="exit"
-            data-scroller
-            className="with-blur fixed bottom-0 left-1/2 z-50 origin-bottom overflow-y-auto border-none"
+            className="with-blur fixed bottom-0 left-1/2 z-50 origin-bottom overflow-y-hidden border-none"
             style={{ transformOrigin: "bottom center" }}
           >
-            <Lyrics onClose={closeLyricsView} />
+            <Fullscreen
+              loadingTrack={isLoading}
+              track={currentTrack}
+              onClose={closeFullscreenView}
+            />
           </motion.div>
         )}
       </AnimatePresence>
 
       <motion.div
-        onHoverEnd={() => setOpenExtra(false)}
-        onHoverStart={() => setOpenExtra(true)}
+        onHoverEnd={() => !openFullscreen && setOpenExtra(false)}
+        onHoverStart={() => !openFullscreen && setOpenExtra(true)}
       >
         <Audio currentTrack={currentTrack} ref={audioRef} />
 
-        <div className="fixed bottom-2 left-[50%] z-50 translate-x-[-50%] space-y-2">
+        <div
+          className={cn(
+            "fixed bottom-2 left-[50%] z-50 translate-x-[-50%] space-y-2",
+            {
+              "z-0": openFullscreen,
+            },
+          )}
+        >
           <AnimatePresence>
             {openExtra && (
               <motion.div
@@ -108,8 +122,13 @@ export function Player() {
               </motion.div>
             )}
           </AnimatePresence>
-          <div
+          <motion.div
             id="player"
+            layout
+            animate={{
+              opacity: openFullscreen ? 0 : 1,
+              translateY: openFullscreen ? 256 : 0,
+            }}
             className="with-blur flex w-max flex-col overflow-hidden rounded-md"
           >
             <div className="mt-2 flex justify-center">
@@ -126,12 +145,12 @@ export function Player() {
             <div className="relative flex items-center justify-between gap-16 px-3 pb-4 pt-1">
               <TrackInfo
                 currentTrack={currentTrack!}
-                openLyricsView={openLyricsView}
+                openLyricsView={openFullscreen}
                 onFullScreenToggle={handleLyricsToggle}
               />
               <Controller shouldPlay={!currentTrack} />
             </div>
-            <TrackProgress currentTrack={currentTrack} />
+            <TrackProgress />
             <AnimatePresence>
               {playlistsExpanded && (
                 <motion.div
@@ -146,7 +165,7 @@ export function Player() {
                 </motion.div>
               )}
             </AnimatePresence>
-          </div>
+          </motion.div>
         </div>
       </motion.div>
     </>
@@ -226,36 +245,18 @@ const TrackInfo = memo(
 
 const lyricsVariants: Variants = {
   initial: {
-    height: 0,
-    width: 0,
-    opacity: 0,
     x: "-50%",
-    bottom: 0,
+    width: "100vw",
+    bottom: "-100vh",
   },
   animate: {
     height: "100vh",
     width: "100vw",
-    opacity: 1,
-    x: "-50%",
     bottom: 0,
     backfaceVisibility: "hidden",
-    transition: {
-      type: "tween",
-      duration: 0.3,
-      ease: "easeInOut",
-    },
   },
   exit: {
-    height: 0,
-    width: 0,
-    opacity: 0,
-    x: "-50%",
-    bottom: 0,
-    transition: {
-      type: "tween",
-      duration: 0.3,
-      ease: "easeInOut",
-    },
+    bottom: "-100vh",
   },
 };
 
