@@ -42,6 +42,7 @@ export interface PlayerStateActions {
   addToQueue: (track: Track) => void;
   setVolume: (volume: number) => void;
   setMuted: (muted: boolean) => void;
+  removeFromQueue: (index: number) => void;
 }
 
 export type PlayerState = PlayerStateProperties & PlayerStateActions;

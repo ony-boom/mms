@@ -23,6 +23,9 @@ import {
 } from "react";
 import { Button } from "./ui/button";
 import { Track } from "@/api";
+import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
+import { CACHE_KEY } from "@/api/constant.ts";
 
 const tagsFormSchema = z.object({
   title: z.string().nonempty(),
@@ -33,7 +36,7 @@ const tagsFormSchema = z.object({
 
 export const TagEditor = ({ trackId, ...dialogProps }: TagEditorProps) => {
   const { useTracks } = useApiClient();
-  const { data, isLoading } = useTracks(
+  const { data, isLoading, refetch } = useTracks(
     {
       id: trackId,
     },
@@ -56,7 +59,7 @@ export const TagEditor = ({ trackId, ...dialogProps }: TagEditorProps) => {
               </DialogTitle>
 
               <DialogDescription>
-                <p>Tags are used to categorize your tracks.</p>
+                Tags are used to categorize your tracks
               </DialogDescription>
             </DialogHeader>
           </>
@@ -68,11 +71,11 @@ export const TagEditor = ({ trackId, ...dialogProps }: TagEditorProps) => {
               </DialogHeader>
 
               <DialogDescription>
-                <p>Tags are used to categorize your tracks.</p>
+                Tags are used to categorize your tracks
               </DialogDescription>
 
               <div data-scroller={true} className="mt-4">
-                <TagsForm track={track} />
+                <TagsForm track={track} onUpdated={refetch} />
               </div>
             </>
           )
@@ -82,13 +85,22 @@ export const TagEditor = ({ trackId, ...dialogProps }: TagEditorProps) => {
   );
 };
 
-const TagsForm = ({ track }: { track: Track }) => {
-  const { getTrackCoverSrc } = useApiClient();
+const TagsForm = ({
+  track,
+  onUpdated,
+}: {
+  track: Track;
+  onUpdated: () => void;
+}) => {
+  const { getTrackCoverSrc, useUpdateTrack } = useApiClient();
   const defaultCoverSrc = getTrackCoverSrc(track.id);
   const [coverPreview, setCoverPreview] = useState<string>(defaultCoverSrc);
   const imageInputRef = useRef<ElementRef<"input">>(null);
+  const closeBtnRef = useRef<ElementRef<"button">>(null);
 
-  const { updateTrack } = useApiClient();
+  const queryClient = useQueryClient();
+
+  const { mutateAsync: updateTrack } = useUpdateTrack();
 
   const tagsForm = useForm<z.infer<typeof tagsFormSchema>>({
     resolver: zodResolver(tagsFormSchema),
@@ -105,13 +117,34 @@ const TagsForm = ({ track }: { track: Track }) => {
     const blob = await fetch(coverPreview).then((res) => res.blob());
     const reader = new FileReader();
     reader.readAsDataURL(blob);
-    reader.onloadend = () => {
+    reader.onloadend = async () => {
       const base64data = reader.result;
       values.cover = base64data as string;
 
-      updateTrack?.(values, track.id);
+      await updateTrack(
+        {
+          ...values,
+          trackId: track.id,
+          albumId: track.album.id,
+          trackPath: track.path,
+        },
+        {
+          onSuccess: async () => {
+            onUpdated();
+            tagsForm.reset();
+            closeBtnRef.current?.click();
+            toast.success("Track updated successfully");
+
+            await queryClient.invalidateQueries({
+              queryKey: [CACHE_KEY.TRACKS],
+            });
+          },
+        },
+      );
     };
   };
+
+  const isDirty = tagsForm.formState.isDirty;
 
   const handleImageClick: MouseEventHandler<HTMLImageElement> = () => {
     imageInputRef.current?.click();
@@ -137,17 +170,17 @@ const TagsForm = ({ track }: { track: Track }) => {
                   <img
                     alt={track.title}
                     src={coverPreview}
-                    className="mx-auto my-2 rounded-md object-center"
+                    className="z-0 mx-auto my-2 rounded-md object-center"
                     onClick={handleImageClick}
                   />
                 </div>
                 <FormControl>
                   <Input
                     {...field}
-                    ref={imageInputRef}
                     type="file"
                     className="hidden"
                     accept="image/*"
+                    ref={imageInputRef}
                     onChange={handleCoverChange}
                   />
                 </FormControl>
@@ -197,14 +230,19 @@ const TagsForm = ({ track }: { track: Track }) => {
 
         <div className="flex justify-end gap-2">
           <DialogClose asChild>
-            <Button variant="secondary">Cancel</Button>
+            <Button ref={closeBtnRef} variant="secondary">
+              Cancel
+            </Button>
           </DialogClose>
-          <Button type="submit">Apply</Button>
+          <Button disabled={!isDirty} type="submit">
+            Apply
+          </Button>
         </div>
       </form>
     </Form>
   );
 };
+
 export type TagEditorProps = {
   trackId: string;
 } & DialogProps;

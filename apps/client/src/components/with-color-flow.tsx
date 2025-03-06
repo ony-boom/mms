@@ -16,6 +16,7 @@ function setCssVar(
     });
   }
 }
+
 export function WithColorFlow({ children }: { children: ReactNode }) {
   const colorFlow = useColorFlow();
   const { theme } = useTheme();
@@ -36,8 +37,10 @@ export function WithColorFlow({ children }: { children: ReactNode }) {
     const borderRgba = rgbaFromArgb(color.onBackground);
 
     acccentRgba.a = 0.1;
-    borderRgba.a = 0.08;
-   setCssVar({
+    borderRgba.a = 0.1;
+
+    const borderLikeValue = `rgba(${borderRgba.r}, ${borderRgba.g}, ${borderRgba.b}, ${borderRgba.a})`;
+    setCssVar({
       "--color-background": hexFromArgb(color.background),
       "--color-foreground": hexFromArgb(color.onBackground),
       "--color-primary": hexFromArgb(color.primary),
@@ -49,8 +52,8 @@ export function WithColorFlow({ children }: { children: ReactNode }) {
       "--color-primary-foreground": hexFromArgb(color.onPrimary),
       "--color-secondary-foreground": hexFromArgb(color.onSecondaryContainer),
       "--color-accent": `rgba(${acccentRgba.r}, ${acccentRgba.g}, ${acccentRgba.b}, ${acccentRgba.a})`,
-      "--color-border": hexFromArgb(color.secondary),
-      "--color-input": `rgba(${borderRgba.r}, ${borderRgba.g}, ${borderRgba.b}, ${borderRgba.a})`,
+      "--color-border": borderLikeValue,
+      "--color-input": borderLikeValue,
     });
   }, [colorFlow, currentTheme]);
 

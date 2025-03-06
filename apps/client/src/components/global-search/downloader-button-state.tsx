@@ -6,6 +6,7 @@ import { Input } from "../ui/input";
 import { useEffect, useState } from "react";
 import { login } from "@/api/clients/downloader";
 import { useLoginStore } from "@/stores/login";
+import { cn } from "@/lib/utils.ts";
 
 function isValidArl(str: string) {
   return str.length !== 0;
@@ -66,7 +67,11 @@ export const DownloaderButtonState = () => {
   };
 
   if (isLoading) {
-    return <Loader className="animate-spin" />;
+    return (
+      <Button disabled variant="ghost" size="icon">
+        <Loader className="animate-spin" />
+      </Button>
+    );
   }
 
   return (
@@ -75,7 +80,9 @@ export const DownloaderButtonState = () => {
         <Button
           size="icon"
           variant="ghost"
-          className={`relative ${isLoggedIn ? "text-green-500" : ""}`}
+          className={cn("relative", {
+            "text-green-600 dark:text-green-300": isLoggedIn,
+          })}
         >
           <GlobeIcon />
         </Button>

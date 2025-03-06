@@ -17,13 +17,15 @@
   },
   "dependencies": {
     "@prisma/client": "^6.4.1",
+    "@repo/config": "workspace:*",
     "glob": "^11.0.1",
     "lodash.debounce": "^4.0.8",
     "lodash.throttle": "^4.1.1",
     "music-metadata": "^10.7.0",
+    "node-id3": "^0.2.8",
     "node-watch": "^0.7.4",
     "p-limit": "^6.2.0",
     "uuid": "^11.0.5",
-    "@repo/config": "workspace:*"
+    "zod": "^3.24.2"
   }
 }

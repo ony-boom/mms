@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { login } from "@/api/clients/downloader";
 import { fetchData, postToServer } from "@/lib/api-utils";
 import { useLoginStore } from "@/stores/login";
@@ -10,7 +9,7 @@ interface BindingSetupProps {
 
 export const InitBinding: React.FC<BindingSetupProps> = ({ children }) => {
   useEffect(() => {
-    async function startApp() {
+    (async function () {
       // Fetch connection data
       const connectResponse = await fetchData("connect");
       const spotifyStatus = connectResponse.spotifyEnabled
@@ -19,9 +18,10 @@ export const InitBinding: React.FC<BindingSetupProps> = ({ children }) => {
       useLoginStore.getState().setSpotifyStatus(spotifyStatus);
 
       // Get stored credentials
-      const arl = connectResponse.singleUser.arl || localStorage.getItem("arl");
+      const arl =
+        connectResponse.singleUser?.arl || localStorage.getItem("arl");
       const accessToken =
-        connectResponse.singleUser.accessToken ||
+        connectResponse.singleUser?.accessToken ||
         localStorage.getItem("accessToken");
 
       // Skip login if autologin is disabled
@@ -48,10 +48,8 @@ export const InitBinding: React.FC<BindingSetupProps> = ({ children }) => {
         useLoginStore.getState().setARL(newArl, true);
         await login(newArl);
       }
-    }
-
-    startApp();
+    })();
   }, []);
 
-  return <div>{children}</div>;
+  return <>{children}</>;
 };
