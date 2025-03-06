@@ -9,6 +9,8 @@ import { Track } from "@/api";
 import { GlobalSearchResult } from "./global-search-result";
 import { GlobeIcon } from "lucide-react";
 import { Button } from "../ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { Label } from "../ui/label";
 
 // Search field options
 const searchFields = [
@@ -74,16 +76,34 @@ const SearchForm = ({
         onFieldChange={onFieldChange}
       />
 
-      <Button
-        size={"icon"}
-        variant={"ghost"}
-        className="relative"
-        onClick={(e) => {
-          e.preventDefault();
-        }}
-      >
-        <GlobeIcon />
-      </Button>
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button size={"icon"} variant={"ghost"} className="relative">
+            <GlobeIcon />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent>
+          <div className="grid gap-4">
+            <div className="space-y-2">
+              <h4 className="font-medium leading-none">Login</h4>
+              <p className="text-muted-foreground text-sm">
+                Please enter arl from deezer cookie here.
+              </p>
+            </div>
+            <div className="grid gap-2">
+              <div className="grid grid-cols-3 items-center gap-4">
+                <Label htmlFor="width">ARL</Label>
+                <Input
+                  id="width"
+                  className="col-span-2 h-8"
+                  // add hint
+                  placeholder="..."
+                />
+              </div>
+            </div>
+          </div>
+        </PopoverContent>
+      </Popover>
     </div>
   </form>
 );
