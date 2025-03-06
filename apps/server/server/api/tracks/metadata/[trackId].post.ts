@@ -43,6 +43,7 @@ export default defineEventHandler(async (event) => {
   );
 
   if (!success) {
+    setResponseStatus(event, 500);
     return {
       data: null,
       success: false,
@@ -51,10 +52,11 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    // delete old cover
-    await fs.promises.unlink(path.join(config.coverPath, data.albumId));
+    await deleteOldCover(data.albumId);
 
+    await musicLibrary.trackSaver.removeTrack(data.trackPath);
     await musicLibrary.trackSaver.updateTrack(data.trackPath);
+
     const savedTrack = await prisma.track.findUnique({
       where: { id: trackId },
     });
@@ -65,13 +67,24 @@ export default defineEventHandler(async (event) => {
       error: null,
     };
   } catch (error) {
+    setResponseStatus(event, 500);
     return {
       data: null,
       success: false,
-      error: "Failed to update track",
+      error: error.message,
     };
   }
 });
+
+const deleteOldCover = async (albumId: string) => {
+  const coverPath = path.join(
+    config.coverPath,
+    `${albumId}.${config.defaultCoverExtension}`,
+  );
+  if (fs.existsSync(coverPath)) {
+    await fs.promises.unlink(coverPath);
+  }
+};
 
 const payloadSchema = z.object({
   title: z.string().nonempty(),

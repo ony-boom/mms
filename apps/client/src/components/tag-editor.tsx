@@ -24,6 +24,8 @@ import {
 import { Button } from "./ui/button";
 import { Track } from "@/api";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
+import { CACHE_KEY } from "@/api/constant.ts";
 
 const tagsFormSchema = z.object({
   title: z.string().nonempty(),
@@ -96,7 +98,9 @@ const TagsForm = ({
   const imageInputRef = useRef<ElementRef<"input">>(null);
   const closeBtnRef = useRef<ElementRef<"button">>(null);
 
-  const { mutate: updateTrack } = useUpdateTrack();
+  const queryClient = useQueryClient();
+
+  const { mutateAsync: updateTrack } = useUpdateTrack();
 
   const tagsForm = useForm<z.infer<typeof tagsFormSchema>>({
     resolver: zodResolver(tagsFormSchema),
@@ -113,11 +117,11 @@ const TagsForm = ({
     const blob = await fetch(coverPreview).then((res) => res.blob());
     const reader = new FileReader();
     reader.readAsDataURL(blob);
-    reader.onloadend = () => {
+    reader.onloadend = async () => {
       const base64data = reader.result;
       values.cover = base64data as string;
 
-      updateTrack(
+      await updateTrack(
         {
           ...values,
           trackId: track.id,
@@ -125,11 +129,15 @@ const TagsForm = ({
           trackPath: track.path,
         },
         {
-          onSuccess: () => {
+          onSuccess: async () => {
             onUpdated();
             tagsForm.reset();
             closeBtnRef.current?.click();
             toast.success("Track updated successfully");
+
+            await queryClient.invalidateQueries({
+              queryKey: [CACHE_KEY.TRACKS],
+            });
           },
         },
       );

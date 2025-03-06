@@ -14,7 +14,7 @@ export class TrackSaver {
     const cover = mm.selectCover(pictures);
 
     if (!cover) return null;
-    const ext = cover.format.split("/")[1] ?? "jpg";
+    const ext = cover.format.split("/")[1] ?? config.defaultCoverExtension;
     const path = `${config.coverPath}/${albumId}.${ext}`;
     try {
       await fs.promises.access(path);
@@ -38,7 +38,7 @@ export class TrackSaver {
     const tracksByAlbum = new Map<string, LoadedMetadata[]>();
     for (const metadata of metadataBatch) {
       const trackTitle = metadata.title || basename(metadata.path);
-      const albumIdentifier = `${metadata.album ?? trackTitle}-${metadata.albumartist || "Various Artists"}`;
+      const albumIdentifier = `${metadata.album ?? trackTitle}-${metadata.albumartist || metadata.artist || "Various Artists"}`;
       const tracks = tracksByAlbum.get(albumIdentifier) || [];
       tracks.push(metadata);
       tracksByAlbum.set(albumIdentifier, tracks);
@@ -89,10 +89,10 @@ export class TrackSaver {
 
     const artistUpserts = Array.from(uniqueArtists).map((name) =>
       prisma.artist.upsert({
-        where: { id: uuid.v5(`${name}-${albumId}`, uuid.v5.DNS) },
+        where: { id: uuid.v5(name, uuid.v5.DNS) },
         update: {},
         create: {
-          id: uuid.v5(`${name}-${albumId}`, uuid.v5.DNS),
+          id: uuid.v5(name, uuid.v5.DNS),
           name,
           albums: { connect: { id: albumId } },
         },
