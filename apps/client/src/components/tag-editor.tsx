@@ -144,6 +144,8 @@ const TagsForm = ({
     };
   };
 
+  const isDirty = tagsForm.formState.isDirty;
+
   const handleImageClick: MouseEventHandler<HTMLImageElement> = () => {
     imageInputRef.current?.click();
   };
@@ -175,10 +177,10 @@ const TagsForm = ({
                 <FormControl>
                   <Input
                     {...field}
-                    ref={imageInputRef}
                     type="file"
                     className="hidden"
                     accept="image/*"
+                    ref={imageInputRef}
                     onChange={handleCoverChange}
                   />
                 </FormControl>
@@ -232,7 +234,9 @@ const TagsForm = ({
               Cancel
             </Button>
           </DialogClose>
-          <Button type="submit">Apply</Button>
+          <Button disabled={!isDirty} type="submit">
+            Apply
+          </Button>
         </div>
       </form>
     </Form>
