@@ -1,6 +1,9 @@
 import { z } from "zod";
+import fs from "node:fs";
 import id3 from "node-id3";
+import path from "node:path";
 import { prisma } from "~~/prisma";
+import { config } from "@repo/config";
 import { musicLibrary } from "~~/lib/music-manager";
 
 export default defineEventHandler(async (event) => {
@@ -27,9 +30,10 @@ export default defineEventHandler(async (event) => {
       artist: data.artist,
       album: data.album,
       image: {
-        imageBuffer: data.cover
-          ? Buffer.from(data.cover, "base64")
-          : defaultCover,
+        imageBuffer:
+          data.cover && data.cover.startsWith("data:image")
+            ? Buffer.from(data.cover.split(",")[1], "base64")
+            : defaultCover,
         mime: "image/jpeg",
         type: { id: 3 },
         description: "Album cover",
@@ -47,6 +51,9 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
+    // delete old cover
+    await fs.promises.unlink(path.join(config.coverPath, data.albumId));
+
     await musicLibrary.trackSaver.updateTrack(data.trackPath);
     const savedTrack = await prisma.track.findUnique({
       where: { id: trackId },
@@ -70,7 +77,12 @@ const payloadSchema = z.object({
   title: z.string().nonempty(),
   artist: z.string().nonempty(),
   album: z.string().nonempty(),
-  cover: z.string().base64(),
+  cover: z
+    .string()
+    .refine(
+      (val) => val.startsWith("data:image") || val === "" || val === null,
+      { message: "Cover must be a data URL, empty string, or null" },
+    ),
   albumId: z.string().uuid(),
   trackId: z.string().uuid(),
   trackPath: z.string(),

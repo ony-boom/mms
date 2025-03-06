@@ -29,7 +29,7 @@ const tagsFormSchema = z.object({
   title: z.string().nonempty(),
   album: z.string().nonempty(),
   artist: z.string().nonempty(),
-  cover: z.string().base64(),
+  cover: z.string(),
 });
 
 export const TagEditor = ({ trackId, ...dialogProps }: TagEditorProps) => {
@@ -57,7 +57,7 @@ export const TagEditor = ({ trackId, ...dialogProps }: TagEditorProps) => {
               </DialogTitle>
 
               <DialogDescription>
-                <p>Tags are used to categorize your tracks.</p>
+                Tags are used to categorize your tracks
               </DialogDescription>
             </DialogHeader>
           </>
@@ -69,7 +69,7 @@ export const TagEditor = ({ trackId, ...dialogProps }: TagEditorProps) => {
               </DialogHeader>
 
               <DialogDescription>
-                <p>Tags are used to categorize your tracks.</p>
+                Tags are used to categorize your tracks
               </DialogDescription>
 
               <div data-scroller={true} className="mt-4">
@@ -160,7 +160,7 @@ const TagsForm = ({
                   <img
                     alt={track.title}
                     src={coverPreview}
-                    className="mx-auto my-2 rounded-md object-center"
+                    className="z-0 mx-auto my-2 rounded-md object-center"
                     onClick={handleImageClick}
                   />
                 </div>

@@ -55,7 +55,18 @@ export interface Api {
       value?: boolean;
     }
   >;
-  updateTrack?: (payload: Payload, trackId: string) => Promise<any>;
+
+  updateTrack?: (payload: Payload, trackId: string) => Promise<Track>;
+
+  useUpdateTrack: <TError = DefaultError>() => UseMutationResult<
+    Track,
+    TError,
+    Payload & {
+      albumId: string;
+      trackId: string;
+      trackPath: string;
+    }
+  >;
 
   getTrackCoverSrc: (trackId: string) => string;
   getTrackAudioSrc: (trackIds: string[]) => string[];
