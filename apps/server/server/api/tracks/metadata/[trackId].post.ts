@@ -1,15 +1,11 @@
 import { z } from "zod";
-import fs from "node:fs";
 import id3 from "node-id3";
-import path from "node:path";
 import { prisma } from "~~/prisma";
-import * as mm from "music-metadata";
-import { config } from "@repo/config";
 import { musicLibrary } from "~~/lib/music-manager";
 
 export default defineEventHandler(async (event) => {
   const trackId = getRouterParam(event, "trackId");
-  const payload = await readBody<MetadataPayload>(event, { strict: true });
+  const payload = await readBody<MetadataPayload>(event);
 
   const parsedPayload = payloadSchema.safeParse(payload);
 
