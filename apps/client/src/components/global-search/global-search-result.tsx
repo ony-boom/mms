@@ -4,6 +4,7 @@ import { Virtuoso } from "react-virtuoso";
 import { TrackListElement } from "../track-list-element";
 import { memo } from "react";
 import { Track } from "@/api";
+import { RemoteTrackListElement } from "../remote-track-list-element";
 
 const LoadingIndicator = () => (
   <div className="flex w-full justify-center">
@@ -17,7 +18,7 @@ const EmptyResults = () => (
   </div>
 );
 
-const TrackItem = memo(
+const LocalTrackItem = memo(
   ({
     track,
     index,
@@ -41,6 +42,19 @@ const TrackItem = memo(
         showWaveBars
         onClick={() => handleResultClick(data, index)}
       />
+    </motion.div>
+  ),
+);
+
+const RemoteTrackItem = memo(
+  ({ index, track }: { track: Track; index: number }) => (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2 }}
+    >
+      <RemoteTrackListElement track={track} index={index} />
     </motion.div>
   ),
 );
@@ -73,14 +87,19 @@ export const GlobalSearchResult = memo(
               style={{ height: "100%" }}
               className="overflow-x-hidden will-change-transform"
               totalCount={data.length}
-              itemContent={(index, track) => (
-                <TrackItem
-                  track={track}
-                  index={index}
-                  data={data}
-                  handleResultClick={handleResultClick}
-                />
-              )}
+              itemContent={(index, track) => {
+                if (track.isRemoteTrack) {
+                  return <RemoteTrackItem track={track} index={index} />;
+                }
+                return (
+                  <LocalTrackItem
+                    track={track}
+                    index={index}
+                    data={data}
+                    handleResultClick={handleResultClick}
+                  />
+                );
+              }}
             />
           ) : (
             <EmptyResults />

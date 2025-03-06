@@ -8,6 +8,8 @@ import { useApiClient, useDebounce } from "@/hooks";
 import { Track } from "@/api";
 import { GlobalSearchResult } from "./global-search-result";
 import { DownloaderButtonState } from "./downloader-button-state";
+import { fetchData } from "@/lib/api-utils";
+import { formatSingleTrack } from "@/lib/search";
 
 // Search field options
 const searchFields = [
@@ -92,16 +94,46 @@ export function GlobalSearch() {
   );
   const [localSearchField, setLocalSearchField] = useState(queryField);
 
-  // Search logic
+  const [remoteSearchResults, setRemoteSearchResults] = useState<Track[]>([]);
+
   const debouncedValue = useDebounce(localValue, 500);
+
+  // Local Search logic
   const filter =
     localSearchField === "*"
       ? { title: debouncedValue }
       : { [localSearchField]: debouncedValue };
 
-  const { data, isLoading } = useApiClient().useTracks(filter, undefined, {
-    enabled: !!localValue,
-  });
+  const { data: localData, isLoading } = useApiClient().useTracks(
+    filter,
+    undefined,
+    {
+      enabled: !!localValue,
+    },
+  );
+
+  // Remote Search Logic
+  useEffect(() => {
+    const fetchTracks = async () => {
+      try {
+        const response = await fetchData("mainSearch", {
+          term: debouncedValue,
+        });
+
+        const trackDatas = response.TRACK.data;
+        const formattedDatas: Track[] = trackDatas.map(
+          (track: { [key: string]: unknown }) => formatSingleTrack(track),
+        );
+        setRemoteSearchResults(formattedDatas);
+      } catch (error) {
+        console.error("Error fetching tracks:", error);
+      }
+    };
+
+    if (debouncedValue) {
+      fetchTracks();
+    }
+  }, [debouncedValue]);
 
   // Event handlers
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -173,7 +205,7 @@ export function GlobalSearch() {
           <GlobalSearchResult
             localValue={localValue}
             isLoading={isLoading}
-            data={data}
+            data={[...(localData ?? []), ...remoteSearchResults]}
             handleResultClick={handleResultClick}
           />
         </div>
