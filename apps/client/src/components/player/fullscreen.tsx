@@ -86,8 +86,8 @@ const LocalController = ({ onMinimize }: { onMinimize: () => void }) => {
   return (
     <div className="sticky bottom-0 mx-auto w-[80%] max-w-7xl px-8 py-4">
       <div className="mb-2 flex justify-between text-xs">
-        <span>-{msToMin(position)}</span>
-        <span>{msToMin(duration)}</span>
+        <span>{formatPosition(position)}</span>
+        <span>{formatPosition(duration)}</span>
       </div>
       <TrackProgress className="mb-4 overflow-hidden rounded-full" />
       <div className="mt-6 flex items-center">
@@ -123,7 +123,7 @@ const LocalController = ({ onMinimize }: { onMinimize: () => void }) => {
   );
 };
 
-function msToMin(ms: number) {
+function formatPosition(ms: number) {
   const minutes = Math.floor(ms / 60);
   const seconds = Math.round(ms % 60);
   return `${minutes}:${seconds.toString().padStart(2, "0")}`;
