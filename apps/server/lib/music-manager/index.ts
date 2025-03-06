@@ -13,7 +13,7 @@ import throttle from "lodash.throttle";
 
 class MusicLibraryManager extends EventEmitter {
   private readonly BATCH_SIZE = 50;
-  private readonly trackSaver = new TrackSaver();
+  readonly trackSaver = new TrackSaver();
   private readonly supportedExtensions = ["mp3", "flac", "wav", "ogg"];
   private readonly globPattern = `${config.musicPath}/**/*.{${this.supportedExtensions.join(",")}}`;
   private watcherCleanup: (() => void) | null = null;
@@ -62,7 +62,9 @@ class MusicLibraryManager extends EventEmitter {
 
   async *loadTracks(): AsyncGenerator<LoadedMetadata> {
     const tracks = await glob(this.globPattern, { nodir: true, stat: true });
-    const normalizedTracks = Array.from(new Set(tracks.map((track) => path.normalize(track).replace(/\\/g, "/"))));
+    const normalizedTracks = Array.from(
+      new Set(tracks.map((track) => path.normalize(track).replace(/\\/g, "/"))),
+    );
     const batchCount = Math.ceil(normalizedTracks.length / this.BATCH_SIZE);
     const limit = pLimit(50);
 

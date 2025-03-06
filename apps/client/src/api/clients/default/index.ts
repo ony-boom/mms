@@ -104,6 +104,11 @@ export const defaultApi: Api = {
     });
   },
 
+  useUpdateTrack() {
+    // TODO: Implement
+    return useMutation({});
+  },
+
   useFavoriteTrack: () => {
     return useMutation({
       mutationFn: async ({ trackId, value }) => {

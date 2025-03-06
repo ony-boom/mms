@@ -42,6 +42,7 @@ const buildConfig = () => {
   return {
     coverPath,
     musicPath: sanitizePath(parsedConfig.musicPath),
+    defaultCoverExtension: "jpeg",
   } satisfies Config;
 };
 
