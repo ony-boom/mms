@@ -7,10 +7,7 @@ import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { useApiClient, useDebounce } from "@/hooks";
 import { Track } from "@/api";
 import { GlobalSearchResult } from "./global-search-result";
-import { GlobeIcon } from "lucide-react";
-import { Button } from "../ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { Label } from "../ui/label";
+import { DownloaderButtonState } from "./downloader-button-state";
 
 // Search field options
 const searchFields = [
@@ -76,34 +73,7 @@ const SearchForm = ({
         onFieldChange={onFieldChange}
       />
 
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button size={"icon"} variant={"ghost"} className="relative">
-            <GlobeIcon />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent>
-          <div className="grid gap-4">
-            <div className="space-y-2">
-              <h4 className="font-medium leading-none">Login</h4>
-              <p className="text-muted-foreground text-sm">
-                Please enter arl from deezer cookie here.
-              </p>
-            </div>
-            <div className="grid gap-2">
-              <div className="grid grid-cols-3 items-center gap-4">
-                <Label htmlFor="width">ARL</Label>
-                <Input
-                  id="width"
-                  className="col-span-2 h-8"
-                  // add hint
-                  placeholder="..."
-                />
-              </div>
-            </div>
-          </div>
-        </PopoverContent>
-      </Popover>
+      <DownloaderButtonState />
     </div>
   </form>
 );
