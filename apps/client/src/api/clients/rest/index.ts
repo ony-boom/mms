@@ -89,9 +89,27 @@ export const rest: Api = {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(payload)
+      body: JSON.stringify(payload),
     });
-    return response.json()
+    return response.json();
+  },
+
+  useUpdateTrack: () => {
+    return useMutation({
+      mutationFn: async (payload) => {
+        const response = await fetch(
+          `${BASE_URL}/api/tracks/metadata/${payload.trackId}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+          },
+        );
+        return response.json();
+      },
+    });
   },
 
   useTrackLoadEvent: () => {

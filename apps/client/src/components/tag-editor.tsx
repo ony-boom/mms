@@ -23,17 +23,18 @@ import {
 } from "react";
 import { Button } from "./ui/button";
 import { Track } from "@/api";
+import { toast } from "sonner";
 
 const tagsFormSchema = z.object({
   title: z.string().nonempty(),
   album: z.string().nonempty(),
   artist: z.string().nonempty(),
-  cover: z.string(),
+  cover: z.string().base64(),
 });
 
 export const TagEditor = ({ trackId, ...dialogProps }: TagEditorProps) => {
   const { useTracks } = useApiClient();
-  const { data, isLoading } = useTracks(
+  const { data, isLoading, refetch } = useTracks(
     {
       id: trackId,
     },
@@ -72,7 +73,7 @@ export const TagEditor = ({ trackId, ...dialogProps }: TagEditorProps) => {
               </DialogDescription>
 
               <div data-scroller={true} className="mt-4">
-                <TagsForm track={track} />
+                <TagsForm track={track} onUpdated={refetch} />
               </div>
             </>
           )
@@ -82,13 +83,20 @@ export const TagEditor = ({ trackId, ...dialogProps }: TagEditorProps) => {
   );
 };
 
-const TagsForm = ({ track }: { track: Track }) => {
-  const { getTrackCoverSrc } = useApiClient();
+const TagsForm = ({
+  track,
+  onUpdated,
+}: {
+  track: Track;
+  onUpdated: () => void;
+}) => {
+  const { getTrackCoverSrc, useUpdateTrack } = useApiClient();
   const defaultCoverSrc = getTrackCoverSrc(track.id);
   const [coverPreview, setCoverPreview] = useState<string>(defaultCoverSrc);
   const imageInputRef = useRef<ElementRef<"input">>(null);
+  const closeBtnRef = useRef<ElementRef<"button">>(null);
 
-  const { updateTrack } = useApiClient();
+  const { mutate: updateTrack } = useUpdateTrack();
 
   const tagsForm = useForm<z.infer<typeof tagsFormSchema>>({
     resolver: zodResolver(tagsFormSchema),
@@ -109,7 +117,22 @@ const TagsForm = ({ track }: { track: Track }) => {
       const base64data = reader.result;
       values.cover = base64data as string;
 
-      updateTrack?.(values, track.id);
+      updateTrack(
+        {
+          ...values,
+          trackId: track.id,
+          albumId: track.album.id,
+          trackPath: track.path,
+        },
+        {
+          onSuccess: () => {
+            onUpdated();
+            tagsForm.reset();
+            closeBtnRef.current?.click();
+            toast.success("Track updated successfully");
+          },
+        },
+      );
     };
   };
 
@@ -197,7 +220,9 @@ const TagsForm = ({ track }: { track: Track }) => {
 
         <div className="flex justify-end gap-2">
           <DialogClose asChild>
-            <Button variant="secondary">Cancel</Button>
+            <Button ref={closeBtnRef} variant="secondary">
+              Cancel
+            </Button>
           </DialogClose>
           <Button type="submit">Apply</Button>
         </div>
@@ -205,6 +230,7 @@ const TagsForm = ({ track }: { track: Track }) => {
     </Form>
   );
 };
+
 export type TagEditorProps = {
   trackId: string;
 } & DialogProps;
