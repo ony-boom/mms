@@ -1,10 +1,10 @@
 import { useRef } from "react";
-import { Separator } from "../ui/separator";
-import { usePlayerStore } from "@/stores";
-import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
-import { useShallow } from "zustand/react/shallow";
-import { TrackListElement } from "@/components/track-list-element.tsx";
 import { useApiClient } from "@/hooks";
+import { usePlayerStore } from "@/stores";
+import { useShallow } from "zustand/react/shallow";
+import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
+import { TrackListElement } from "@/components/track-list-element.tsx";
+import { Skeleton } from "@/components/ui/skeleton.tsx";
 
 export function Playlists() {
   const { playlistOrder, shuffleOrder, isShuffle, getCurrentIndex } =
@@ -22,7 +22,6 @@ export function Playlists() {
 
   return (
     <>
-      <Separator className="bg-foreground/[8%] w-full" />
       <Virtuoso
         ref={virtuoso}
         data={isShuffle ? shuffleOrder : playlistOrder}
@@ -47,14 +46,18 @@ const ItemContent = ({
 }) => {
   const { playTrackAtIndex } = usePlayerStore.getState();
 
-  const { data: track } = useApiClient().useTracks({ id: trackId });
+  const { data: track, isLoading } = useApiClient().useTracks({ id: trackId });
 
-  return (
-    <TrackListElement
-      showWaveBars
-      index={index}
-      track={track?.at(0)}
-      onClick={playTrackAtIndex}
-    />
+  return isLoading ? (
+    <Skeleton className={"h-[64px] w-full"} />
+  ) : (
+    track && (
+      <TrackListElement
+        showWaveBars
+        index={index}
+        track={track.at(0)}
+        onClick={playTrackAtIndex}
+      />
+    )
   );
 };

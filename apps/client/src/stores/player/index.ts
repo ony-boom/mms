@@ -215,10 +215,24 @@ export const usePlayerStore = create<PlayerState>()(
         if (state.playlists.has(track.id)) return;
 
         const orderKey = state.isShuffle ? "shuffleOrder" : "playlistOrder";
-        const newOrder = [...state[orderKey], track.id];
+        const newOrder = [structuredClone(state[orderKey]), track.id];
 
         set({
           playlists: new Map([...state.playlists, [track.id, track.src]]),
+          [orderKey]: newOrder,
+        });
+      },
+
+      removeFromQueue: (index) => {
+        const state = get();
+        const orderKey = state.isShuffle ? "shuffleOrder" : "playlistOrder";
+        const newOrder = structuredClone(state[orderKey]);
+        const removedId = newOrder.splice(index, 1)[0];
+        const playlists = new Map(state.playlists);
+        playlists.delete(removedId);
+
+        set({
+          playlists,
           [orderKey]: newOrder,
         });
       },

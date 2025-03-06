@@ -1,4 +1,4 @@
-import { memo, MouseEventHandler } from "react";
+import { memo, MouseEventHandler, useLayoutEffect } from "react";
 import { usePlayerStore } from "@/stores";
 import { TrackContextMenu } from "@/components/track-context-menu.tsx";
 import { TrackCover } from "@/pages/Tracks/components/track-cover.tsx";
@@ -8,11 +8,15 @@ import { cn } from "@/lib/utils";
 
 export const TrackListElement = memo(
   ({ track, index, onClick, showWaveBars }: TrackListElementProps) => {
-    const { currentTrackId } = usePlayerStore.getState();
+    const { currentTrackId, removeFromQueue } = usePlayerStore.getState();
 
     const isCurrent = currentTrackId === track?.id;
 
-    if (!track) return <div className="h-[64px]"></div>;
+    useLayoutEffect(() => {
+      if (!track) removeFromQueue(index);
+    }, [track, index, removeFromQueue]);
+
+    if (!track) return null;
 
     const handleClick: MouseEventHandler<HTMLLIElement> = (event) => {
       event.stopPropagation();

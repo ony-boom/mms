@@ -31,7 +31,7 @@ export const TrackProgress = memo(({ currentTrack }: TrackProgressProps) => {
   return (
     <motion.div
       whileHover={{
-        scaleY: 1.5,
+        scaleY: 2,
       }}
     >
       <Progress
