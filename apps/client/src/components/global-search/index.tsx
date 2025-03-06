@@ -7,6 +7,8 @@ import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { useApiClient, useDebounce } from "@/hooks";
 import { Track } from "@/api";
 import { GlobalSearchResult } from "./global-search-result";
+import { GlobeIcon } from "lucide-react";
+import { Button } from "../ui/button";
 
 // Search field options
 const searchFields = [
@@ -65,10 +67,24 @@ const SearchForm = ({
       className="border-b-foreground/10 focus-visible:border-b-foreground/30 min-w-xl h-12 rounded-none focus-visible:ring-0"
       onClick={(e) => e.stopPropagation()}
     />
-    <SearchFieldBadges
-      activeField={activeField}
-      onFieldChange={onFieldChange}
-    />
+
+    <div className="flex items-center justify-between gap-2 px-2">
+      <SearchFieldBadges
+        activeField={activeField}
+        onFieldChange={onFieldChange}
+      />
+
+      <Button
+        size={"icon"}
+        variant={"ghost"}
+        className="relative"
+        onClick={(e) => {
+          e.preventDefault();
+        }}
+      >
+        <GlobeIcon />
+      </Button>
+    </div>
   </form>
 );
 
