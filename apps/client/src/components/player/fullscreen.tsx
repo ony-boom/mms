@@ -83,7 +83,7 @@ const LocalController = ({ onMinimize }: { onMinimize: () => void }) => {
   const onVolumeIconClick = useVolumeCompClickEventHandler();
 
   return (
-    <div className="w-7xl sticky bottom-0 mx-auto px-8 py-4">
+    <div className="max-w-7xl w-[80%] sticky bottom-0 mx-auto px-8 py-4">
       <div className="mb-2 flex justify-between text-xs">
         <span>-{msToMin(duration)}</span>
         <span>{msToMin(duration)}</span>
