@@ -4,11 +4,21 @@ import { usePreviewStore } from "@/stores";
 export const PreviewAudio = () => {
   const ref = useAudioPreviewRef();
 
-  const { setLoading } = usePreviewStore();
+  const { setLoading, setIsPlaying } = usePreviewStore();
 
   const handleLoadedMetadata = () => {
     setLoading(false);
   };
 
-  return <audio onLoadedMetadata={handleLoadedMetadata} ref={ref} />;
+  const handleEnded = () => {
+    setIsPlaying(false);
+  };
+
+  return (
+    <audio
+      onEnded={handleEnded}
+      onLoadedMetadata={handleLoadedMetadata}
+      ref={ref}
+    />
+  );
 };

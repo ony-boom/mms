@@ -98,7 +98,14 @@ export const GlobalSearchResult = memo(
       setLoading,
     } = usePreviewStore();
 
-    const handleTrackClick = (track: Track) => {
+    const handleTogglePlay = (track: Track) => {
+      // If the same track is clicked and is already playing, pause it
+      if (src === track.remoteTrackPreview && isPlaying) {
+        setIsPlaying(false);
+        return;
+      }
+
+      // If it's a new track or the same track but paused, play it
       setSrc(track.remoteTrackPreview!);
       setCurrentTrackId(track.id);
       setIsPlaying(true);
@@ -147,7 +154,7 @@ export const GlobalSearchResult = memo(
                       track={track}
                       index={index}
                       isPlaying={isPlaying && src === track.remoteTrackPreview}
-                      onTogglePlayButton={handleTrackClick}
+                      onTogglePlayButton={handleTogglePlay}
                       isLoading={loading && src === track.remoteTrackPreview}
                     />
                   );
