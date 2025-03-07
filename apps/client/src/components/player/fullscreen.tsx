@@ -25,7 +25,7 @@ export function Fullscreen({ onClose, track, loadingTrack }: FullscreenProps) {
 
     return (
       <div className="relative flex h-full flex-col justify-between">
-        <div className="mt-8 flex items-end gap-4 px-8">
+        <div className="flex items-end gap-4 px-8 py-4">
           <TrackCover
             trackId={track.id}
             trackTitle={track.title}
@@ -84,7 +84,7 @@ const LocalController = ({ onMinimize }: { onMinimize: () => void }) => {
   const onVolumeIconClick = useVolumeCompClickEventHandler();
 
   return (
-    <div className="sticky bottom-0 mx-auto w-[80%] max-w-7xl px-8 py-4">
+    <div className="sticky bottom-0 mx-auto w-[80%] max-w-7xl px-8 py-6">
       <div className="mb-2 flex justify-between text-xs">
         <span>{formatPosition(position)}</span>
         <span>{formatPosition(duration)}</span>
