@@ -24,6 +24,9 @@ export const TrackProgress = memo((props: TrackProgressProps) => {
 
   return (
     <motion.div
+      whileTap={{
+        marginTop: 0,
+      }}
       whileHover={{
         scaleY: 2,
         backfaceVisibility: "hidden",

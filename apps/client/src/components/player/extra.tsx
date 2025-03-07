@@ -25,6 +25,7 @@ export const Extra = () => {
           <VolumeComp muted={muted} volume={volumeValue} />
         </button>
         <motion.div
+          className="will-change-transform"
           whileHover={{
             scaleY: 1.5,
           }}

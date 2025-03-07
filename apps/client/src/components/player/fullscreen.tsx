@@ -20,48 +20,53 @@ import {
 } from "@/hooks";
 
 export function Fullscreen({ onClose, track, loadingTrack }: FullscreenProps) {
-  if (track && !loadingTrack) {
-    const artist = track.artists.map((artist) => artist.name).join(", ");
-
-    return (
-      <div className="relative flex h-full flex-col justify-between">
-        <div className="flex items-end gap-4 px-8 py-4">
-          <TrackCover
-            trackId={track.id}
-            trackTitle={track.title}
-            className="h-36 w-36"
-          />
-          <div className="space-y-1">
-            <p className="text-2xl font-black">{track.title}</p>
-            <p>{artist}</p>
-          </div>
-        </div>
-
-        <Lyrics className="w-full text-center" />
-
-        <LocalController onMinimize={onClose} />
-      </div>
-    );
-  }
-
   return (
     <div className="relative flex h-full flex-col justify-between">
-      <div className="mt-8 flex items-end gap-4 px-8">
-        <Skeleton className="h-36 w-36" />
-        <div className="space-y-1">
-          <Skeleton className="h-8 w-full" />
-          <Skeleton className="h-8 w-[70%]" />
-        </div>
-      </div>
-
-      <Lyrics className="w-full justify-center text-center" />
-
-      <div className="pointer-events-none opacity-70">
-        <LocalController onMinimize={onClose} />
-      </div>
+      <Button
+        className="absolute right-6 top-6"
+        variant="ghost"
+        size="icon"
+        onClick={onClose}
+      >
+        <Minimize />
+      </Button>
+      {track && !loadingTrack ? (
+        <TrackInfo track={track} />
+      ) : (
+        <LoadingTrackInfo />
+      )}
+      <Lyrics className="w-full text-center" />
+      <LocalController />
     </div>
   );
 }
+
+const TrackInfo = ({ track }: { track: Track }) => {
+  const artist = track.artists.map((artist) => artist.name).join(", ");
+  return (
+    <div className="flex items-end gap-4 px-8 py-4">
+      <TrackCover
+        trackId={track.id}
+        trackTitle={track.title}
+        className="h-36 w-36"
+      />
+      <div className="space-y-1">
+        <p className="text-2xl font-black">{track.title}</p>
+        <p>{artist}</p>
+      </div>
+    </div>
+  );
+};
+
+const LoadingTrackInfo = () => (
+  <div className="mt-8 flex items-end gap-4 px-8">
+    <Skeleton className="h-36 w-36" />
+    <div className="space-y-1">
+      <Skeleton className="h-8 w-full" />
+      <Skeleton className="h-8 w-[70%]" />
+    </div>
+  </div>
+);
 
 const Progress = () => {
   const { duration, position } = usePlayerStore(
@@ -77,13 +82,12 @@ const Progress = () => {
         <span>{formatPosition(position)}</span>
         <span>{formatPosition(duration)}</span>
       </div>
-
       <TrackProgress className="mb-4 overflow-hidden rounded-full" />
     </>
   );
 };
 
-const LocalController = ({ onMinimize }: { onMinimize: () => void }) => {
+const LocalController = () => {
   const audioRef = useAudioRef();
   const { volume, muted } = usePlayerStore(
     useShallow((state) => ({
@@ -113,9 +117,6 @@ const LocalController = ({ onMinimize }: { onMinimize: () => void }) => {
         </div>
         <div className="flex flex-1 items-center justify-end gap-2">
           <ShuffleButton />
-          <Button variant="ghost" size="icon" onClick={onMinimize}>
-            <Minimize />
-          </Button>
           <div className="flex items-center gap-1">
             <Button onClick={onVolumeIconClick} variant="ghost" size="icon">
               <VolumeComp volume={volume * 100} muted={muted} />

@@ -30,17 +30,18 @@ function Card({ track, index, onTrackPlay }: TrackCardProps) {
     <div className="group relative flex flex-col gap-1">
       <TrackContextMenu track={track}>
         <TrackCover
-          className="mb-2"
           trackId={track.id}
           trackTitle={track.title}
+          onClick={onPlayButtonClick}
+          className="mb-2 hover:cursor-pointer"
         />
         <p
           title={track.title}
-          className="overflow-hidden font-bold text-nowrap text-ellipsis"
+          className="overflow-hidden text-ellipsis text-nowrap font-bold"
         >
           {track.title}
         </p>
-        <p className="overflow-hidden text-sm text-nowrap text-ellipsis">
+        <p className="overflow-hidden text-ellipsis text-nowrap text-sm">
           {artistNames.map((name, index) => (
             <Button
               key={name}
@@ -56,7 +57,7 @@ function Card({ track, index, onTrackPlay }: TrackCardProps) {
       <Button
         size="icon"
         onClick={onPlayButtonClick}
-        className="absolute right-2 bottom-20 z-20 opacity-0 shadow-xl transition group-hover:opacity-100"
+        className="absolute bottom-20 right-2 z-20 opacity-0 shadow-xl transition group-hover:opacity-100"
       >
         {isCurrent && isPlaying ? <Pause /> : <Play />}
       </Button>

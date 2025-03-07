@@ -129,7 +129,7 @@ export function Player() {
         {openFullscreen && (
           <motion.div
             key="lyrics"
-            variants={lyricsVariants}
+            variants={fullscreenVariants}
             initial="initial"
             animate="animate"
             exit="exit"
@@ -204,7 +204,7 @@ export function Player() {
                 onClick={togglePlaylistsExpanded}
               />
             </div>
-            <div className="relative flex items-center justify-between gap-16 px-3 pt-1 pb-4">
+            <div className="relative flex items-center justify-between gap-16 px-3 pb-4 pt-1">
               <TrackInfo
                 currentTrack={currentTrack!}
                 openLyricsView={openFullscreen}
@@ -226,7 +226,6 @@ export function Player() {
                   animate="animate"
                   exit="exit"
                   layout="position"
-                  // Add will-change to optimize animations
                   style={{ willChange: "height" }}
                 >
                   <Playlists />
@@ -277,7 +276,7 @@ const TrackInfo = memo(
                 size="icon"
                 title={openLyricsView ? "Hide lyrics" : "Show lyrics"}
                 onClick={onFullScreenToggle}
-                className="absolute right-0 bottom-0 opacity-0 transition-opacity group-hover:opacity-100"
+                className="absolute bottom-0 right-0 opacity-0 transition-opacity group-hover:opacity-100"
               >
                 {<MessageSquareQuote />}
               </Button>
@@ -285,14 +284,14 @@ const TrackInfo = memo(
             <div className="w-[148px] space-y-1 text-nowrap">
               <p
                 title={currentTrack.title}
-                className="overflow-hidden font-bold text-ellipsis"
+                className="overflow-hidden text-ellipsis font-bold"
               >
                 {currentTrack.title}
               </p>
 
               <p
                 title={artists}
-                className="overflow-hidden text-xs text-ellipsis"
+                className="overflow-hidden text-ellipsis text-xs"
               >
                 {artists}
               </p>
@@ -303,7 +302,7 @@ const TrackInfo = memo(
             className="flex items-end gap-4"
             variants={skeletonVariants}
           >
-            <div className="bg-muted aspect-square w-18 rounded-xl" />
+            <div className="bg-muted w-18 aspect-square rounded-xl" />
             <div className="w-[148px]">
               <Skeleton className="w-full" />
               <Skeleton className="w-full" />
@@ -321,27 +320,19 @@ const TrackInfo = memo(
   },
 );
 
-const lyricsVariants: Variants = {
+const fullscreenVariants: Variants = {
   initial: {
     x: "-50%",
     width: "100vw",
+    height: "100vh",
     bottom: "-100vh",
   },
   animate: {
-    height: "100vh",
-    width: "100vw",
     bottom: 0,
     backfaceVisibility: "hidden",
-    transition: {
-      duration: 0.3,
-      ease: "easeOut",
-    },
   },
   exit: {
     bottom: "-100vh",
-    transition: {
-      duration: 0.2, // Faster exit animation
-    },
   },
 };
 
@@ -350,15 +341,9 @@ const playlistVariants: Variants = {
   animate: {
     height: "auto",
     backfaceVisibility: "hidden",
-    transition: {
-      duration: 0.2,
-    },
   },
   exit: {
     height: 0,
-    transition: {
-      duration: 0.15,
-    },
   },
 };
 
@@ -366,9 +351,6 @@ const trackInfoVariants = {
   initial: { opacity: 0 },
   animate: {
     opacity: 1,
-    transition: {
-      duration: 0.2,
-    },
   },
 };
 
@@ -376,9 +358,5 @@ const skeletonVariants: Variants = {
   initial: { opacity: 0 },
   animate: {
     opacity: 1,
-    transition: {
-      staggerChildren: 0.05,
-      duration: 0.2,
-    },
   },
 };

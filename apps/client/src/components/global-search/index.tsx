@@ -11,14 +11,6 @@ import { DownloaderButtonState } from "./downloader-button-state";
 import { fetchData } from "@/lib/api-utils";
 import { formatSingleTrack } from "@/lib/search";
 
-// Search field options
-const searchFields = [
-  { label: "All", value: "*" },
-  { label: "Artist", value: "artistName" },
-  { label: "Album", value: "albumTitle" },
-];
-
-// Search field badges component
 const SearchFieldBadges = ({
   activeField,
   onFieldChange,
@@ -45,7 +37,6 @@ const SearchFieldBadges = ({
   </div>
 );
 
-// Search form component
 const SearchForm = ({
   value,
   onValueChange,
@@ -112,7 +103,7 @@ export function GlobalSearch() {
     },
   );
 
-  // Remote Search Logic
+  // TODO: use react-query for this
   useEffect(() => {
     const fetchTracks = async () => {
       try {
@@ -131,11 +122,10 @@ export function GlobalSearch() {
     };
 
     if (debouncedValue) {
-      fetchTracks();
+      fetchTracks().then();
     }
   }, [debouncedValue]);
 
-  // Event handlers
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setLocalValue(event.target.value);
   };
@@ -188,6 +178,7 @@ export function GlobalSearch() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         className="bg-background/60 fixed left-0 top-0 z-50 grid h-full w-full justify-center"
+        onClick={() => setOpenSearchComponent(false)}
       >
         <div
           className="with-blur mt-32 h-max overflow-hidden rounded-md"
@@ -212,3 +203,9 @@ export function GlobalSearch() {
     </AnimatePresence>
   );
 }
+
+const searchFields = [
+  { label: "All", value: "*" },
+  { label: "Artist", value: "artistName" },
+  { label: "Album", value: "albumTitle" },
+];
