@@ -5,10 +5,16 @@ import { TrackCover } from "@/pages/Tracks/components/track-cover.tsx";
 import { WaveBars } from "@/components/player/wave-bars.tsx";
 import { Track } from "@/api";
 import { cn } from "@/lib/utils";
+import { useShallow } from "zustand/react/shallow";
 
 export const TrackListElement = memo(
   ({ track, index, onClick, showWaveBars }: TrackListElementProps) => {
-    const { currentTrackId, removeFromQueue } = usePlayerStore.getState();
+    const { currentTrackId, removeFromQueue } = usePlayerStore(
+      useShallow((state) => ({
+        currentTrackId: state.currentTrackId,
+        removeFromQueue: state.removeFromQueue,
+      })),
+    );
 
     const isCurrent = currentTrackId === track?.id;
 
