@@ -54,11 +54,13 @@ const RemoteTrackItem = memo(
     track,
     isPlaying,
     onTogglePlayButton,
+    isLoading,
   }: {
     track: Track;
     index: number;
     isPlaying: boolean;
     onTogglePlayButton: (track: Track) => void;
+    isLoading: boolean;
   }) => (
     <motion.div
       initial={{ opacity: 0 }}
@@ -71,6 +73,7 @@ const RemoteTrackItem = memo(
         index={index}
         isPlaying={isPlaying}
         onTogglePlayButton={() => onTogglePlayButton(track)}
+        isLoading={isLoading}
       />
     </motion.div>
   ),
@@ -85,13 +88,21 @@ export const GlobalSearchResult = memo(
   }: GlobalSearchResultProps) => {
     const audioRef = useAudioPreviewRef();
 
-    const { isPlaying, setIsPlaying, setCurrentTrackId, src, setSrc } =
-      usePreviewStore();
+    const {
+      isPlaying,
+      setIsPlaying,
+      setCurrentTrackId,
+      loading,
+      src,
+      setSrc,
+      setLoading,
+    } = usePreviewStore();
 
     const handleTrackClick = (track: Track) => {
       setSrc(track.remoteTrackPreview!);
       setCurrentTrackId(track.id);
       setIsPlaying(true);
+      setLoading(true);
     };
 
     useEffect(() => {
@@ -137,6 +148,7 @@ export const GlobalSearchResult = memo(
                       index={index}
                       isPlaying={isPlaying && src === track.remoteTrackPreview}
                       onTogglePlayButton={handleTrackClick}
+                      isLoading={loading && src === track.remoteTrackPreview}
                     />
                   );
                 }
