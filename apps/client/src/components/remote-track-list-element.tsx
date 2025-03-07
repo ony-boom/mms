@@ -9,11 +9,6 @@ export const RemoteTrackListElement = ({
 }: RemoteTrackListElementProps) => {
   const ref = useAudioPreviewRef();
   const handleClickPlay = () => {
-    console.log("Playing track:", track.remoteTrackPreview);
-
-    // log ref current
-    console.log("Audio ref current:", ref.current);
-
     if (!ref.current || !track.remoteTrackPreview) return;
 
     ref.current.src = track.remoteTrackPreview;
