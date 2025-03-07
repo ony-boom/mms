@@ -20,19 +20,19 @@ function Layout() {
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
         <InitBinding>
           <AppTitle />
-          <WithColorFlow>
-            <main className="mx-auto w-full">
-              <AudioProvider>
-                <AudioPreviewProvider>
+          <main className="mx-auto w-full">
+            <AudioProvider>
+              <AudioPreviewProvider>
+                <WithColorFlow>
                   <Outlet />
 
                   <Player />
                   <PreviewAudio />
                   <Toaster />
-                </AudioPreviewProvider>
-              </AudioProvider>
-            </main>
-          </WithColorFlow>
+                </WithColorFlow>
+              </AudioPreviewProvider>
+            </AudioProvider>
+          </main>
         </InitBinding>
       </ThemeProvider>
     </ApiContext.Provider>

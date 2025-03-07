@@ -37,7 +37,7 @@ export function Fullscreen({ onClose, track, loadingTrack }: FullscreenProps) {
           </div>
         </div>
 
-        <Lyrics className="w-full justify-center text-center" />
+        <Lyrics className="w-full text-center" />
 
         <LocalController onMinimize={onClose} />
       </div>
@@ -47,10 +47,10 @@ export function Fullscreen({ onClose, track, loadingTrack }: FullscreenProps) {
   return (
     <div className="relative flex h-full flex-col justify-between">
       <div className="mt-8 flex items-end gap-4 px-8">
-        <Skeleton className="h-24 w-24" />
+        <Skeleton className="h-36 w-36" />
         <div className="space-y-1">
           <Skeleton className="h-8 w-full" />
-          <Skeleton className="h-6 w-[70%]" />
+          <Skeleton className="h-8 w-[70%]" />
         </div>
       </div>
 
