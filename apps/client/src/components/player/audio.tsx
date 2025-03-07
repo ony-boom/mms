@@ -82,7 +82,7 @@ export const Audio = memo(
           handleVolumeChange,
         );
       };
-    }, [playNext, playPrev]);
+    }, [playNext, playPrev, ref, setMuted, setVolume]);
 
     return (
       <audio
