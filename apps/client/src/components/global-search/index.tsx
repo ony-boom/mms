@@ -141,10 +141,12 @@ export function GlobalSearch() {
   };
 
   const handleResultClick = (tracks: Track[], index: number) => {
-    const newPlaylist = tracks.map((track) => ({
-      src: getTrackAudioSrc([track.id])[0]!,
-      id: track.id,
-    }));
+    const newPlaylist = tracks
+      .filter((track) => !track.isRemoteTrack)
+      .map((track) => ({
+        src: getTrackAudioSrc([track.id])[0]!,
+        id: track.id,
+      }));
 
     setPlaylists(newPlaylist);
     toggleShuffle(false);

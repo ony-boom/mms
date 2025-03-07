@@ -175,7 +175,6 @@ export function Player() {
                   opacity: 0,
                   translateY: 64,
                 }}
-                // Add will-change to optimize animations
                 style={{ willChange: "transform, opacity" }}
               >
                 <Extra />
@@ -186,11 +185,12 @@ export function Player() {
             id="player"
             layout
             animate={{
-              opacity: openFullscreen ? 0 : 1,
+              transition: {
+                delay: openFullscreen ? 0 : 0.3,
+              },
               translateY: openFullscreen ? 256 : 0,
             }}
             className="with-blur flex w-max flex-col overflow-hidden rounded-md"
-            // Add will-change to optimize animations
             style={{ willChange: "transform, opacity" }}
           >
             <div className="mt-2 flex justify-center">

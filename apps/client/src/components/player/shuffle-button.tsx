@@ -24,11 +24,20 @@ export function ShuffleButton(props: ShuffleButtonProps) {
       variant="ghost"
       disabled={getCurrentPlaylist().length === 0}
       className={cn(
+        "relative",
         isShuffle ? "text-foreground" : "text-foreground/50",
         props.className,
       )}
     >
       <Shuffle />
+      <span
+        className={cn(
+          "bg-primary left-5/12 absolute bottom-0 inline-block h-1 w-1 rounded-full opacity-0",
+          {
+            "opacity-100": isShuffle,
+          },
+        )}
+      ></span>
     </Button>
   );
 }

@@ -134,36 +134,22 @@ export const usePlayerStore = create<PlayerState>()(
         state.playTrackAtIndex(randomIndex);
       },
 
+      // FIXME: This is a temporary solution to add a track to the queue
+      //        this is broken and should be fixed
       playAfter: ({ src, id }) => {
         const state = get();
-        const {
-          isShuffle,
-          shuffleOrder,
-          playlistOrder,
-          playlists,
-          getCurrentIndex,
-        } = state;
-        const currentPlaylistOrder = isShuffle ? shuffleOrder : playlistOrder;
-        const currentIndex = getCurrentIndex();
+        const currentIndex = state.getCurrentIndex();
+        const orderKey = state.isShuffle ? "shuffleOrder" : "playlistOrder";
+        const newOrder = [...state[orderKey]];
 
-        const sourceIndex = currentPlaylistOrder.indexOf(id);
-        if (sourceIndex === currentIndex) return;
-
-        const newPlaylistOrder = structuredClone(currentPlaylistOrder);
-
-        if (sourceIndex === -1 && src) {
-          set({ playlists: new Map([...playlists, [id, src]]) });
-          newPlaylistOrder.splice(currentIndex + 1, 0, id);
-        } else {
-          const [removedId] = newPlaylistOrder.splice(sourceIndex, 1);
-          newPlaylistOrder.splice(currentIndex + 1, 0, removedId!);
-        }
+        // Insert the new track after the current track
+        newOrder.splice(currentIndex + 1, 0, id);
 
         set({
-          [isShuffle ? "shuffleOrder" : "playlistOrder"]: newPlaylistOrder,
+          playlists: new Map([...state.playlists, [id, src]]),
+          [orderKey]: newOrder,
         });
       },
-
       playTrackAtIndex: (index) => {
         const state = get();
         const order = state.isShuffle
@@ -215,7 +201,7 @@ export const usePlayerStore = create<PlayerState>()(
         if (state.playlists.has(track.id)) return;
 
         const orderKey = state.isShuffle ? "shuffleOrder" : "playlistOrder";
-        const newOrder = [structuredClone(state[orderKey]), track.id];
+        const newOrder = [...state[orderKey], track.id];
 
         set({
           playlists: new Map([...state.playlists, [track.id, track.src]]),
