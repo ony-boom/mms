@@ -28,16 +28,24 @@ export const Audio = memo(
     } = usePlayerStore.getState();
 
     const updateNavigatorMetadata = useCallback(() => {
-      navigator.mediaSession.metadata = new MediaMetadata({
-        title: currentTrack?.title,
-        artist: currentTrack?.artists.map((artist) => artist.name).join(", "),
-        artwork: [
-          {
-            src: getTrackCoverSrc(currentTrackId!),
-            type: "image/jpeg",
-          },
-        ],
-      });
+      if ("mediaSession" in navigator && currentTrackId) {
+        try {
+          navigator.mediaSession.metadata = new MediaMetadata({
+            title: currentTrack?.title || "",
+            artist:
+              currentTrack?.artists?.map((artist) => artist.name).join(", ") ||
+              "",
+            artwork: [
+              {
+                src: getTrackCoverSrc(currentTrackId),
+                type: "image/jpeg",
+              },
+            ],
+          });
+        } catch (error) {
+          console.error("Error updating media session metadata:", error);
+        }
+      }
     }, [
       currentTrack?.artists,
       currentTrack?.title,
@@ -56,13 +64,30 @@ export const Audio = memo(
       const audioElement = event.target as HTMLAudioElement;
       setDuration(audioElement.duration);
       audioElement.volume = volume;
-      audioElement.currentTime = position;
+      requestAnimationFrame(() => {
+        try {
+          audioElement.currentTime = position;
+        } catch (err) {
+          console.error("Error setting audio position:", err);
+        }
+      });
+
       updateNavigatorMetadata();
     };
 
+    const handleError: ReactEventHandler<HTMLAudioElement> = (event) => {
+      console.error("Audio error:", (event.target as HTMLAudioElement).error);
+    };
+
     useEffect(() => {
-      navigator.mediaSession.setActionHandler("previoustrack", playPrev);
-      navigator.mediaSession.setActionHandler("nexttrack", playNext);
+      if ("mediaSession" in navigator) {
+        try {
+          navigator.mediaSession.setActionHandler("previoustrack", playPrev);
+          navigator.mediaSession.setActionHandler("nexttrack", playNext);
+        } catch (error) {
+          console.error("Error setting media session handlers:", error);
+        }
+      }
 
       const typedRef = ref as React.MutableRefObject<HTMLAudioElement>;
 
@@ -77,10 +102,12 @@ export const Audio = memo(
       typedRef.current.addEventListener("volumechange", handleVolumeChange);
 
       return () => {
-        typedRef.current?.removeEventListener(
-          "volumechange",
-          handleVolumeChange,
-        );
+        if (typedRef.current) {
+          typedRef.current.removeEventListener(
+            "volumechange",
+            handleVolumeChange,
+          );
+        }
       };
     }, [playNext, playPrev, ref, setMuted, setVolume]);
 
@@ -91,9 +118,11 @@ export const Audio = memo(
         ref={ref}
         onPause={pause}
         onEnded={playNext}
+        onError={handleError}
         title={currentTrack?.title}
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}
+        preload="auto"
       />
     );
   }),
