@@ -1,11 +1,12 @@
 import { Track } from "@/api/types";
 import { Cover } from "./cover";
 import { Button } from "./ui/button";
-import { CloudDownloadIcon, Pause, Play } from "lucide-react";
+import { CloudDownloadIcon, Loader, Pause, Play } from "lucide-react";
 
 export const RemoteTrackListElement = ({
   track,
   isPlaying,
+  isLoading,
   onTogglePlayButton,
 }: RemoteTrackListElementProps) => {
   return (
@@ -38,8 +39,15 @@ export const RemoteTrackListElement = ({
         variant={"ghost"}
         onClick={() => onTogglePlayButton(isPlaying)}
         className="absolute inset-3.5 z-20 opacity-0 hover:cursor-pointer group-hover:opacity-100"
+        disabled={isLoading}
       >
-        {isPlaying ? <Pause /> : <Play />}
+        {isLoading ? (
+          <Loader className="animate-spin" />
+        ) : isPlaying ? (
+          <Pause />
+        ) : (
+          <Play />
+        )}
       </Button>
     </div>
   );
@@ -50,4 +58,5 @@ type RemoteTrackListElementProps = {
   index: number;
   isPlaying: boolean;
   onTogglePlayButton: (state: boolean) => void;
+  isLoading: boolean;
 };
