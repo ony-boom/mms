@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { Extra } from "./extra";
 import { usePlayerStore } from "@/stores";
 import { Controller } from "./controller";
-import { memo, useCallback, useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useState, useMemo } from "react";
 import { TrackProgress } from "./track-progress";
 import { MessageSquareQuote } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
@@ -15,11 +15,15 @@ import { Playlists } from "@/components/player/playlists";
 import { TrackCover } from "@/pages/Tracks/components/track-cover";
 import { motion, AnimatePresence, type Variants } from "motion/react";
 import { Fullscreen } from "./fullscreen";
+import { FavouriteButton } from "@/components";
+import { ShuffleButton } from "@/components/player/shuffle-button.tsx";
 
 export function Player() {
-  const [openExtra, setOpenExtra] = useState(false);
-  const [openFullscreen, setOpenFullscreen] = useState(false);
-  const [playlistsExpanded, setPlaylistsExpanded] = useState(false);
+  const [uiState, setUiState] = useState({
+    openExtra: false,
+    openFullscreen: false,
+    playlistsExpanded: false,
+  });
 
   const { useTracks } = useApiClient();
 
@@ -33,37 +37,91 @@ export function Player() {
   );
 
   const audioRef = useAudioRef();
-  const { data, isLoading } = useTracks({ id: currentTrackId });
 
-  const currentTrack = data?.length === 1 ? data?.[0] : undefined;
+  const { data, isLoading } = useTracks(
+    {
+      id: currentTrackId,
+    },
+    undefined,
+    {
+      staleTime: 60000,
+    },
+  );
+
+  const currentTrack = useMemo(
+    () => (data?.length === 1 ? data[0] : undefined),
+    [data],
+  );
 
   const handleLyricsToggle = useCallback((value?: boolean) => {
-    if (typeof value === "boolean") {
-      setOpenFullscreen(value);
-    } else {
-      setOpenFullscreen((prev) => !prev);
-    }
+    setUiState((prev) => ({
+      ...prev,
+      openFullscreen: typeof value === "boolean" ? value : !prev.openFullscreen,
+    }));
   }, []);
 
   const closeFullscreenView = useCallback(() => {
     handleLyricsToggle(false);
   }, [handleLyricsToggle]);
 
+  const handleHoverStart = useCallback(() => {
+    if (!uiState.openFullscreen) {
+      setUiState((prev) => ({ ...prev, openExtra: true }));
+    }
+  }, [uiState.openFullscreen]);
+
+  const handleHoverEnd = useCallback(() => {
+    if (!uiState.openFullscreen) {
+      setUiState((prev) => ({ ...prev, openExtra: false }));
+    }
+  }, [uiState.openFullscreen]);
+
+  const togglePlaylistsExpanded = useCallback(() => {
+    setUiState((prev) => ({
+      ...prev,
+      playlistsExpanded: !prev.playlistsExpanded,
+    }));
+  }, []);
+
   useEffect(() => {
     const audioElement = audioRef.current;
     if (!audioElement) return;
-    (async () => {
-      if (isPlaying && src) {
-        await audioElement.play();
-      } else {
-        audioElement.pause();
+
+    let playPromise: Promise<void> | undefined;
+
+    const handlePlayback = async () => {
+      try {
+        if (isPlaying && src) {
+          playPromise = audioElement.play();
+          await playPromise;
+        } else if (audioElement) {
+          if (playPromise !== undefined) {
+            playPromise
+              .then(() => {
+                audioElement.pause();
+              })
+              .catch(() => {
+                audioElement.pause();
+              });
+          } else {
+            audioElement.pause();
+          }
+        }
+      } catch (error) {
+        console.error("Audio playback error:", error);
       }
-    })();
+    };
+
+    handlePlayback().then();
   }, [audioRef, isPlaying, src]);
 
   useEffect(() => {
-    setOpenExtra(false);
-  }, [openFullscreen]);
+    if (uiState.openFullscreen) {
+      setUiState((prev) => ({ ...prev, openExtra: false }));
+    }
+  }, [uiState.openFullscreen]);
+
+  const { openExtra, openFullscreen, playlistsExpanded } = uiState;
 
   return (
     <>
@@ -75,8 +133,11 @@ export function Player() {
             initial="initial"
             animate="animate"
             exit="exit"
-            className="with-blur fixed bottom-0 left-1/2 z-50 origin-bottom overflow-y-hidden border-none"
-            style={{ transformOrigin: "bottom center" }}
+            className="with-blur fixed bottom-0 left-1/2 z-50 overflow-y-hidden border-none"
+            style={{
+              transformOrigin: "bottom center",
+              willChange: "transform, opacity",
+            }}
           >
             <Fullscreen
               loadingTrack={isLoading}
@@ -87,10 +148,7 @@ export function Player() {
         )}
       </AnimatePresence>
 
-      <motion.div
-        onHoverEnd={() => !openFullscreen && setOpenExtra(false)}
-        onHoverStart={() => !openFullscreen && setOpenExtra(true)}
-      >
+      <motion.div onHoverEnd={handleHoverEnd} onHoverStart={handleHoverStart}>
         <Audio currentTrack={currentTrack} ref={audioRef} />
 
         <div
@@ -117,6 +175,8 @@ export function Player() {
                   opacity: 0,
                   translateY: 64,
                 }}
+                // Add will-change to optimize animations
+                style={{ willChange: "transform, opacity" }}
               >
                 <Extra />
               </motion.div>
@@ -130,6 +190,8 @@ export function Player() {
               translateY: openFullscreen ? 256 : 0,
             }}
             className="with-blur flex w-max flex-col overflow-hidden rounded-md"
+            // Add will-change to optimize animations
+            style={{ willChange: "transform, opacity" }}
           >
             <div className="mt-2 flex justify-center">
               <button
@@ -139,16 +201,20 @@ export function Player() {
                     "w-24": playlistsExpanded,
                   },
                 )}
-                onClick={() => setPlaylistsExpanded((prev) => !prev)}
+                onClick={togglePlaylistsExpanded}
               />
             </div>
-            <div className="relative flex items-center justify-between gap-16 px-3 pb-4 pt-1">
+            <div className="relative flex items-center justify-between gap-16 px-3 pt-1 pb-4">
               <TrackInfo
                 currentTrack={currentTrack!}
                 openLyricsView={openFullscreen}
                 onFullScreenToggle={handleLyricsToggle}
               />
-              <Controller shouldPlay={!currentTrack} />
+              <div className="flex items-center gap-2">
+                <FavouriteButton variant="ghost" />
+                <ShuffleButton />
+                <Controller shouldPlay={!currentTrack} />
+              </div>
             </div>
             <TrackProgress />
             <AnimatePresence>
@@ -160,6 +226,8 @@ export function Player() {
                   animate="animate"
                   exit="exit"
                   layout="position"
+                  // Add will-change to optimize animations
+                  style={{ willChange: "height" }}
                 >
                   <Playlists />
                 </motion.div>
@@ -182,9 +250,13 @@ const TrackInfo = memo(
     openLyricsView: boolean;
     onFullScreenToggle: () => void;
   }) => {
-    const artists = currentTrack?.artists
-      .map((artist) => artist.name)
-      .join(", ");
+    // Memoize artists string to prevent recalculation
+    const artists = useMemo(
+      () =>
+        currentTrack?.artists?.map((artist) => artist.name).join(", ") || "",
+      [currentTrack?.artists],
+    );
+
     return (
       <motion.div
         aria-labelledby="track info"
@@ -205,7 +277,7 @@ const TrackInfo = memo(
                 size="icon"
                 title={openLyricsView ? "Hide lyrics" : "Show lyrics"}
                 onClick={onFullScreenToggle}
-                className="absolute bottom-0 right-0 opacity-0 transition-opacity group-hover:opacity-100"
+                className="absolute right-0 bottom-0 opacity-0 transition-opacity group-hover:opacity-100"
               >
                 {<MessageSquareQuote />}
               </Button>
@@ -213,14 +285,14 @@ const TrackInfo = memo(
             <div className="w-[148px] space-y-1 text-nowrap">
               <p
                 title={currentTrack.title}
-                className="overflow-hidden text-ellipsis font-bold"
+                className="overflow-hidden font-bold text-ellipsis"
               >
                 {currentTrack.title}
               </p>
 
               <p
                 title={artists}
-                className="overflow-hidden text-ellipsis text-xs"
+                className="overflow-hidden text-xs text-ellipsis"
               >
                 {artists}
               </p>
@@ -231,7 +303,7 @@ const TrackInfo = memo(
             className="flex items-end gap-4"
             variants={skeletonVariants}
           >
-            <div className="bg-muted w-18 aspect-square rounded-xl" />
+            <div className="bg-muted aspect-square w-18 rounded-xl" />
             <div className="w-[148px]">
               <Skeleton className="w-full" />
               <Skeleton className="w-full" />
@@ -239,6 +311,12 @@ const TrackInfo = memo(
           </motion.div>
         )}
       </motion.div>
+    );
+  },
+  (prevProps, nextProps) => {
+    return (
+      prevProps.openLyricsView === nextProps.openLyricsView &&
+      prevProps.currentTrack?.id === nextProps.currentTrack?.id
     );
   },
 );
@@ -254,9 +332,16 @@ const lyricsVariants: Variants = {
     width: "100vw",
     bottom: 0,
     backfaceVisibility: "hidden",
+    transition: {
+      duration: 0.3,
+      ease: "easeOut",
+    },
   },
   exit: {
     bottom: "-100vh",
+    transition: {
+      duration: 0.2, // Faster exit animation
+    },
   },
 };
 
@@ -265,18 +350,35 @@ const playlistVariants: Variants = {
   animate: {
     height: "auto",
     backfaceVisibility: "hidden",
+    transition: {
+      duration: 0.2,
+    },
   },
   exit: {
     height: 0,
+    transition: {
+      duration: 0.15,
+    },
   },
 };
 
 const trackInfoVariants = {
   initial: { opacity: 0 },
-  animate: { opacity: 1, transition: { duration: 0.3 } },
+  animate: {
+    opacity: 1,
+    transition: {
+      duration: 0.2,
+    },
+  },
 };
 
 const skeletonVariants: Variants = {
   initial: { opacity: 0 },
-  animate: { opacity: 1, transition: { staggerChildren: 0.1 } },
+  animate: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.05,
+      duration: 0.2,
+    },
+  },
 };
