@@ -2,9 +2,11 @@ import { Loader } from "lucide-react";
 import { motion } from "motion/react";
 import { Virtuoso } from "react-virtuoso";
 import { TrackListElement } from "../track-list-element";
-import { memo } from "react";
+import { memo, useEffect } from "react";
 import { Track } from "@/api";
 import { RemoteTrackListElement } from "../remote-track-list-element";
+import { usePreviewStore } from "@/stores";
+import { useAudioPreviewRef } from "@/hooks";
 
 const LoadingIndicator = () => (
   <div className="flex w-full justify-center">
@@ -47,14 +49,29 @@ const LocalTrackItem = memo(
 );
 
 const RemoteTrackItem = memo(
-  ({ index, track }: { track: Track; index: number }) => (
+  ({
+    index,
+    track,
+    isPlaying,
+    onTogglePlayButton,
+  }: {
+    track: Track;
+    index: number;
+    isPlaying: boolean;
+    onTogglePlayButton: (track: Track) => void;
+  }) => (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
     >
-      <RemoteTrackListElement track={track} index={index} />
+      <RemoteTrackListElement
+        track={track}
+        index={index}
+        isPlaying={isPlaying}
+        onTogglePlayButton={() => onTogglePlayButton(track)}
+      />
     </motion.div>
   ),
 );
@@ -66,6 +83,31 @@ export const GlobalSearchResult = memo(
     data,
     handleResultClick,
   }: GlobalSearchResultProps) => {
+    const audioRef = useAudioPreviewRef();
+
+    const { isPlaying, setIsPlaying, setCurrentTrackId, src, setSrc } =
+      usePreviewStore();
+
+    const handleTrackClick = (track: Track) => {
+      setSrc(track.remoteTrackPreview!);
+      setCurrentTrackId(track.id);
+      setIsPlaying(true);
+    };
+
+    useEffect(() => {
+      const audioElement = audioRef.current;
+      if (!audioElement) return;
+      (async () => {
+        if (isPlaying && src) {
+          audioElement.src = src;
+          audioElement.load();
+          await audioElement.play();
+        } else {
+          audioElement.pause();
+        }
+      })();
+    }, [audioRef, isPlaying, src]);
+
     if (!localValue) return null;
 
     return (
@@ -89,7 +131,14 @@ export const GlobalSearchResult = memo(
               totalCount={data.length}
               itemContent={(index, track) => {
                 if (track.isRemoteTrack) {
-                  return <RemoteTrackItem track={track} index={index} />;
+                  return (
+                    <RemoteTrackItem
+                      track={track}
+                      index={index}
+                      isPlaying={isPlaying && src === track.remoteTrackPreview}
+                      onTogglePlayButton={handleTrackClick}
+                    />
+                  );
                 }
                 return (
                   <LocalTrackItem

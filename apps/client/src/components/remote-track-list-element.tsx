@@ -1,24 +1,13 @@
 import { Track } from "@/api/types";
 import { Cover } from "./cover";
 import { Button } from "./ui/button";
-import { CloudDownloadIcon, PlayIcon } from "lucide-react";
-import { useAudioPreviewRef } from "@/hooks";
+import { CloudDownloadIcon, Pause, Play } from "lucide-react";
 
 export const RemoteTrackListElement = ({
   track,
+  isPlaying,
+  onTogglePlayButton,
 }: RemoteTrackListElementProps) => {
-  const ref = useAudioPreviewRef();
-  const handleClickPlay = () => {
-    if (!ref.current || !track.remoteTrackPreview) return;
-
-    ref.current.src = track.remoteTrackPreview;
-
-    ref.current.play().catch((error) => {
-      console.error("Error playing audio:", error);
-    });
-
-    console.log(`Playing track: ${track.remoteTrackTitle}`);
-  };
   return (
     <div className="group relative">
       <li className="hover:bg-foreground/[5%] mt-2 flex items-center justify-between p-2 opacity-50">
@@ -47,10 +36,10 @@ export const RemoteTrackListElement = ({
       <Button
         size="icon"
         variant={"ghost"}
-        onClick={handleClickPlay}
+        onClick={() => onTogglePlayButton(isPlaying)}
         className="absolute inset-3.5 z-20 opacity-0 hover:cursor-pointer group-hover:opacity-100"
       >
-        <PlayIcon />
+        {isPlaying ? <Pause /> : <Play />}
       </Button>
     </div>
   );
@@ -59,4 +48,6 @@ export const RemoteTrackListElement = ({
 type RemoteTrackListElementProps = {
   track: Track;
   index: number;
+  isPlaying: boolean;
+  onTogglePlayButton: (state: boolean) => void;
 };
