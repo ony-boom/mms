@@ -8,6 +8,8 @@ import { AudioProvider } from "./context/audio-ref-context";
 import { ThemeProvider } from "./context/theme";
 import { apiClients } from "./api";
 import { InitBinding } from "./components/init-binding";
+import { AudioPreviewProvider } from "./context/audio-preview-context";
+import { PreviewAudio } from "./components/audio-preview";
 
 const DEFAULT_API_CLIENT: keyof typeof apiClients =
   import.meta.env.VITE_DEFAULT_API_NAME_TO_USE ?? "default";
@@ -21,10 +23,13 @@ function Layout() {
           <WithColorFlow>
             <main className="mx-auto w-full">
               <AudioProvider>
-                <Outlet />
+                <AudioPreviewProvider>
+                  <Outlet />
 
-                <Player />
-                <Toaster />
+                  <Player />
+                  <PreviewAudio />
+                  <Toaster />
+                </AudioPreviewProvider>
               </AudioProvider>
             </main>
           </WithColorFlow>
