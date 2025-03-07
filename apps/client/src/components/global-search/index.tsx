@@ -188,7 +188,6 @@ export function GlobalSearch() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         className="bg-background/60 fixed left-0 top-0 z-50 grid h-full w-full justify-center"
-        onClick={() => setOpenSearchComponent(false)}
       >
         <div
           className="with-blur mt-32 h-max overflow-hidden rounded-md"
