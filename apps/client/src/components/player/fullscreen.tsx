@@ -63,14 +63,32 @@ export function Fullscreen({ onClose, track, loadingTrack }: FullscreenProps) {
   );
 }
 
-const LocalController = ({ onMinimize }: { onMinimize: () => void }) => {
-  const audioRef = useAudioRef();
-  const { duration, volume, muted, position } = usePlayerStore(
+const Progress = () => {
+  const { duration, position } = usePlayerStore(
     useShallow((state) => ({
       duration: state.duration,
+      position: state.position,
+    })),
+  );
+
+  return (
+    <>
+      <div className="mb-2 flex justify-between text-xs">
+        <span>{formatPosition(position)}</span>
+        <span>{formatPosition(duration)}</span>
+      </div>
+
+      <TrackProgress className="mb-4 overflow-hidden rounded-full" />
+    </>
+  );
+};
+
+const LocalController = ({ onMinimize }: { onMinimize: () => void }) => {
+  const audioRef = useAudioRef();
+  const { volume, muted } = usePlayerStore(
+    useShallow((state) => ({
       volume: state.volume,
       muted: state.muted,
-      position: state.position,
     })),
   );
 
@@ -85,11 +103,7 @@ const LocalController = ({ onMinimize }: { onMinimize: () => void }) => {
 
   return (
     <div className="sticky bottom-0 mx-auto w-[80%] max-w-7xl px-8 py-6">
-      <div className="mb-2 flex justify-between text-xs">
-        <span>{formatPosition(position)}</span>
-        <span>{formatPosition(duration)}</span>
-      </div>
-      <TrackProgress className="mb-4 overflow-hidden rounded-full" />
+      <Progress />
       <div className="mt-6 flex items-center">
         <div className="flex-1">
           <FavouriteButton variant="ghost" className="self-start" />
