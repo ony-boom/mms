@@ -64,7 +64,7 @@ const SyncedLyrics = ({ lrc }: SyncedLyricsProps) => {
           "text-foreground/50 cursor-pointer leading-10 transition-all",
           { "text-foreground text-4xl": isActive },
         )}
-        key={lyric.timestamp}
+        key={index} // since it won't change
         onClick={() => !isActive && handleLyricsClick(lyric.timestamp)}
       >
         {lyric.content}

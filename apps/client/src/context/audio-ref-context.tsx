@@ -1,5 +1,6 @@
 import { createContext, useRef, ReactNode, ElementRef, RefObject } from "react";
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const AudioContext = createContext<RefObject<
   ElementRef<"audio">
 > | null>(null);
