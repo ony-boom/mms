@@ -3,23 +3,29 @@ import { useApiClient } from "@/hooks/use-api-client";
 import { ReactEventHandler, useCallback, useEffect, memo } from "react";
 import { useAudioRef } from "@/hooks/use-audio-ref";
 import { usePlayerStore } from "@/stores/player/store";
+import { useShallow } from "zustand/react/shallow";
 
 export const Audio = memo(({ currentTrack }: AudioProps) => {
   const { getTrackCoverSrc } = useApiClient();
   const {
-    src,
-    currentTrackId,
     setDuration,
     setPosition,
-    position,
     pause,
     play,
     playNext,
     playPrev,
-    volume,
     setVolume,
     setMuted,
   } = usePlayerStore.getState();
+
+  const { src, currentTrackId, volume, position } = usePlayerStore(
+    useShallow((state) => ({
+      src: state.src,
+      volume: state.volume,
+      position: state.position,
+      currentTrackId: state.currentTrackId,
+    })),
+  );
 
   const ref = useAudioRef();
 
@@ -58,13 +64,11 @@ export const Audio = memo(({ currentTrack }: AudioProps) => {
     const audioElement = event.target as HTMLAudioElement;
     setDuration(audioElement.duration);
     audioElement.volume = volume;
-    requestAnimationFrame(() => {
-      try {
-        audioElement.currentTime = position;
-      } catch (err) {
-        console.error("Error setting audio position:", err);
-      }
-    });
+    try {
+      audioElement.currentTime = position;
+    } catch (err) {
+      console.error("Error setting audio position:", err);
+    }
 
     updateNavigatorMetadata();
   };
