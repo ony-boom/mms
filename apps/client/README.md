@@ -7,7 +7,7 @@ A web client for My Music Server (should work with any music server though).
 ## Description
 
 This web client is designed to work with My Music Server, a simple music server application built with TypeScript,
-React, and SQL. It allows users to manage and play their music tracks efficiently.
+React, and SQL. It allows users to play their music tracks efficiently.
 
 ## Installation
 
