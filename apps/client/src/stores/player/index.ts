@@ -134,22 +134,23 @@ export const usePlayerStore = create<PlayerState>()(
         state.playTrackAtIndex(randomIndex);
       },
 
-      // FIXME: This is a temporary solution to add a track to the queue
-      //        this is broken and should be fixed
       playAfter: ({ src, id }) => {
         const state = get();
         const currentIndex = state.getCurrentIndex();
-        const orderKey = state.isShuffle ? "shuffleOrder" : "playlistOrder";
-        const newOrder = [...state[orderKey]];
 
-        // Insert the new track after the current track
-        newOrder.splice(currentIndex + 1, 0, id);
+        const shuffleOrder = [...state.shuffleOrder];
+        const playlistOrder = [...state.playlistOrder];
+
+        shuffleOrder.splice(currentIndex + 1, 0, id);
+        playlistOrder.splice(currentIndex + 1, 0, id);
 
         set({
-          playlists: new Map([...state.playlists, [id, src]]),
-          [orderKey]: newOrder,
+          shuffleOrder,
+          playlistOrder,
+          playlists: new Map(state.playlists).set(id, src),
         });
       },
+
       playTrackAtIndex: (index) => {
         const state = get();
         const order = state.isShuffle
@@ -200,12 +201,16 @@ export const usePlayerStore = create<PlayerState>()(
         const state = get();
         if (state.playlists.has(track.id)) return;
 
-        const orderKey = state.isShuffle ? "shuffleOrder" : "playlistOrder";
-        const newOrder = [...state[orderKey], track.id];
+        const shuffledOrder = [...state.shuffleOrder, track.id];
+        const playlistOrder = [...state.playlistOrder, track.id];
+
+        const newPlaylist = new Map(state.playlists);
+        newPlaylist.set(track.id, track.src);
 
         set({
-          playlists: new Map([...state.playlists, [track.id, track.src]]),
-          [orderKey]: newOrder,
+          playlists: newPlaylist,
+          shuffleOrder: shuffledOrder,
+          playlistOrder: playlistOrder,
         });
       },
 

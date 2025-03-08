@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 scan({
+  log: false,
   enabled: import.meta.env.DEV,
 });
 
