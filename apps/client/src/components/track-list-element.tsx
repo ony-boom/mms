@@ -45,7 +45,7 @@ export const TrackListElement = memo(
 
             <div className="flex flex-col">
               <small className="font-bold">{track.title}</small>
-              <small>
+              <small className="text-foreground/80">
                 {track.artists.map((artist) => artist.name).join(", ")}
               </small>
             </div>

@@ -141,6 +141,12 @@ export const usePlayerStore = create<PlayerState>()(
         const shuffleOrder = [...state.shuffleOrder];
         const playlistOrder = [...state.playlistOrder];
 
+        const shuffleIndex = shuffleOrder.indexOf(id);
+        if (shuffleIndex !== -1) shuffleOrder.splice(shuffleIndex, 1);
+
+        const playlistIndex = playlistOrder.indexOf(id);
+        if (playlistIndex !== -1) playlistOrder.splice(playlistIndex, 1);
+
         shuffleOrder.splice(currentIndex + 1, 0, id);
         playlistOrder.splice(currentIndex + 1, 0, id);
 
@@ -150,7 +156,6 @@ export const usePlayerStore = create<PlayerState>()(
           playlists: new Map(state.playlists).set(id, src),
         });
       },
-
       playTrackAtIndex: (index) => {
         const state = get();
         const order = state.isShuffle

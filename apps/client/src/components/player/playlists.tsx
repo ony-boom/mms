@@ -25,10 +25,9 @@ export function Playlists() {
     <>
       <Virtuoso
         data={data}
-        style={{ height: 256 }}
-        overscan={8}
-        className={"overflow-x-hidden will-change-transform"}
+        overscan={5}
         totalCount={playlistOrder.length}
+        style={{ height: 256, overflowX: "hidden", willChange: "transform" }}
         itemContent={(index, data) => {
           return <ItemContent index={index} trackId={data} />;
         }}
@@ -49,7 +48,7 @@ const ItemContent = ({
   const { data: track, isLoading } = useApiClient().useTracks({ id: trackId });
 
   return isLoading ? (
-    <Skeleton className={"h-[68px] w-full"} />
+    <Skeleton className={"h-[64px] w-full"} />
   ) : track ? (
     <TrackListElement
       showWaveBars

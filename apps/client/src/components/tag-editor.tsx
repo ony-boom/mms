@@ -230,7 +230,7 @@ const TagsForm = ({
 
         <div className="flex justify-end gap-2">
           <DialogClose asChild>
-            <Button ref={closeBtnRef} variant="secondary">
+            <Button ref={closeBtnRef} variant="outline">
               Cancel
             </Button>
           </DialogClose>

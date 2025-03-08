@@ -52,7 +52,7 @@ const TrackInfo = ({ track }: { track: Track }) => {
       />
       <div className="space-y-1">
         <p className="text-2xl font-black">{track.title}</p>
-        <p>{artist}</p>
+        <p className="text-foreground/80">{artist}</p>
       </div>
     </div>
   );

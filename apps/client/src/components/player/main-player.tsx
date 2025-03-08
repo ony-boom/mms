@@ -191,8 +191,12 @@ export function Player() {
               },
               translateY: openFullscreen ? 256 : 0,
             }}
-            className="with-blur flex w-max flex-col overflow-hidden rounded-md"
-            style={{ willChange: "transform, opacity" }}
+            className="with-blur flex flex-col overflow-hidden rounded-md"
+            style={{
+              width: 560, // FIXME: Remove hardcoded width, but since chrome render some blurry text when the value can not be divided by 2, we need to find a better solution
+              willChange: "transform, opacity",
+              backfaceVisibility: "hidden",
+            }}
           >
             <div className="mt-2 flex justify-center">
               <button
@@ -227,7 +231,10 @@ export function Player() {
                   animate="animate"
                   exit="exit"
                   layout="position"
-                  style={{ willChange: "height" }}
+                  style={{
+                    willChange: "height",
+                    backfaceVisibility: "hidden",
+                  }}
                 >
                   <Playlists />
                 </motion.div>
@@ -292,7 +299,7 @@ const TrackInfo = memo(
 
               <p
                 title={artists}
-                className="overflow-hidden text-ellipsis text-xs"
+                className="text-foreground/80 overflow-hidden text-ellipsis text-xs"
               >
                 {artists}
               </p>

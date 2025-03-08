@@ -37,16 +37,16 @@ function Card({ track, index, onTrackPlay }: TrackCardProps) {
         />
         <p
           title={track.title}
-          className="overflow-hidden text-ellipsis text-nowrap font-bold"
+          className="overflow-hidden text-ellipsis text-nowrap font-bold leading-6"
         >
           {track.title}
         </p>
-        <p className="overflow-hidden text-ellipsis text-nowrap text-sm">
+        <p className="overflow-hidden text-ellipsis text-nowrap">
           {artistNames.map((name, index) => (
             <Button
               key={name}
               variant="link"
-              className="text-foreground p-0"
+              className="text-foreground/80 h-max p-0 text-xs"
               onClick={() => onArtistClick(index)}
             >
               {index === artistNames.length - 1 ? name : `${name}, `}
