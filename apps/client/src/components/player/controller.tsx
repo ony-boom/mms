@@ -1,8 +1,8 @@
 import { Pause, Play, SkipBack, SkipForward } from "lucide-react";
-import { usePlayerStore } from "@/stores";
 import { Button } from "@/components/ui/button";
 import { useShallow } from "zustand/react/shallow";
 import { memo } from "react";
+import { usePlayerStore } from "@/stores/player/store";
 
 export const Controller = memo(({ shouldPlay }: ControllerProps) => {
   const playerState = usePlayerStore(

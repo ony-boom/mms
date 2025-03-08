@@ -1,6 +1,6 @@
-import { useApiClient } from "@/hooks";
-import { usePlayerStore } from "@/stores";
 import { useEffect } from "react";
+import { useApiClient } from "@/hooks/use-api-client";
+import { usePlayerStore } from "@/stores/player/store";
 
 export function AppTitle() {
   const { useTracks } = useApiClient();

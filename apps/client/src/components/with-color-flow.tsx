@@ -1,5 +1,6 @@
+import { useColorFlow } from "@/hooks/use-color-flow";
+import { useTheme } from "@/hooks/use-theme";
 import Color from "color";
-import { useColorFlow, useTheme } from "@/hooks";
 import { ReactNode, useEffect, useMemo, useRef, useCallback } from "react";
 
 const useCssVarSetter = () => {

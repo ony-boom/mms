@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { fetchData } from "@/lib/api-utils";
+import { fetchData } from "@/api/downloader/utils";
 
 interface User {
   id: string | null;

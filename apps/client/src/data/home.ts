@@ -1,4 +1,4 @@
-import { fetchData } from "@/lib/api-utils";
+import { fetchData } from "@/api/downloader/utils";
 
 let homeData = {};
 

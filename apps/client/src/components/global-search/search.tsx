@@ -1,15 +1,17 @@
 import clsx from "clsx";
+import { Track } from "@/api/types";
 import { Badge } from "@/components/ui/badge";
-import { QueryField, useFilterStore, usePlayerStore } from "@/stores";
 import { Input } from "@/components/ui/input";
 import { AnimatePresence, motion } from "motion/react";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import { useApiClient, useDebounce } from "@/hooks";
-import { Track } from "@/api";
 import { GlobalSearchResult } from "./global-search-result";
 import { DownloaderButtonState } from "./downloader-button-state";
-import { fetchData } from "@/lib/api-utils";
 import { formatSingleTrack } from "@/lib/search";
+import { fetchData } from "@/api/downloader/utils";
+import { useApiClient } from "@/hooks/use-api-client";
+import { useDebounce } from "@/hooks/use-debounce";
+import { QueryField, useFilterStore } from "@/stores/filter";
+import { usePlayerStore } from "@/stores/player/store";
 
 const SearchFieldBadges = ({
   activeField,
@@ -71,7 +73,7 @@ const SearchForm = ({
   </form>
 );
 
-export function GlobalSearch() {
+export function Search() {
   const { queryField, query, openSearchComponent, setOpenSearchComponent } =
     useFilterStore();
 

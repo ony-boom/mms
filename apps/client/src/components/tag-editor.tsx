@@ -7,7 +7,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "./ui/dialog";
-import { useApiClient } from "@/hooks";
 import { Skeleton } from "./ui/skeleton";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "./ui/form";
 import { useForm } from "react-hook-form";
@@ -22,10 +21,11 @@ import {
   useState,
 } from "react";
 import { Button } from "./ui/button";
-import { Track } from "@/api";
 import { toast } from "sonner";
+import { CACHE_KEY } from "@/api/constant";
+import type { Track } from "@/api/types";
 import { useQueryClient } from "@tanstack/react-query";
-import { CACHE_KEY } from "@/api/constant.ts";
+import { useApiClient } from "@/hooks/use-api-client";
 
 const tagsFormSchema = z.object({
   title: z.string().nonempty(),

@@ -1,9 +1,9 @@
 import { memo, MouseEventHandler } from "react";
-import { usePlayerStore } from "@/stores";
-import { TrackContextMenu } from "@/components/track-context-menu.tsx";
-import { TrackCover } from "@/pages/Tracks/components/track-cover.tsx";
-import { WaveBars } from "@/components/player/wave-bars.tsx";
-import { Track } from "@/api";
+import { usePlayerStore } from "@/stores/player/store";
+import { TrackContextMenu } from "@/components/track-context-menu";
+import { TrackCover } from "@/components/track-cover.tsx";
+import { WaveBars } from "@/components/player/wave-bars";
+import { Track } from "@/api/types";
 import { cn } from "@/lib/utils";
 import { useShallow } from "zustand/react/shallow";
 

@@ -15,8 +15,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { SortOrder, TrackSortField } from "@/api";
 import { GetTrackSortByInput } from "@/api/Api";
+import { SortOrder, TrackSortField } from "@/api/types";
 
 const sortFields = [
   {

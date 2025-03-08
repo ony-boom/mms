@@ -1,22 +1,23 @@
-import { Track } from "@/api";
+import { Track } from "@/api/types";
 import { Audio } from "./audio";
 import { cn } from "@/lib/utils";
 import { Extra } from "./extra";
-import { usePlayerStore } from "@/stores";
 import { Controller } from "./controller";
 import { memo, useCallback, useEffect, useState, useMemo } from "react";
+import { Fullscreen } from "./fullscreen";
 import { TrackProgress } from "./track-progress";
 import { MessageSquareQuote } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
 import { Button } from "@/components/ui/button.tsx";
-import { useApiClient, useAudioRef } from "@/hooks";
-import { Skeleton } from "@/components/ui/skeleton.tsx";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Playlists } from "@/components/player/playlists";
-import { TrackCover } from "@/pages/Tracks/components/track-cover";
+import { TrackCover } from "@/components/track-cover";
+import { ShuffleButton } from "@/components/player/shuffle-button";
+import { FavouriteButton } from "@/components/favourite-button";
 import { motion, AnimatePresence, type Variants } from "motion/react";
-import { Fullscreen } from "./fullscreen";
-import { FavouriteButton } from "@/components";
-import { ShuffleButton } from "@/components/player/shuffle-button.tsx";
+import { useApiClient } from "@/hooks/use-api-client";
+import { useAudioRef } from "@/hooks/use-audio-ref";
+import { usePlayerStore } from "@/stores/player/store";
 
 export function Player() {
   const [uiState, setUiState] = useState({
@@ -149,7 +150,7 @@ export function Player() {
       </AnimatePresence>
 
       <motion.div onHoverEnd={handleHoverEnd} onHoverStart={handleHoverStart}>
-        <Audio currentTrack={currentTrack} ref={audioRef} />
+        <Audio currentTrack={currentTrack} />
 
         <div
           className={cn(

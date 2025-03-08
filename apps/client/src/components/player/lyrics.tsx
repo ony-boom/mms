@@ -1,15 +1,12 @@
-import { Lrc, Lyric } from "lrc-kit";
 import { cn } from "@/lib/utils";
-import { LyricsResponse } from "@/api";
-import { usePlayerStore } from "@/stores";
-import { useMemo, useRef, useEffect, memo, ReactNode, HTMLProps } from "react";
-import { useApiClient, useAudioRef } from "@/hooks";
 import { Button } from "../ui/button";
+import { Lrc, Lyric } from "lrc-kit";
+import { LyricsResponse } from "@/api/types";
 import { useShallow } from "zustand/react/shallow";
-
-interface SyncedLyricsProps {
-  lrc: Lyric[];
-}
+import { useMemo, useRef, useEffect, memo, ReactNode, HTMLProps } from "react";
+import { useAudioRef } from "@/hooks/use-audio-ref";
+import { useApiClient } from "@/hooks/use-api-client";
+import { usePlayerStore } from "@/stores/player/store";
 
 const SyncedLyrics = ({ lrc }: SyncedLyricsProps) => {
   const audioRef = useAudioRef();
@@ -72,11 +69,6 @@ const SyncedLyrics = ({ lrc }: SyncedLyricsProps) => {
     );
   });
 };
-
-interface LyricsContainerProps {
-  children: ReactNode;
-  className?: string;
-}
 
 const LyricsContainer = ({
   children,
@@ -180,3 +172,12 @@ export const Lyrics = memo((props: HTMLProps<HTMLDivElement>) => {
     </LyricsContainer>
   );
 });
+
+interface LyricsContainerProps {
+  children: ReactNode;
+  className?: string;
+}
+
+interface SyncedLyricsProps {
+  lrc: Lyric[];
+}

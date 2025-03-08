@@ -1,4 +1,4 @@
-import { usePlayerStore } from "@/stores";
+import { usePlayerStore } from "@/stores/player/store";
 import { useApiClient } from "@/hooks/use-api-client.ts";
 import { useEffect, useState } from "react";
 import materialDynamicColors from "material-dynamic-colors";

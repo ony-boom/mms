@@ -1,11 +1,11 @@
 import { memo } from "react";
-import { Track } from "@/api";
-import { usePlayerStore } from "@/stores";
-import { TrackCover } from "./track-cover";
+import { Track } from "@/api/types.ts";
 import { Pause, Play } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { TrackContextMenu } from "@/components";
+import { Button } from "@/components/ui/button.tsx";
 import { useShallow } from "zustand/react/shallow";
+import { TrackCover } from "@/components/track-cover";
+import { usePlayerStore } from "@/stores/player/store";
+import { TrackContextMenu } from "@/components/track-context-menu";
 
 function Card({ track, index, onTrackPlay }: TrackCardProps) {
   const artistNames = track.artists.map((artist) => artist.name);

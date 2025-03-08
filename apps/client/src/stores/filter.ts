@@ -1,6 +1,6 @@
 import { create } from "zustand/react";
 import { persist } from "zustand/middleware";
-import { TrackSortField } from "@/api";
+import { TrackSortField } from "@/api/types";
 import { GetTrackSortByInput, GetTrackWhereInput } from "@/api/Api";
 
 // Types

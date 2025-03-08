@@ -1,5 +1,5 @@
-import { useAudioPreviewRef } from "@/hooks";
-import { usePreviewStore } from "@/stores";
+import { usePreviewStore } from "@/stores/preview";
+import { useAudioPreviewRef } from "@/hooks/use-audio-preview-ref";
 
 export const PreviewAudio = () => {
   const ref = useAudioPreviewRef();

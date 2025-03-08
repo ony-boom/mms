@@ -1,6 +1,6 @@
-import { Track } from "@/api";
+import { Track } from "@/api/types.ts";
 import { forwardRef, memo } from "react";
-import { TrackCard } from "./track-card";
+import { TrackCard } from "./track-card.tsx";
 import { VirtuosoGrid, type GridComponents } from "react-virtuoso";
 
 const ITEM_SIZE = 232;
