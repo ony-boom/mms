@@ -1,23 +1,23 @@
 import { Lyrics } from "./lyrics";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
-import { TrackCover } from "@/pages/Tracks/components/track-cover";
+import { TrackCover } from "@/components/track-cover.tsx";
 import { Minimize2 as Minimize } from "lucide-react";
-import { Track } from "@/api";
-import { usePlayerStore } from "@/stores";
+import { Track } from "@/api/types";
 import { useShallow } from "zustand/react/shallow";
 import { Controller } from "./controller";
 import { ShuffleButton } from "./shuffle-button";
-import { FavouriteButton } from "@/components";
 import { TrackProgress } from "./track-progress";
 import { VolumeComp } from "./extra";
 import { Skeleton } from "@/components/ui/skeleton.tsx";
 import { motion } from "motion/react";
+import { FavouriteButton } from "../favourite-button";
+import { useAudioRef } from "@/hooks/use-audio-ref";
 import {
-  useAudioRef,
   useVolumeCompClickEventHandler,
   useVolumeCompWheelEventHandler,
-} from "@/hooks";
+} from "@/hooks/use-volume-comp-event-handler";
+import { usePlayerStore } from "@/stores/player/store";
 
 export function Fullscreen({ onClose, track, loadingTrack }: FullscreenProps) {
   return (

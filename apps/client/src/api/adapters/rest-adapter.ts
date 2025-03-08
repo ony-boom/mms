@@ -1,8 +1,8 @@
 import { Api } from "@/api/Api.ts";
-import { LoadedTracks, TrackSortField } from "@/api";
 import { CACHE_KEY } from "@/api/constant.ts";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { LoadedTracks, TrackSortField } from "@/api/types";
 
 export const BASE_URL =
   import.meta.env.VITE_DEFAULT_REST_API_URL ?? "http://localhost:3000";
@@ -18,7 +18,7 @@ const mapTrackSortField = (field: TrackSortField) => {
   return obj[field];
 };
 
-export const rest: Api = {
+export const restApi: Api = {
   getTrackCoverSrc: (trackId: string) => {
     return `${BASE_URL}/api/cover/${trackId}`;
   },

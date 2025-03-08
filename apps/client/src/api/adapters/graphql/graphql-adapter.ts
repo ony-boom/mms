@@ -1,19 +1,17 @@
 import type { Api } from "@/api/Api";
 import { createClient } from "graphql-sse";
 import { useEffect, useState } from "react";
-import { LoadedTracks, LyricsResponse, Track } from "@/api";
 import { CACHE_KEY } from "@/api/constant.ts";
 import { axiosClient, BASE_URL } from "./axios-client";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import {
-  FAVORITE_TRACK,
-  GET_LYRICS,
-  GET_TRACKS,
-  LOAD_TRACK,
-  TRACK_LOAD,
-} from "./queries";
+import { LoadedTracks, LyricsResponse, Track } from "@/api/types";
 
-export const defaultApi: Api = {
+import { GET_LYRICS } from "./queries/lyrics";
+import { GET_TRACKS } from "./queries/get-tracks";
+import { FAVORITE_TRACK } from "./queries/favorite-track";
+import { LOAD_TRACK, TRACK_LOAD } from "./queries/track-load";
+
+export const graphqlApi: Api = {
   useTracks: (where, sortBy) => {
     return useQuery<Track[]>({
       queryKey: [CACHE_KEY.TRACKS, where, sortBy],

@@ -1,12 +1,12 @@
 import { Heart } from "lucide-react";
-import { useApiClient } from "@/hooks";
-import { usePlayerStore } from "@/stores";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button, ButtonProps } from "@/components/ui/button.tsx";
 import { CACHE_KEY } from "@/api/constant";
 import { cn } from "@/lib/utils.ts";
 import { useCallback } from "react";
 import { motion } from "motion/react";
+import { useApiClient } from "@/hooks/use-api-client";
+import { usePlayerStore } from "@/stores/player/store";
 
 export function FavouriteButton(props: ButtonProps) {
   const currentTrackId = usePlayerStore((state) => state.currentTrackId);

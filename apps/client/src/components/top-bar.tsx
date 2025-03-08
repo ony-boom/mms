@@ -1,12 +1,14 @@
-import { Sort } from "./sort.tsx";
+import { Sort } from "./sort";
 import { useCallback } from "react";
+import { Button } from "./ui/button";
 import { Search, Shuffle } from "lucide-react";
-import { Button } from "./ui/button.tsx";
-import { SortOrder, TrackSortField } from "@/api";
-import { useApiClient, useTrackList } from "@/hooks";
 import { TrackLoadToast } from "./track-load-toast";
 import { ModeToggle } from "@/components/mode-toggle";
-import { useFilterStore, usePlayerStore } from "@/stores";
+import { SortOrder, TrackSortField } from "@/api/types";
+import { useApiClient } from "@/hooks/use-api-client";
+import { useTrackList } from "@/hooks/use-track-list";
+import { useFilterStore } from "@/stores/filter";
+import { usePlayerStore } from "@/stores/player/store";
 
 export function TopBar() {
   const { resetPlaylist, trackList } = useTrackList();

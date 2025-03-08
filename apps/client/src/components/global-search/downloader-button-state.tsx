@@ -1,12 +1,12 @@
-import { GlobeIcon, Loader } from "lucide-react";
 import { Button } from "../ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { cn } from "@/lib/utils";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { useEffect, useState } from "react";
-import { login } from "@/api/clients/downloader";
 import { useLoginStore } from "@/stores/login";
-import { cn } from "@/lib/utils.ts";
+import { GlobeIcon, Loader } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { login } from "@/api/downloader/auth";
 
 function isValidArl(str: string) {
   return str.length !== 0;

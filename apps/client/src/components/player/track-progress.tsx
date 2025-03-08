@@ -2,10 +2,10 @@ import { memo } from "react";
 import { cn } from "@/lib/utils.ts";
 import { Slider } from "../ui/slider";
 import { motion } from "motion/react";
-import { usePlayerStore } from "@/stores";
 import { useShallow } from "zustand/react/shallow";
 import { useAudioRef } from "@/hooks/use-audio-ref";
 import { SliderProps } from "@radix-ui/react-slider";
+import { usePlayerStore } from "@/stores/player/store";
 
 export const TrackProgress = memo((props: TrackProgressProps) => {
   const audioRef = useAudioRef();

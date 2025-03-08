@@ -1,11 +1,11 @@
 import { motion } from "motion/react";
 import { Progress } from "../ui/progress";
-import { usePlayerStore } from "@/stores";
+import { Volume, Volume1, Volume2, VolumeOff } from "lucide-react";
 import {
   useVolumeCompClickEventHandler,
   useVolumeCompWheelEventHandler,
-} from "@/hooks";
-import { Volume, Volume1, Volume2, VolumeOff } from "lucide-react";
+} from "@/hooks/use-volume-comp-event-handler";
+import { usePlayerStore } from "@/stores/player/store";
 
 export const Extra = () => {
   const volume = usePlayerStore((state) => state.volume);

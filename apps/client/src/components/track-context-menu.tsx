@@ -1,16 +1,16 @@
-import { Track } from "@/api";
+import { Track } from "@/api/types";
 import {
   ContextMenu,
   ContextMenuContent,
   ContextMenuItem,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
-import { usePlayerStore } from "@/stores";
+import { usePlayerStore } from "@/stores/player/store";
 import { ListEnd, Redo2, Edit2 } from "lucide-react";
-import { useApiClient } from "@/hooks";
 import { memo, MouseEventHandler, ReactNode, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { TagEditor } from "./tag-editor";
+import { useApiClient } from "@/hooks/use-api-client";
 
 export const TrackContextMenu = memo(
   ({ track, children }: TrackContextMenuProps) => {

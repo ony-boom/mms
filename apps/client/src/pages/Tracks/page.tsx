@@ -1,9 +1,10 @@
-import { usePlayerStore } from "@/stores";
-import { Loading } from "./components/loading";
-import { useTrackList } from "@/hooks";
-import { TracksGrid } from "./components/tracks-grid";
 import { useCallback } from "react";
-import { TopBar, GlobalSearch } from "@/components";
+import { Loading } from "./loading";
+import { TracksGrid } from "./tracks-grid";
+import { TopBar } from "@/components/top-bar";
+import { useTrackList } from "@/hooks/use-track-list";
+import { usePlayerStore } from "@/stores/player/store";
+import { Search } from "@/components/global-search/search";
 
 export function Tracks() {
   const { toggleShuffle, playTrackAtIndex, currentTrackId, toggle } =
@@ -35,7 +36,7 @@ export function Tracks() {
 
   return (
     <>
-      <GlobalSearch />
+      <Search />
       <TopBar />
       <TracksGrid
         onTrackPlay={handleTrackPlay}

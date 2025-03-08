@@ -1,6 +1,7 @@
+import { useFilterStore } from "@/stores/filter";
 import { useDebounce } from "./use-debounce";
 import { useApiClient } from "@/hooks/use-api-client";
-import { useFilterStore, usePlayerStore } from "@/stores";
+import { usePlayerStore } from "@/stores/player/store";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useShallow } from "zustand/react/shallow";
 

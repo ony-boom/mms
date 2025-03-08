@@ -1,8 +1,8 @@
 import { cn } from "@/lib/utils.ts";
 import { Shuffle } from "lucide-react";
-import { usePlayerStore } from "@/stores";
 import { Button, ButtonProps } from "@/components/ui/button.tsx";
 import { useShallow } from "zustand/react/shallow";
+import { usePlayerStore } from "@/stores/player/store";
 
 export function ShuffleButton(props: ShuffleButtonProps) {
   const { toggleShuffle, isShuffle, getCurrentPlaylist } = usePlayerStore(

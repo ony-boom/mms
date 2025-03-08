@@ -3,10 +3,10 @@ import { motion } from "motion/react";
 import { Virtuoso } from "react-virtuoso";
 import { TrackListElement } from "../track-list-element";
 import { memo, useEffect } from "react";
-import { Track } from "@/api";
+import { Track } from "@/api/types";
 import { RemoteTrackListElement } from "../remote-track-list-element";
-import { usePreviewStore } from "@/stores";
-import { useAudioPreviewRef } from "@/hooks";
+import { useAudioPreviewRef } from "@/hooks/use-audio-preview-ref";
+import { usePreviewStore } from "@/stores/preview";
 
 const LoadingIndicator = () => (
   <div className="flex w-full justify-center">

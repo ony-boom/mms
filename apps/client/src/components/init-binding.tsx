@@ -1,7 +1,7 @@
-import { login } from "@/api/clients/downloader";
-import { fetchData, postToServer } from "@/lib/api-utils";
-import { useLoginStore } from "@/stores/login";
 import { useEffect } from "react";
+import { useLoginStore } from "@/stores/login";
+import { fetchData, postToServer } from "@/api/downloader/utils";
+import { login } from "@/api/downloader/auth";
 
 interface BindingSetupProps {
   children?: React.ReactNode;

@@ -1,10 +1,10 @@
 import { useMemo } from "react";
-import { useApiClient } from "@/hooks";
-import { usePlayerStore } from "@/stores";
 import { useShallow } from "zustand/react/shallow";
 import { Virtuoso } from "react-virtuoso";
 import { TrackListElement } from "@/components/track-list-element.tsx";
 import { Skeleton } from "@/components/ui/skeleton.tsx";
+import { useApiClient } from "@/hooks/use-api-client";
+import { usePlayerStore } from "@/stores/player/store";
 
 export function Playlists() {
   const { playlistOrder, shuffleOrder, isShuffle } = usePlayerStore(

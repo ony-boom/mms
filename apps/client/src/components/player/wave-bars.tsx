@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { motion, useAnimation } from "motion/react"; // Keeping the import as is
-import { usePlayerStore } from "@/stores";
+import { motion, useAnimation } from "motion/react";
+import { usePlayerStore } from "@/stores/player/store";
 
 export function WaveBars() {
   const isPlaying = usePlayerStore((state) => state.isPlaying);

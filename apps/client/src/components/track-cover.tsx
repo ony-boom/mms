@@ -1,7 +1,7 @@
 import { HTMLProps } from "react";
-import { cn } from "@/lib/utils";
-import { useApiClient } from "@/hooks";
-import { Cover } from "@/components/cover";
+import { cn } from "@/lib/utils.ts";
+import { Cover } from "@/components/cover.tsx";
+import { useApiClient } from "@/hooks/use-api-client";
 
 export function TrackCover({
   trackId,
