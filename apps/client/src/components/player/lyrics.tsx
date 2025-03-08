@@ -61,10 +61,10 @@ const SyncedLyrics = ({ lrc }: SyncedLyricsProps) => {
         title={isActive ? "" : "Click to seek to this position"}
         ref={isActive ? activeLyricRef : null}
         className={cn(
-          "text-foreground/50 cursor-pointer leading-10 transition-all w-max",
+          "text-foreground/50 w-max cursor-pointer leading-10 transition-all",
           { "text-foreground text-4xl": isActive },
         )}
-        key={index} // since it won't change
+        key={index} // since we just want to render the lyrics
         onClick={() => !isActive && handleLyricsClick(lyric.timestamp)}
       >
         {lyric.content}
@@ -172,7 +172,7 @@ export const Lyrics = memo((props: HTMLProps<HTMLDivElement>) => {
     <LyricsContainer
       {...props}
       className={cn(
-        "w-max space-y-4 overflow-auto pt-0 text-3xl font-black flex flex-col items-center",
+        "flex w-max flex-col items-center space-y-4 overflow-auto pt-0 text-3xl font-black",
         props.className,
       )}
     >
