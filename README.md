@@ -2,7 +2,7 @@
 
 This is still a work in progress, yet it is functional.
 
-![Demo](./apps/client/assets/screenshot.png)
+![Demo](./apps/client/assets/banner.png)
 
 ## Development
 

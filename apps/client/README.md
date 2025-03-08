@@ -2,7 +2,7 @@
 
 A web client for My Music Server (should work with any music server though).
 
-![Demo](./assets/screenshot.png)
+![Demo](./assets/banner.png)
 
 ## Description
 
