@@ -106,7 +106,7 @@ const LocalController = () => {
   const onVolumeIconClick = useVolumeCompClickEventHandler();
 
   return (
-    <div className="sticky bottom-0 mx-auto w-[80%] max-w-7xl px-8 py-6">
+    <div className="sticky bottom-0 mx-auto w-[80%] max-w-7xl p-8">
       <Progress />
       <div className="mt-6 flex items-center">
         <div className="flex-1">

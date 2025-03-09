@@ -38,6 +38,11 @@ export interface Api {
     options?: Omit<UseQueryOptions<Track[]>, "queryFn" | "queryKey">,
   ) => UseQueryResult<Track[]>;
 
+  useArtistTracks: (
+    artistId: string,
+    options?: Omit<UseQueryOptions<Track[]>, "queryFn" | "queryKey">,
+  ) => UseQueryResult<Track[]>;
+
   useLoadTracks: (
     options?: Omit<UseQueryOptions, "queryFn" | "queryKey">,
   ) => UseMutationResult<boolean>;
@@ -65,6 +70,11 @@ export interface Api {
       trackPath: string;
     }
   >;
+
+  useArtistImage: (
+    artistName: string,
+    options?: Omit<UseQueryOptions<string>, "queryFn" | "queryKey">,
+  ) => UseQueryResult<string>;
 
   getTrackCoverSrc: (trackId: string) => string;
   getTrackAudioSrc: (trackIds: string[]) => string[];

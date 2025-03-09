@@ -22,8 +22,23 @@ export const restApi: Api = {
   getTrackCoverSrc: (trackId: string) => {
     return `${BASE_URL}/api/cover/${trackId}`;
   },
+
   getTrackAudioSrc: (trackIds: string[]) => {
     return trackIds.map((trackId) => `${BASE_URL}/api/tracks/audio/${trackId}`);
+  },
+
+  useArtistImage: (artistName, options) => {
+    return useQuery({
+      queryKey: [CACHE_KEY.ARTIST_IMAGE, artistName],
+      queryFn: async () => {
+        const response = await fetch(
+          `${BASE_URL}/api/cover/fromDeezer/${encodeURIComponent(artistName)}`,
+        );
+        const { data } = await response.json();
+        return data.picture_big || "";
+      },
+      ...options,
+    });
   },
 
   useLoadTracks: () => {
@@ -155,6 +170,20 @@ export const restApi: Api = {
 
         return data;
       },
+    });
+  },
+
+  useArtistTracks: (artistId, options) => {
+    return useQuery({
+      queryKey: [CACHE_KEY.ARTIST_TRACKS, artistId],
+      queryFn: async () => {
+        const response = await fetch(
+          `${BASE_URL}/api/tracks/byArtist/${artistId}`,
+        );
+        const { data } = await response.json();
+        return data;
+      },
+      ...options,
     });
   },
 };
