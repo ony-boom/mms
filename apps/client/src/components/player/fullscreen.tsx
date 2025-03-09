@@ -37,6 +37,8 @@ export function Fullscreen({ onClose, track, loadingTrack }: FullscreenProps) {
       )}
       <Lyrics className="w-full text-center" />
       <LocalController />
+
+      <div className="from-background pointer-events-none absolute bottom-32 left-0 right-0 h-44 bg-gradient-to-t to-transparent" />
     </div>
   );
 }

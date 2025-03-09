@@ -134,7 +134,7 @@ export function Player() {
             initial="initial"
             animate="animate"
             exit="exit"
-            className="with-blur fixed bottom-0 left-1/2 z-50 overflow-y-hidden border-none"
+            className="bg-background fixed bottom-0 left-1/2 z-50 overflow-y-hidden border-none"
             style={{
               transformOrigin: "bottom center",
               willChange: "transform, opacity",
