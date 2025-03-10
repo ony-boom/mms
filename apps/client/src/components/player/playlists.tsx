@@ -7,14 +7,17 @@ import { useApiClient } from "@/hooks/use-api-client";
 import { usePlayerStore } from "@/stores/player/store";
 
 export function Playlists() {
-  const { playlistOrder, shuffleOrder, isShuffle } = usePlayerStore(
-    useShallow((state) => ({
-      playlistOrder: state.playlistOrder,
-      shuffleOrder: state.shuffleOrder,
-      isShuffle: state.isShuffle,
-      getCurrentIndex: state.getCurrentIndex,
-    })),
-  );
+  const { playlistOrder, shuffleOrder, isShuffle, getCurrentIndex } =
+    usePlayerStore(
+      useShallow((state) => ({
+        playlistOrder: state.playlistOrder,
+        shuffleOrder: state.shuffleOrder,
+        isShuffle: state.isShuffle,
+        getCurrentIndex: state.getCurrentIndex,
+      })),
+    );
+
+  const currentIndex = getCurrentIndex();
 
   const data = useMemo(
     () => (isShuffle ? shuffleOrder : playlistOrder),
@@ -26,6 +29,7 @@ export function Playlists() {
       <Virtuoso
         data={data}
         overscan={5}
+        initialTopMostItemIndex={currentIndex}
         totalCount={playlistOrder.length}
         style={{ height: 256, overflowX: "hidden", willChange: "transform" }}
         itemContent={(index, data) => {
@@ -55,6 +59,11 @@ const ItemContent = ({
       index={index}
       track={track.at(0)}
       onClick={playTrackAtIndex}
+      contextMenuItemProps={{
+        addToQueue: {
+          disabled: true,
+        },
+      }}
     />
   ) : (
     <div className="h-[64px]"></div>

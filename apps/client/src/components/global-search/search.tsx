@@ -58,7 +58,7 @@ const SearchForm = ({
       value={value}
       onChange={onValueChange}
       placeholder="Search..."
-      className="border-b-foreground/10 focus-visible:border-b-foreground/30 min-w-xl h-12 rounded-none border-l-0 border-r-0 border-t-0 focus-visible:ring-0"
+      className="border-b-foreground/10 focus-visible:border-b-foreground/30 h-12 min-w-[560px] rounded-none border-l-0 border-r-0 border-t-0 focus-visible:ring-0"
       onClick={(e) => e.stopPropagation()}
     />
 
@@ -171,39 +171,39 @@ export function Search() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [setOpenSearchComponent]);
 
-  if (!openSearchComponent) return null;
-
   return (
     <AnimatePresence>
-      <motion.div
-        layout
-        aria-modal
-        exit={{ opacity: 0 }}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="bg-background/60 fixed left-0 top-0 z-50 grid h-full w-full justify-center"
-        onClick={() => setOpenSearchComponent(false)}
-      >
-        <div
-          className="with-blur mt-32 h-max overflow-hidden rounded-md"
-          onClick={(e) => e.stopPropagation()}
+      {openSearchComponent && (
+        <motion.div
+          layout
+          aria-modal
+          exit={{ opacity: 0 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="bg-background/60 fixed left-0 top-0 z-50 grid h-full w-full justify-center"
+          onClick={() => setOpenSearchComponent(false)}
         >
-          <SearchForm
-            value={localValue}
-            onValueChange={handleInputChange}
-            activeField={localSearchField}
-            onFieldChange={onBadgeClick}
-            onSubmit={handleSubmit}
-          />
+          <div
+            className="with-blur mt-32 h-max overflow-hidden rounded-md"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <SearchForm
+              value={localValue}
+              onValueChange={handleInputChange}
+              activeField={localSearchField}
+              onFieldChange={onBadgeClick}
+              onSubmit={handleSubmit}
+            />
 
-          <GlobalSearchResult
-            localValue={localValue}
-            isLoading={isLoading}
-            data={[...(localData ?? []), ...remoteSearchResults]}
-            handleResultClick={handleResultClick}
-          />
-        </div>
-      </motion.div>
+            <GlobalSearchResult
+              localValue={localValue}
+              isLoading={isLoading}
+              data={[...(localData ?? []), ...remoteSearchResults]}
+              handleResultClick={handleResultClick}
+            />
+          </div>
+        </motion.div>
+      )}
     </AnimatePresence>
   );
 }

@@ -1,6 +1,9 @@
-import { memo, MouseEventHandler } from "react";
+import { HTMLProps, memo, MouseEventHandler } from "react";
 import { usePlayerStore } from "@/stores/player/store";
-import { TrackContextMenu } from "@/components/track-context-menu";
+import {
+  TrackContextMenu,
+  TrackContextMenuProps,
+} from "@/components/track-context-menu";
 import { TrackCover } from "@/components/track-cover.tsx";
 import { WaveBars } from "@/components/player/wave-bars";
 import { Track } from "@/api/types";
@@ -8,7 +11,14 @@ import { cn } from "@/lib/utils";
 import { useShallow } from "zustand/react/shallow";
 
 export const TrackListElement = memo(
-  ({ track, index, onClick, showWaveBars }: TrackListElementProps) => {
+  ({
+    track,
+    index,
+    onClick,
+    showWaveBars,
+    contextMenuItemProps,
+    ...liProps
+  }: TrackListElementProps) => {
     const { currentTrackId } = usePlayerStore(
       useShallow((state) => ({
         currentTrackId: state.currentTrackId,
@@ -26,13 +36,15 @@ export const TrackListElement = memo(
     };
 
     return (
-      <TrackContextMenu track={track}>
+      <TrackContextMenu track={track} itemProps={contextMenuItemProps}>
         <li
+          {...liProps}
           className={cn(
-            "hover:bg-foreground/[5%] mt-2 flex cursor-pointer items-center justify-between p-2",
+            "hover:bg-foreground/[5%] mt-2 flex cursor-pointer items-center justify-between rounded-md p-2",
             {
               "bg-foreground/[3%]": isCurrent,
             },
+            liProps.className,
           )}
           onClick={handleClick}
         >
@@ -63,4 +75,5 @@ type TrackListElementProps = {
   index: number;
   showWaveBars?: boolean;
   onClick?: (index: number) => void;
-};
+  contextMenuItemProps?: TrackContextMenuProps["itemProps"];
+} & Omit<HTMLProps<HTMLLIElement>, "onClick">;

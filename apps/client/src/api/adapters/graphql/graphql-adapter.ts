@@ -3,7 +3,11 @@ import { createClient } from "graphql-sse";
 import { useEffect, useState } from "react";
 import { CACHE_KEY } from "@/api/constant.ts";
 import { axiosClient, BASE_URL } from "./axios-client";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQuery,
+  UseQueryResult,
+} from "@tanstack/react-query";
 import { LoadedTracks, LyricsResponse, Track } from "@/api/types";
 
 import { GET_LYRICS } from "./queries/lyrics";
@@ -120,5 +124,11 @@ export const graphqlApi: Api = {
         return responseData.data.favoriteTrack;
       },
     });
+  },
+  useArtistTracks: function (): UseQueryResult<Track[]> {
+    throw new Error("Function not implemented.");
+  },
+  useArtistImage: function (): UseQueryResult<string> {
+    throw new Error("Function not implemented.");
   },
 };

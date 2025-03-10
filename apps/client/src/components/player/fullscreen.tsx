@@ -37,6 +37,8 @@ export function Fullscreen({ onClose, track, loadingTrack }: FullscreenProps) {
       )}
       <Lyrics className="w-full text-center" />
       <LocalController />
+
+      <div className="from-background pointer-events-none absolute bottom-32 left-0 right-0 h-44 bg-gradient-to-t to-transparent" />
     </div>
   );
 }
@@ -106,7 +108,7 @@ const LocalController = () => {
   const onVolumeIconClick = useVolumeCompClickEventHandler();
 
   return (
-    <div className="sticky bottom-0 mx-auto w-[80%] max-w-7xl px-8 py-6">
+    <div className="sticky bottom-0 mx-auto w-[80%] max-w-7xl p-8">
       <Progress />
       <div className="mt-6 flex items-center">
         <div className="flex-1">

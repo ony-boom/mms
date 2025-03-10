@@ -50,14 +50,12 @@ const buildSortBy = (
 
 export default defineEventHandler(async (event) => {
   const query = getQuery<RequestQuery>(event);
-  const orderByDirection = query.orderByField
-    ? query.orderByDirection || "asc"
-    : undefined;
 
   try {
     const tracks = await prisma.track.findMany({
       where: buildWhere(query),
       orderBy: buildSortBy(query),
+      take: query.limit ? parseInt(query.limit) : undefined,
       include: {
         artists: true,
         album: true,
@@ -84,4 +82,5 @@ type RequestQuery = {
   orderByDirection?: "asc" | "desc";
   orderByField?: "title" | "dateAdded" | "album";
   field?: "*" | "title" | "artist" | "album" | "id";
+  limit?: string;
 };

@@ -11,9 +11,11 @@ import { memo, MouseEventHandler, ReactNode, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { TagEditor } from "./tag-editor";
 import { useApiClient } from "@/hooks/use-api-client";
+import { ContextMenuItemProps } from "@radix-ui/react-context-menu";
+import { cn } from "@/lib/utils.ts";
 
 export const TrackContextMenu = memo(
-  ({ track, children }: TrackContextMenuProps) => {
+  ({ track, children, itemProps }: TrackContextMenuProps) => {
     const { playAfter, currentTrackId, addToQueue } = usePlayerStore(
       useShallow((state) => ({
         currentTrackId: state.currentTrackId,
@@ -47,20 +49,33 @@ export const TrackContextMenu = memo(
           <ContextMenuTrigger>{children}</ContextMenuTrigger>
           <ContextMenuContent className="with-blur z-50 w-36 space-y-1 p-0 transition-all">
             <ContextMenuItem
-              className="w-full"
+              {...itemProps?.playNext}
               onClick={onPlayNextClick}
-              disabled={!currentTrackId || currentTrackId === track.id}
+              disabled={
+                !currentTrackId ||
+                currentTrackId === track.id ||
+                itemProps?.playNext?.disabled
+              }
+              className={cn("w-full", itemProps?.playNext?.className)}
             >
               Play next
               <Redo2 size={16} className="ml-auto" />
             </ContextMenuItem>
 
-            <ContextMenuItem className="w-full" onClick={onAddToQueueClick}>
+            <ContextMenuItem
+              {...itemProps?.addToQueue}
+              onClick={onAddToQueueClick}
+              className={cn("w-full", itemProps?.addToQueue?.className)}
+            >
               Add to queue
               <ListEnd size={16} className="ml-auto" />
             </ContextMenuItem>
 
-            <ContextMenuItem className="w-full" onClick={openTagEditor}>
+            <ContextMenuItem
+              {...itemProps?.editTags}
+              onClick={openTagEditor}
+              className={cn("w-full", itemProps?.editTags?.className)}
+            >
               Edit tags
               <Edit2 size={16} className="ml-auto" />
             </ContextMenuItem>
@@ -80,4 +95,9 @@ export const TrackContextMenu = memo(
 export type TrackContextMenuProps = {
   track: Track;
   children: ReactNode;
+  itemProps?: {
+    playNext?: ContextMenuItemProps;
+    addToQueue?: ContextMenuItemProps;
+    editTags?: ContextMenuItemProps;
+  };
 };
