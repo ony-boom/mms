@@ -1,8 +1,8 @@
+import { useState } from "react";
+import { cn } from "@/lib/utils";
 import { Artist } from "@/api/types";
 import { Button, ButtonProps } from "@/components/ui/button.tsx";
 import { ArtistTrackDialog } from "./artist-track/artist-track-dialog";
-import { cn } from "@/lib/utils.ts";
-import { useState } from "react";
 
 export function ArtistName({ artist, ...buttonProps }: ArtistNameProps) {
   const [openDialog, setOpenDialog] = useState(false);

@@ -6,15 +6,15 @@ import * as mm from "music-metadata";
 import * as crypto from "node:crypto";
 import EventEmitter from "node:events";
 import { config } from "@repo/config";
-import { TrackSaver } from "./track-saver";
-import { startWatcher } from "./watcher";
-import { prisma, StateKey } from "~~/prisma";
 import throttle from "lodash.throttle";
+import { startWatcher } from "./watcher";
+import { TrackSaver } from "./track-saver";
+import { prisma, StateKey } from "~~/prisma";
 
 class MusicLibraryManager extends EventEmitter {
   private readonly BATCH_SIZE = 50;
   readonly trackSaver = new TrackSaver();
-  private readonly supportedExtensions = ["mp3", "flac", "wav", "ogg"];
+  private readonly supportedExtensions = ["mp3", "flac", "wav", "ogg", "m4a"];
   private readonly globPattern = `${config.musicPath}/**/*.{${this.supportedExtensions.join(",")}}`;
   private watcherCleanup: (() => void) | null = null;
 

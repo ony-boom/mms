@@ -58,7 +58,7 @@ const SyncedLyrics = ({ lrc }: SyncedLyricsProps) => {
         title={isActive ? "" : "Click to seek to this position"}
         ref={isActive ? activeLyricRef : null}
         className={cn(
-          "text-foreground/50 w-max cursor-pointer leading-10 transition-all",
+          "text-foreground/50 cursor-pointer leading-10 transition-all",
           { "text-foreground text-4xl": isActive },
         )}
         key={index} // since we just want to render the lyrics
