@@ -6,7 +6,6 @@ import { axiosClient, BASE_URL } from "./axios-client";
 import {
   useMutation,
   useQuery,
-  UseQueryOptions,
   UseQueryResult,
 } from "@tanstack/react-query";
 import { LoadedTracks, LyricsResponse, Track } from "@/api/types";
