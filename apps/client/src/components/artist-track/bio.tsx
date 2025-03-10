@@ -18,11 +18,9 @@ export function ArtistBio({ description }: ArtistBioProps) {
       <div className="relative">
         <motion.div
           layout
-          initial={{
-            height: "5rem",
-          }}
+          initial={{ height: 0 }}
           animate={{
-            height: openSummary ? "100%" : "5rem",
+            height: openSummary ? "100%" : 64,
             transition: {
               type: "tween",
               duration: 0.3,
@@ -39,7 +37,7 @@ export function ArtistBio({ description }: ArtistBioProps) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="from-background pointer-events-none absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t to-transparent"
+              className="from-background pointer-events-none absolute right-0 bottom-0 left-0 h-12 bg-gradient-to-t to-transparent"
             />
           )}
         </AnimatePresence>

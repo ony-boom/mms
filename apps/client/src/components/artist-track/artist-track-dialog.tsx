@@ -63,7 +63,7 @@ export function ArtistTrackDialog({
 
         <DialogDescription asChild>
           <div>
-            <ArtistBio description={bioData?.description} />
+            <ArtistBio description={bioData?.htmlSummary} />
           </div>
         </DialogDescription>
 

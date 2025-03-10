@@ -13,12 +13,10 @@ const withWikipedia = async (artistName: string) => {
     response.json(),
   )) as {
     extract_html: string;
-    description: string;
   };
 
   return {
     htmlSummary: wikResponse.extract_html,
-    description: wikResponse.description,
   } satisfies ArtistWikiSummary;
 };
 
@@ -42,7 +40,6 @@ export function useArtistBio(
 
       return {
         htmlSummary: lastFmResponse.artist.bio.content,
-        description: lastFmResponse.artist.bio.summary,
       };
     },
   });

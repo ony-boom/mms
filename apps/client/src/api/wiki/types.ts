@@ -1,6 +1,5 @@
 export type ArtistWikiSummary = {
   htmlSummary: string;
-  description: string;
 };
 
 export type LasFmArtistInfoRawResponse = {
