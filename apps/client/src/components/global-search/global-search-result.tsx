@@ -7,6 +7,7 @@ import { Track } from "@/api/types";
 import { RemoteTrackListElement } from "../remote-track-list-element";
 import { useAudioPreviewRef } from "@/hooks/use-audio-preview-ref";
 import { usePreviewStore } from "@/stores/preview";
+import { usePlayerStore } from "@/stores/player/store";
 
 const LoadingIndicator = () => (
   <div className="flex w-full justify-center">
@@ -88,19 +89,15 @@ export const GlobalSearchResult = memo(
   }: GlobalSearchResultProps) => {
     const audioRef = useAudioPreviewRef();
 
-    const {
-      isPlaying,
-      setIsPlaying,
-      setCurrentTrackId,
-      loading,
-      src,
-      setSrc,
-      setLoading,
-    } = usePreviewStore();
+    const pause = usePlayerStore((state) => state.pause);
+
+    const { isPlaying, setIsPlaying, setCurrentTrackId, loading, src, setSrc } =
+      usePreviewStore();
 
     const handleTogglePlay = (track: Track) => {
       // If the same track is clicked and is already playing, pause it
       if (src === track.remoteTrackPreview && isPlaying) {
+        pause();
         setIsPlaying(false);
         return;
       }
@@ -108,21 +105,31 @@ export const GlobalSearchResult = memo(
       // If it's a new track or the same track but paused, play it
       setSrc(track.remoteTrackPreview!);
       setCurrentTrackId(track.id);
+      pause();
       setIsPlaying(true);
-      setLoading(true);
     };
 
     useEffect(() => {
       const audioElement = audioRef.current;
       if (!audioElement) return;
       (async () => {
-        if (isPlaying && src) {
-          audioElement.src = src;
-          audioElement.load();
-          await audioElement.play();
-        } else {
+        if (!isPlaying) {
           audioElement.pause();
+          return;
         }
+
+        if (!src) {
+          return;
+        }
+
+        if (audioRef.current?.src === src) {
+          audioElement.play();
+          return;
+        }
+
+        audioElement.src = src;
+        audioElement.load();
+        await audioElement.play();
       })();
     }, [audioRef, isPlaying, src]);
 

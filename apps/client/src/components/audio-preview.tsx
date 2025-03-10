@@ -16,6 +16,8 @@ export const PreviewAudio = () => {
 
   return (
     <audio
+      onLoadStart={() => setLoading(true)}
+      onCanPlay={() => setLoading(false)}
       onEnded={handleEnded}
       onLoadedMetadata={handleLoadedMetadata}
       ref={ref}
