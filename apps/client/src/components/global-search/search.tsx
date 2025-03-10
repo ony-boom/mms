@@ -12,6 +12,7 @@ import { useApiClient } from "@/hooks/use-api-client";
 import { useDebounce } from "@/hooks/use-debounce";
 import { QueryField, useFilterStore } from "@/stores/filter";
 import { usePlayerStore } from "@/stores/player/store";
+import { useSearchRemoteTracks } from "@/api/downloader/search";
 
 const SearchFieldBadges = ({
   activeField,
@@ -87,7 +88,7 @@ export function Search() {
   );
   const [localSearchField, setLocalSearchField] = useState(queryField);
 
-  const [remoteSearchResults, setRemoteSearchResults] = useState<Track[]>([]);
+  const { remoteSearchResults } = useSearchRemoteTracks(localValue);
 
   const debouncedValue = useDebounce(localValue, 500);
 
@@ -104,29 +105,6 @@ export function Search() {
       enabled: !!localValue,
     },
   );
-
-  // TODO: use react-query for this
-  useEffect(() => {
-    const fetchTracks = async () => {
-      try {
-        const response = await fetchData("mainSearch", {
-          term: debouncedValue,
-        });
-
-        const trackDatas = response.TRACK.data;
-        const formattedDatas: Track[] = trackDatas.map(
-          (track: { [key: string]: unknown }) => formatSingleTrack(track),
-        );
-        setRemoteSearchResults(formattedDatas);
-      } catch (error) {
-        console.error("Error fetching tracks:", error);
-      }
-    };
-
-    if (debouncedValue) {
-      fetchTracks().then();
-    }
-  }, [debouncedValue]);
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setLocalValue(event.target.value);

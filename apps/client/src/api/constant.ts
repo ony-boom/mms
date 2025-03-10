@@ -4,4 +4,6 @@ export const CACHE_KEY = {
   ARTIST_TRACKS: "artist-tracks",
   ARTIST_BIO: "artist-bio",
   ARTIST_IMAGE: "artist-image",
+  CONNECT: "connect",
+  SEARCH_REMOTE_TRACKS: "search-remote-tracks",
 };

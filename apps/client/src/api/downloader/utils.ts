@@ -1,57 +1,81 @@
-export function fetchData(
-  key: string,
-  data: Record<string, any> = {},
-  method = "GET",
-) {
-  const url = new URL(`http://localhost:6595/api/${key}`);
+// Constants
+const API_BASE_URL = "http://localhost:6595/api";
+const HTTP_METHODS = {
+  GET: "GET",
+  POST: "POST",
+};
+const CONTENT_TYPES = {
+  JSON: "application/json",
+};
 
-  Object.keys(data).forEach((key) => {
-    url.searchParams.append(key, data[key]);
-  });
+/**
+ * Fetches data from the server and returns it as JSON
+ */
+export function fetchData(
+  endpoint: string,
+  params: Record<string, any> = {},
+  method = HTTP_METHODS.GET,
+) {
+  const url = buildUrl(endpoint, params);
 
   return fetch(url.href, { method })
-    .then((response) => response.json())
-    .catch((error) => {
-      console.error(
-        "There has been a problem with your fetch operation:",
-        error,
-      );
-      return Promise.reject(error);
-    });
-}
-
-export function sendToServer(key: string, data: Record<string, any>) {
-  const url = new URL(`http://localhost:6595/api/${key}`);
-
-  Object.keys(data).forEach((key) => {
-    url.searchParams.append(key, data[key]);
-  });
-
-  fetch(url.href).catch((error) => {
-    console.error("There has been a problem with your fetch operation:", error);
-  });
-}
-
-export function postToServer(endpoint: string, data?: Record<string, any>) {
-  const url = new URL(`http://localhost:6595/api/${endpoint}`);
-
-  return fetch(url, {
-    body: JSON.stringify(data),
-    headers: {
-      "Content-Type": "application/json",
-    },
-    method: "POST",
-  })
     .then((response) => {
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        throw new Error(`HTTP error! Status: ${response.status}`);
       }
       return response.json();
     })
     .catch((error) => {
-      console.error(
-        "There has been a problem with your fetch operation:",
-        error,
-      );
+      console.error("Fetch operation failed:", error);
+      return Promise.reject(error);
     });
+}
+
+/**
+ * Sends data to the server without waiting for a response
+ */
+export function sendToServer(endpoint: string, params: Record<string, any>) {
+  const url = buildUrl(endpoint, params);
+
+  fetch(url.href).catch((error) => {
+    console.error("Fetch operation failed:", error);
+  });
+}
+
+/**
+ * Posts JSON data to the server and returns the response as JSON
+ */
+export function postToServer(endpoint: string, data?: Record<string, any>) {
+  const url = new URL(`${API_BASE_URL}/${endpoint}`);
+
+  return fetch(url, {
+    method: HTTP_METHODS.POST,
+    headers: {
+      "Content-Type": CONTENT_TYPES.JSON,
+    },
+    body: JSON.stringify(data),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      console.error("Fetch operation failed:", error);
+      return Promise.reject(error); // Added to maintain consistency with other functions
+    });
+}
+
+/**
+ * Helper function to build URLs with query parameters
+ */
+function buildUrl(endpoint: string, params: Record<string, any>): URL {
+  const url = new URL(`${API_BASE_URL}/${endpoint}`);
+
+  Object.entries(params).forEach(([key, value]) => {
+    url.searchParams.append(key, String(value));
+  });
+
+  return url;
 }

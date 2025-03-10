@@ -5,18 +5,17 @@ import { createDebouncedStorage } from "@/stores/player/storage.ts";
 import { PlayerState, PlayerStateProperties } from "./types";
 
 const updateCurrentTrack = (state: PlayerStateProperties, index: number) => {
-  const trackId = state.isShuffle
-    ? state.shuffleOrder[index]
-    : state.playlistOrder[index];
-  const trackSrc = state.playlists.get(trackId!);
-  if (trackSrc) {
-    return {
-      playingIndex: index,
-      currentTrackId: trackId,
-      src: trackSrc,
-    };
-  }
-  return {};
+  const order = state.isShuffle ? state.shuffleOrder : state.playlistOrder;
+  const trackId = order[index];
+  const trackSrc = trackId ? state.playlists.get(trackId) : undefined;
+
+  if (!trackSrc) return {};
+
+  return {
+    playingIndex: index,
+    currentTrackId: trackId,
+    src: trackSrc,
+  };
 };
 
 const shufflePlaylist = (state: PlayerState, shuffleAll: boolean) => {
