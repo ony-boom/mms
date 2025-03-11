@@ -59,7 +59,9 @@ export const restApi: Api = {
     return useQuery({
       queryKey: [CACHE_KEY.TRACKS, where, sortBy],
       queryFn: async () => {
-        const newUrl = new URL(`${BASE_URL}/api/tracks`);
+        const newUrl = import.meta.env.DEV
+          ? new URL("/api/tracks", BASE_URL)
+          : new URL("/api/tracks", window.location.origin);
 
         if (where) {
           const fields: Record<string, string> = {
