@@ -55,7 +55,7 @@ export function ArtistTrackDialog({
   );
 
   return (
-    <Dialog {...dialogProps} modal={true}>
+    <Dialog {...dialogProps}>
       <DialogContent>
         <DialogTitle>{artist.name}</DialogTitle>
 

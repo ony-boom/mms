@@ -45,7 +45,7 @@ export const TrackContextMenu = memo(
 
     return (
       <>
-        <ContextMenu>
+        <ContextMenu modal>
           <ContextMenuTrigger>{children}</ContextMenuTrigger>
           <ContextMenuContent className="with-blur z-[60] w-36 space-y-1 p-0 transition-all">
             <ContextMenuItem
