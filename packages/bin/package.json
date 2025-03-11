@@ -7,7 +7,14 @@
   "license": "ISC",
   "packageManager": "pnpm@10.5.2",
   "dependencies": {
-    "@repo/config": "workspace:*"
+    "@repo/config": "workspace:*",
+    "nexe": "5.0.0-beta.4",
+    "rimraf": "^6.0.1"
+  },
+  "scripts": {
+    "clean": "tsx ./clean.ts",
+    "setup": "tsx ./setup.ts",
+    "package": "tsx ./package/package.ts"
   },
   "devDependencies": {
     "@types/node": "^22.13.1"
