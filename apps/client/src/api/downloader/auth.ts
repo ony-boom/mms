@@ -6,7 +6,7 @@ import { useLoginStore } from "@/stores/login";
 
 export async function login(arl: string) {
   arl = arl.trim();
-  return await postToServer("loginArl", { arl });
+  return await postToServer("loginArl", { arl, force: true, child: 0 });
 }
 
 export function useConnect() {

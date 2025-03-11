@@ -2,6 +2,7 @@ import { Track } from "@/api/types";
 import { Cover } from "./cover";
 import { Button } from "./ui/button";
 import { CloudDownloadIcon, Loader, Pause, Play } from "lucide-react";
+import { useAddToQueue } from "@/api/downloader/add-to-queue";
 
 export const RemoteTrackListElement = ({
   track,
@@ -9,6 +10,12 @@ export const RemoteTrackListElement = ({
   isLoading,
   onTogglePlayButton,
 }: RemoteTrackListElementProps) => {
+  const {addToQueue} = useAddToQueue(track.remoteTrackLink || "");
+
+  const handleDownloadTrack = () => {
+    addToQueue();
+  }
+
   return (
     <div className="group relative">
       <li className="hover:bg-foreground/[5%] mt-2 flex items-center justify-between p-2 opacity-50">
@@ -29,6 +36,7 @@ export const RemoteTrackListElement = ({
           size="icon"
           variant="ghost"
           className="relative hover:cursor-pointer"
+          onClick={handleDownloadTrack}
         >
           <CloudDownloadIcon />
         </Button>
