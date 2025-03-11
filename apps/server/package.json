@@ -28,6 +28,9 @@
     "uuid": "^11.0.5",
     "zod": "^3.24.2",
     "@repo/deezer-sdk": "workspace:*",
-    "@repo/deemix": "workspace:*"
+    "@repo/deemix": "workspace:*",
+    "got": "^14.4.2",
+    "winston": "3.14.2",
+    "date-fns": "^3.6.0"
   }
 }

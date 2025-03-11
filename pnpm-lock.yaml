@@ -424,9 +424,15 @@ importers:
       '@repo/deezer-sdk':
         specifier: workspace:*
         version: link:../../packages/deezer-sdk
+      date-fns:
+        specifier: ^3.6.0
+        version: 3.6.0
       glob:
         specifier: ^11.0.1
         version: 11.0.1
+      got:
+        specifier: ^14.4.2
+        version: 14.4.6
       lodash.debounce:
         specifier: ^4.0.8
         version: 4.0.8
@@ -448,6 +454,9 @@ importers:
       uuid:
         specifier: ^11.0.5
         version: 11.1.0
+      winston:
+        specifier: 3.14.2
+        version: 3.14.2
       zod:
         specifier: ^3.24.2
         version: 3.24.2
