@@ -1,10 +1,7 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { spawn } from "node:child_process";
-
-const rootDir = path.resolve(__dirname, "../../");
-const clientDir = path.resolve(rootDir, "apps/client");
-const serverDir = path.resolve(rootDir, "apps/server");
+import { clientDir, serverDir } from "./constants";
 
 const copyExampleEnvFile = async (basePath: string) => {
   const exampleEnvPath = path.resolve(basePath, ".env.example");
