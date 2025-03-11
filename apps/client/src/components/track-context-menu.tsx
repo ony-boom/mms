@@ -47,7 +47,7 @@ export const TrackContextMenu = memo(
       <>
         <ContextMenu>
           <ContextMenuTrigger>{children}</ContextMenuTrigger>
-          <ContextMenuContent className="with-blur z-50 w-36 space-y-1 p-0 transition-all">
+          <ContextMenuContent className="with-blur z-[60] w-36 space-y-1 p-0 transition-all">
             <ContextMenuItem
               {...itemProps?.playNext}
               onClick={onPlayNextClick}

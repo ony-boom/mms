@@ -5,7 +5,7 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
-    "setup": "pnpm --filter '@repo/bin' setup",
+    "setup": "pnpm --filter '@repo/bin' run setup",
     "package": "pnpm --filter '@repo/bin' package",
     "clean": "tsx packages/bin/clean.ts",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
