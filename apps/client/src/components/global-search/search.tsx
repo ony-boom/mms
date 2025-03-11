@@ -10,7 +10,6 @@ import { useApiClient } from "@/hooks/use-api-client";
 import { useDebounce } from "@/hooks/use-debounce";
 import { QueryField, useFilterStore } from "@/stores/filter";
 import { usePlayerStore } from "@/stores/player/store";
-import { useSearchRemoteTracks } from "@/api/downloader/search";
 
 const SearchFieldBadges = ({
   activeField,
@@ -78,7 +77,7 @@ export function Search() {
 
   const { setPlaylists, toggleShuffle, playTrackAtIndex } =
     usePlayerStore.getState();
-  const { getTrackAudioSrc } = useApiClient();
+  const { getTrackAudioSrc, useSearchRemoteTracks } = useApiClient();
 
   // Local state
   const [localValue, setLocalValue] = useState(
@@ -86,9 +85,9 @@ export function Search() {
   );
   const [localSearchField, setLocalSearchField] = useState(queryField);
 
-  const { remoteSearchResults } = useSearchRemoteTracks(localValue);
-
   const debouncedValue = useDebounce(localValue, 500);
+
+  const { data: remoteSearchResults } = useSearchRemoteTracks(debouncedValue);
 
   // Local Search logic
   const filter =
@@ -174,7 +173,7 @@ export function Search() {
             <GlobalSearchResult
               localValue={localValue}
               isLoading={isLoading}
-              data={[...(localData ?? []), ...remoteSearchResults]}
+              data={[...(localData ?? []), ...(remoteSearchResults ?? [])]}
               handleResultClick={handleResultClick}
             />
           </div>

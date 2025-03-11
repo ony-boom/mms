@@ -2,7 +2,8 @@ import { Api } from "@/api/Api.ts";
 import { CACHE_KEY } from "@/api/constant.ts";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { LoadedTracks, TrackSortField } from "@/api/types";
+import { LoadedTracks, Track, TrackSortField } from "@/api/types";
+import { formatSingleTrack } from "@/lib/search";
 
 export const BASE_URL =
   import.meta.env.VITE_DEFAULT_REST_API_URL ?? "http://localhost:3000";
@@ -184,6 +185,30 @@ export const restApi: Api = {
         return data;
       },
       ...options,
+    });
+  },
+
+  useSearchRemoteTracks: (query: string) => {
+    return useQuery({
+      queryKey: [CACHE_KEY.SEARCH_REMOTE_TRACKS, query],
+      queryFn: async () => {
+        try {
+          const response = await fetch(
+            `${BASE_URL}/api/remote-tracks/?query=${query}`,
+          );
+          const { data } = await response.json();
+
+          const trackDatas = data.TRACK.data;
+          const formattedDatas: Track[] = trackDatas.map(
+            (track: { [key: string]: unknown }) => formatSingleTrack(track),
+          );
+          return formattedDatas;
+        } catch (error) {
+          console.error("Error fetching tracks:", error);
+          return [];
+        }
+      },
+      enabled: !!query,
     });
   },
 };

@@ -79,4 +79,6 @@ export interface Api {
   getTrackCoverSrc: (trackId: string) => string;
   getTrackAudioSrc: (trackIds: string[]) => string[];
   useTrackLoadEvent: (debounce?: number) => LoadedTracks;
+
+  useSearchRemoteTracks: (query: string) => UseQueryResult<Track[]>; // TODO: Add options²
 }

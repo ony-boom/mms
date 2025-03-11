@@ -418,6 +418,12 @@ importers:
       '@repo/config':
         specifier: workspace:*
         version: link:../../packages/config
+      '@repo/deemix':
+        specifier: workspace:*
+        version: link:../../packages/deemix
+      '@repo/deezer-sdk':
+        specifier: workspace:*
+        version: link:../../packages/deezer-sdk
       glob:
         specifier: ^11.0.1
         version: 11.0.1
