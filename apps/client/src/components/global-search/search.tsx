@@ -6,8 +6,6 @@ import { AnimatePresence, motion } from "motion/react";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { GlobalSearchResult } from "./global-search-result";
 import { DownloaderButtonState } from "./downloader-button-state";
-import { formatSingleTrack } from "@/lib/search";
-import { fetchData } from "@/api/downloader/utils";
 import { useApiClient } from "@/hooks/use-api-client";
 import { useDebounce } from "@/hooks/use-debounce";
 import { QueryField, useFilterStore } from "@/stores/filter";
