@@ -8,7 +8,6 @@
   "packageManager": "pnpm@10.5.2",
   "dependencies": {
     "@repo/config": "workspace:*",
-    "nexe": "5.0.0-beta.4",
     "rimraf": "^6.0.1"
   },
   "scripts": {
