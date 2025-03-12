@@ -11,6 +11,7 @@ import { PreviewAudio } from "./components/audio-preview";
 import { AudioProvider } from "./context/audio-ref-context";
 import { WithColorFlow } from "./components/with-color-flow";
 import { AudioPreviewProvider } from "./context/audio-preview-context";
+import { InitBinding } from "./components/init-binding";
 
 const DEFAULT_API_CLIENT: keyof typeof apiClients =
   import.meta.env.VITE_DEFAULT_API_NAME_TO_USE ?? "rest";
@@ -19,20 +20,22 @@ function Layout() {
   return (
     <ApiContext.Provider value={{ apiClientName: DEFAULT_API_CLIENT }}>
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-        <AppTitle />
-        <main className="mx-auto w-full antialiased">
-          <AudioProvider>
-            <AudioPreviewProvider>
-              <WithColorFlow>
-                <Outlet />
+        <InitBinding>
+          <AppTitle />
+          <main className="mx-auto w-full antialiased">
+            <AudioProvider>
+              <AudioPreviewProvider>
+                <WithColorFlow>
+                  <Outlet />
 
-                <Player />
-                <PreviewAudio />
-                <Toaster />
-              </WithColorFlow>
-            </AudioPreviewProvider>
-          </AudioProvider>
-        </main>
+                  <Player />
+                  <PreviewAudio />
+                  <Toaster />
+                </WithColorFlow>
+              </AudioPreviewProvider>
+            </AudioProvider>
+          </main>
+        </InitBinding>
       </ThemeProvider>
     </ApiContext.Provider>
   );
