@@ -56,7 +56,6 @@ export function useConnect() {
         spotifyStatus,
       };
     },
-    enabled: true,
     retry: false,
     refetchOnWindowFocus: false,
     refetchOnMount: false,

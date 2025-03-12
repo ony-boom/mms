@@ -31,7 +31,7 @@ export function ArtistTrackDialog({
       enabled: dialogProps.open,
     },
   );
-  const { data: bioData } = useArtistBio(artist.name, {
+  const { data: bioData, isLoading: loadingBioData } = useArtistBio(artist.name, {
     enabled: dialogProps.open,
   });
 
@@ -55,7 +55,7 @@ export function ArtistTrackDialog({
   );
 
   return (
-    <Dialog {...dialogProps} modal={true}>
+    <Dialog {...dialogProps}>
       <DialogContent>
         <DialogTitle>{artist.name}</DialogTitle>
 
@@ -63,7 +63,7 @@ export function ArtistTrackDialog({
 
         <DialogDescription asChild>
           <div>
-            <ArtistBio description={bioData?.htmlSummary} />
+            <ArtistBio loading={loadingBioData} description={bioData?.htmlSummary} />
           </div>
         </DialogDescription>
 

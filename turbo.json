@@ -2,9 +2,6 @@
   "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
   "tasks": {
-    "setutp": {
-      "cache": false
-    },
     "build": {
       "dependsOn": [
         "^build"
@@ -13,7 +10,10 @@
         "$TURBO_DEFAULT$",
         ".env*"
       ],
-      "outputs": ["dist/**"]
+      "outputs": [
+        "dist/**",
+        ".output/**"
+      ]
     },
     "lint": {
       "dependsOn": [
@@ -25,8 +25,14 @@
       "persistent": true
     },
     "package": {
-			"dependsOn": ["build", "^build"],
-			"outputs": ["dist/**", "out/**"]
-		}
+      "dependsOn": [
+        "build",
+        "^build"
+      ],
+      "outputs": [
+        "dist/**",
+        "out/**"
+      ]
+    }
   }
 }

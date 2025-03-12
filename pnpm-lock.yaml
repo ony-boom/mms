@@ -464,6 +464,9 @@ importers:
       '@repo/config':
         specifier: workspace:*
         version: link:../config
+      rimraf:
+        specifier: ^6.0.1
+        version: 6.0.1
     devDependencies:
       '@types/node':
         specifier: ^22.13.1

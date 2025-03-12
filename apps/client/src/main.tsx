@@ -6,10 +6,11 @@ import { Tracks } from "@/pages/Tracks/page";
 import { BrowserRouter, Routes, Route } from "react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-scan({
-  log: false,
-  enabled: import.meta.env.DEV,
-});
+if (import.meta.env.DEV) {
+  scan({
+    log: false,
+  });
+}
 
 const queryClient = new QueryClient();
 

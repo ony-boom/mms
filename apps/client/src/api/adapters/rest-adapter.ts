@@ -4,8 +4,9 @@ import { useEffect, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { LoadedTracks, TrackSortField } from "@/api/types";
 
-export const BASE_URL =
-  import.meta.env.VITE_DEFAULT_REST_API_URL ?? "http://localhost:3000";
+export const BASE_URL = import.meta.env.DEV
+  ? (import.meta.env.VITE_DEFAULT_REST_API_URL ?? "http://localhost:3000")
+  : ""; // Production URL will be just "/" since it will be served from the same domain as the server
 
 const mapTrackSortField = (field: TrackSortField) => {
   const obj: Record<TrackSortField, string> = {
@@ -58,7 +59,9 @@ export const restApi: Api = {
     return useQuery({
       queryKey: [CACHE_KEY.TRACKS, where, sortBy],
       queryFn: async () => {
-        const newUrl = new URL(`${BASE_URL}/api/tracks`);
+        const newUrl = import.meta.env.DEV
+          ? new URL("/api/tracks", BASE_URL)
+          : new URL("/api/tracks", window.location.origin);
 
         if (where) {
           const fields: Record<string, string> = {
