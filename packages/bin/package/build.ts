@@ -8,8 +8,12 @@ const PM = "pnpm";
 
 const clientOutputDir = path.join(clientDir, "dist");
 
-const buildApp = (cwd: string) => {
-  return new Promise((resolve, reject) => {
+const buildApp = (
+  cwd: string,
+  opts?: { preBuild?: () => Promise<void>; postBuild?: () => Promise<void> },
+) => {
+  return new Promise(async (resolve, reject) => {
+    await opts?.preBuild?.();
     const proc = spawn(PM, ["run", "build"], {
       stdio: "inherit",
       cwd,
@@ -19,11 +23,12 @@ const buildApp = (cwd: string) => {
       reject(err.message);
     });
 
-    proc.on("close", (code) => {
+    proc.on("close", async (code) => {
       if (code !== 0) {
         reject(code);
       }
       resolve(code);
+      await opts?.postBuild?.();
     });
   });
 };

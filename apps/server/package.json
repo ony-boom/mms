@@ -2,7 +2,7 @@
   "name": "@repo/server",
   "private": true,
   "scripts": {
-    "build": "nitro build",
+    "build": "prisma generate && nitro build",
     "dev": "nitro dev",
     "lint": "eslint .",
     "prepare": "nitro prepare",
@@ -10,6 +10,8 @@
     "db:push": "prisma db push"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^28.0.3",
+    "@rollup/plugin-node-resolve": "^16.0.1",
     "@types/lodash.debounce": "^4.0.9",
     "@types/lodash.throttle": "^4.1.9",
     "nitropack": "latest",
