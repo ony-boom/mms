@@ -11,7 +11,6 @@ async function packageApp() {
     path.join(serverDir, ".output"),
     path.join(rootDir, "build"),
   );
-  rimraf.sync(path.join(rootDir, "build", "server", "node_modules"));
 }
 
 packageApp().catch(console.error);
