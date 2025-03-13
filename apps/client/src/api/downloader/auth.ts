@@ -1,5 +1,5 @@
 import { postToServer } from "./utils";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { CACHE_KEY } from "../constant";
 import { fetchData } from "./utils";
 import { useLoginStore } from "@/stores/login";
@@ -9,8 +9,11 @@ export async function login(arl: string) {
   return await postToServer("loginArl", { arl });
 }
 
-export function useConnect() {
+export function useConnect(
+  opts?: Omit<UseQueryOptions, "queryFn" | "queryKey">,
+) {
   return useQuery({
+    ...opts,
     queryKey: [CACHE_KEY.CONNECT],
     queryFn: async () => {
       const connectResponse = await fetchData("connect");

@@ -17,7 +17,9 @@ const DEFAULT_API_CLIENT: keyof typeof apiClients =
   import.meta.env.VITE_DEFAULT_API_NAME_TO_USE ?? "rest";
 
 function Layout() {
-  useConnect();
+  useConnect({
+    enabled: import.meta.env.DEV,
+  });
 
   return (
     <ApiContext.Provider value={{ apiClientName: DEFAULT_API_CLIENT }}>
