@@ -3,10 +3,9 @@
   "private": true,
   "version": "0.1.0",
   "scripts": {
-    "build": "turbo run build",
     "dev": "turbo run dev",
+    "build": "pnpm --filter '@repo/bin' package",
     "setup": "pnpm --filter '@repo/bin' run setup",
-    "package": "pnpm --filter '@repo/bin' package",
     "preview": "node ./build/server/index.mjs",
     "clean": "tsx packages/bin/clean.ts",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
