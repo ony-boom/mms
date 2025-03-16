@@ -43,6 +43,7 @@ const buildConfig = () => {
     coverPath,
     musicPath: sanitizePath(parsedConfig.musicPath),
     defaultCoverExtension: "jpeg",
+    databasePath: path.join(BASE_CONFIG_DIR, "database.db")
   } satisfies Config;
 };
 

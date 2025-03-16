@@ -22,8 +22,8 @@
       }
     )
     // {
-      # Home Manager module
-      homeManagerModules.x86_64-linux = import ./nix/modules/home-manager.nix;
+      # Home Manager module for linux
+      homeManagerModules.x86_64-linux = import ./nix/modules/home-manager.nix {mms = self.packages.x86_64-linux.default;};
 
       # For convenience, expose the module as an overlay too
       overlays.default = final: prev: {

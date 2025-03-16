@@ -6,7 +6,8 @@
     "dev": "turbo run dev",
     "build": "pnpm --filter '@repo/bin' package",
     "setup": "pnpm --filter '@repo/bin' run setup",
-    "preview": "node ./build/server/index.mjs",
+    "package": "pnpm run setup && nix build",
+    "preview": "node ./build/server/index.mjs --cwd ./build/server",
     "clean": "tsx packages/bin/clean.ts",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },

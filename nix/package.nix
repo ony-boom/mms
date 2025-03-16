@@ -42,7 +42,7 @@ pkgs.stdenv.mkDerivation (finalAttrs: {
       src
       prePnpmInstall
       ;
-    hash = "sha256-UpLfCixNiTGmoQGslkkphz1XC9UCKSiKxvneUy07sag=";
+    hash = "sha256-e7fAlql3wpBp4rTu4X3T4685zHA8vSJP0rHIwsc9w6o=";
   };
 
   # Build phase
@@ -70,11 +70,13 @@ pkgs.stdenv.mkDerivation (finalAttrs: {
 
     # Create executable wrapper
     makeWrapper ${pkgs.nodejs}/bin/node $out/bin/mms \
-      --add-flags "$out/lib/server/index.mjs" \
+      --add-flags "index.mjs" \
       --set NODE_PATH "$out/lib:${pkgs.nodejs}/lib/node_modules" \
       --set PRISMA_QUERY_ENGINE_LIBRARY "${pkgs.prisma-engines}/lib/libquery_engine.node" \
       --set PRISMA_SCHEMA_ENGINE_BINARY "${pkgs.prisma-engines}/bin/query-engine" \
-      --set LD_LIBRARY_PATH "${pkgs.openssl.out}/lib"
+      --set LD_LIBRARY_PATH "${pkgs.openssl.out}/lib" \
+      --chdir "$out/lib/server" \
+      --run "exec -a \"$0\" \"\$@\""
 
     runHook postInstall
   '';
