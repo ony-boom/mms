@@ -1,4 +1,4 @@
-{
+{mms}: {
   config,
   lib,
   pkgs,
@@ -30,7 +30,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [cfg.package];
+    home.packages = [mms];
 
     # Create systemd user service
     systemd.user.services.mms = {

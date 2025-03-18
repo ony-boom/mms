@@ -2,7 +2,7 @@ import * as fs from "node:fs";
 import * as rimraf from "rimraf";
 import * as path from "node:path";
 import { spawn } from "node:child_process";
-import { clientDir, rootDir, serverDir } from "../constants";
+import { clientDir, rootDir, serverDir } from "../constants.js";
 
 const PM = "pnpm";
 

@@ -6,5 +6,6 @@ export type ConfigFile = {
 
 export type Config = ConfigFile & {
   coverPath: string;
+  databasePath: string;
   defaultCoverExtension: "jpeg" | "png" | "jpg";
 };

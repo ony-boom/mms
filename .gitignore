@@ -47,4 +47,6 @@ tsconfig.tsbuildinfo
 # since server will act as an api, we ignore the public folder since it will be used for the client
 apps/server/server/public
 mms # any binary files
-result ## nix result folder
+
+result
+database.db
