@@ -1,14 +1,29 @@
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
-import { Lrc, Lyric } from "lrc-kit";
+import { Lrc, Runner } from "lrc-kit";
 import { LyricsResponse } from "@/api/types";
 import { useShallow } from "zustand/react/shallow";
-import { useMemo, useRef, useEffect, memo, ReactNode, HTMLProps } from "react";
 import { useAudioRef } from "@/hooks/use-audio-ref";
 import { useApiClient } from "@/hooks/use-api-client";
 import { usePlayerStore } from "@/stores/player/store";
+import {
+  useMemo,
+  useRef,
+  useEffect,
+  memo,
+  ReactNode,
+  HTMLProps,
+  useState,
+  useCallback,
+} from "react";
 
-const SyncedLyrics = ({ lrc }: SyncedLyricsProps) => {
+const SyncedLyrics = memo(({ lrc }: SyncedLyricsProps) => {
+  const [activeIndex, setActiveIndex] = useState<number>(-1);
+
+  const runner = useMemo(() => new Runner(lrc), [lrc]);
+  const lyricsRef = useRef<Record<number, HTMLParagraphElement>>({});
+  const containerRef = useRef<HTMLDivElement>(null);
+
   const audioRef = useAudioRef();
   const { position, isPlaying } = usePlayerStore(
     useShallow((state) => ({
@@ -17,58 +32,72 @@ const SyncedLyrics = ({ lrc }: SyncedLyricsProps) => {
     })),
   );
 
-  const activeLyricRef = useRef<HTMLParagraphElement>(null);
-  const observerRef = useRef<IntersectionObserver | null>(null);
+  useEffect(() => {
+    if (audioRef.current) {
+      runner.timeUpdate(position);
+      setActiveIndex(runner.curIndex());
+    }
+  }, [audioRef, position, runner]);
 
   useEffect(() => {
-    if (observerRef.current) {
-      observerRef.current.disconnect();
+    const activeLyric = lyricsRef.current[activeIndex];
+
+    if (activeLyric && isPlaying && containerRef.current) {
+      activeLyric.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
     }
+  }, [activeIndex, isPlaying]);
 
-    observerRef.current = new IntersectionObserver(
-      (entries) => {
-        const [entry] = entries;
-        if (!entry?.isIntersecting && activeLyricRef.current && isPlaying) {
-          activeLyricRef.current.scrollIntoView({
-            behavior: "smooth",
-            block: "center",
-          });
-        }
-      },
-      { threshold: 0.9 },
-    );
+  useEffect(() => {
+    const audioElement = audioRef.current;
 
-    if (activeLyricRef.current) {
-      observerRef.current.observe(activeLyricRef.current);
-    }
+    const handleRunnerUpdate = (event: Event) => {
+      const audioElement = event.target as HTMLAudioElement;
+      runner.timeUpdate(audioElement.currentTime);
+      setActiveIndex(runner.curIndex());
+    };
 
-    return () => observerRef.current?.disconnect();
-  }, [position, isPlaying]);
+    audioElement?.addEventListener("timeupdate", handleRunnerUpdate);
 
-  const handleLyricsClick = (time: number) => {
-    if (audioRef.current) audioRef.current.currentTime = time;
-  };
+    return () => {
+      audioElement?.removeEventListener("timeupdate", handleRunnerUpdate);
+    };
+  }, [audioRef, runner]);
 
-  return lrc.map((lyric, index) => {
-    const nextTimestamp = lrc[index + 1]?.timestamp ?? Infinity;
-    const isActive = position >= lyric.timestamp && position < nextTimestamp;
+  const handleLyricsClick = useCallback(
+    (time: number) => {
+      if (audioRef.current) audioRef.current.currentTime = time;
+    },
+    [audioRef],
+  );
 
-    return (
-      <p
-        title={isActive ? "" : "Click to seek to this position"}
-        ref={isActive ? activeLyricRef : null}
-        className={cn(
-          "text-foreground/50 cursor-pointer leading-10 transition-all",
-          { "text-foreground text-4xl": isActive },
-        )}
-        key={index} // since we just want to render the lyrics
-        onClick={() => !isActive && handleLyricsClick(lyric.timestamp)}
-      >
-        {lyric.content}
-      </p>
-    );
-  });
-};
+  return (
+    <div ref={containerRef} className="w-full space-y-2">
+      {lrc.lyrics.map((lyric, index) => {
+        const isActive = index === activeIndex;
+
+        return (
+          <p
+            ref={(el) => {
+              if (el) lyricsRef.current[index] = el;
+            }}
+            title={isActive ? "" : "Click to seek to this position"}
+            className={cn(
+              "text-foreground/50 cursor-pointer leading-10 transition-all",
+              { "text-foreground text-4xl": isActive },
+            )}
+            key={`lyric-${index}-${lyric.timestamp}`}
+            onClick={() => !isActive && handleLyricsClick(lyric.timestamp)}
+          >
+            {lyric.content}
+          </p>
+        );
+      })}
+    </div>
+  );
+});
 
 const LyricsContainer = ({
   children,
@@ -168,7 +197,7 @@ export const Lyrics = memo((props: HTMLProps<HTMLDivElement>) => {
         props.className,
       )}
     >
-      <SyncedLyrics lrc={lrc!.lyrics} />
+      <SyncedLyrics lrc={lrc!} />
     </LyricsContainer>
   );
 });
@@ -179,5 +208,5 @@ interface LyricsContainerProps {
 }
 
 interface SyncedLyricsProps {
-  lrc: Lyric[];
+  lrc: Lrc;
 }
