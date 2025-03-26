@@ -5,12 +5,10 @@ import { Input } from "@/components/ui/input";
 import { AnimatePresence, motion } from "motion/react";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { GlobalSearchResult } from "./global-search-result";
-import { DownloaderButtonState } from "./downloader-button-state";
 import { useApiClient } from "@/hooks/use-api-client";
 import { useDebounce } from "@/hooks/use-debounce";
 import { QueryField, useFilterStore } from "@/stores/filter";
 import { usePlayerStore } from "@/stores/player/store";
-import { useSearchRemoteTracks } from "@/api/downloader/search";
 
 const SearchFieldBadges = ({
   activeField,
@@ -57,7 +55,7 @@ const SearchForm = ({
       value={value}
       onChange={onValueChange}
       placeholder="Search..."
-      className="border-b-foreground/10 focus-visible:border-b-foreground/30 h-12 min-w-[560px] rounded-none border-l-0 border-r-0 border-t-0 focus-visible:ring-0"
+      className="border-b-foreground/10 focus-visible:border-b-foreground/30 h-12 min-w-[560px] rounded-none border-t-0 border-r-0 border-l-0 focus-visible:ring-0"
       onClick={(e) => e.stopPropagation()}
     />
 
@@ -66,8 +64,6 @@ const SearchForm = ({
         activeField={activeField}
         onFieldChange={onFieldChange}
       />
-
-      <DownloaderButtonState />
     </div>
   </form>
 );
@@ -86,8 +82,6 @@ export function Search() {
   );
   const [localSearchField, setLocalSearchField] = useState(queryField);
 
-  const { remoteSearchResults } = useSearchRemoteTracks(localValue);
-
   const debouncedValue = useDebounce(localValue, 500);
 
   // Local Search logic
@@ -96,13 +90,9 @@ export function Search() {
       ? { title: debouncedValue }
       : { [localSearchField]: debouncedValue };
 
-  const { data: localData, isLoading } = useApiClient().useTracks(
-    filter,
-    undefined,
-    {
-      enabled: !!localValue,
-    },
-  );
+  const { data, isLoading } = useApiClient().useTracks(filter, undefined, {
+    enabled: !!localValue,
+  });
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setLocalValue(event.target.value);
@@ -119,12 +109,10 @@ export function Search() {
   };
 
   const handleResultClick = (tracks: Track[], index: number) => {
-    const newPlaylist = tracks
-      .filter((track) => !track.isRemoteTrack)
-      .map((track) => ({
-        src: getTrackAudioSrc([track.id])[0]!,
-        id: track.id,
-      }));
+    const newPlaylist = tracks.map((track) => ({
+      src: getTrackAudioSrc([track.id])[0]!,
+      id: track.id,
+    }));
 
     setPlaylists(newPlaylist);
     toggleShuffle(false);
@@ -156,7 +144,7 @@ export function Search() {
           exit={{ opacity: 0 }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="bg-background/60 fixed left-0 top-0 z-50 grid h-full w-full justify-center"
+          className="bg-background/60 fixed top-0 left-0 z-50 grid h-full w-full justify-center"
           onClick={() => setOpenSearchComponent(false)}
         >
           <div
@@ -174,7 +162,7 @@ export function Search() {
             <GlobalSearchResult
               localValue={localValue}
               isLoading={isLoading}
-              data={[...(localData ?? []), ...remoteSearchResults]}
+              data={data ?? []}
               handleResultClick={handleResultClick}
             />
           </div>

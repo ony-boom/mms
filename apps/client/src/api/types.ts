@@ -7,19 +7,6 @@ export type Track = {
   album: Album;
   dateAdded?: string;
   isFavorite?: boolean;
-
-  isRemoteTrack?: boolean;
-  remoteTrackTitle?: string;
-  remoteTrackVersion?: string;
-  remoteTrackPreview?: string;
-  remoteTrackDuration?: number;
-  remoteTrackLink?: string;
-  remoteTrackIsExplicit?: boolean;
-  remoteArtistId?: string;
-  remoteArtistName?: string;
-  remoteAlbumId?: string;
-  remoteAlbumTitle?: string;
-  remoteAlbumCover?: string;
 };
 
 export type LoadedTracks = { current: number; total: number };
