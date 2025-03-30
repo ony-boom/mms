@@ -3,21 +3,21 @@ import { Audio } from "./audio";
 import { cn } from "@/lib/utils";
 import { Extra } from "./extra";
 import { Controller } from "./controller";
-import { memo, useCallback, useEffect, useState, useMemo } from "react";
-import { Fullscreen } from "./fullscreen";
 import { TrackProgress } from "./track-progress";
 import { MessageSquareQuote } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
 import { Button } from "@/components/ui/button.tsx";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Playlists } from "@/components/player/playlists";
+import { Fullscreen } from "./fullscreen/fullscreen";
 import { TrackCover } from "@/components/track-cover";
+import { Playlists } from "@/components/player/playlists";
 import { ShuffleButton } from "@/components/player/shuffle-button";
 import { FavouriteButton } from "@/components/favourite-button";
 import { motion, AnimatePresence, type Variants } from "motion/react";
 import { useApiClient } from "@/hooks/use-api-client";
 import { useAudioRef } from "@/hooks/use-audio-ref";
 import { usePlayerStore } from "@/stores/player/store";
+import { memo, useCallback, useEffect, useState, useMemo } from "react";
 
 export function Player() {
   const [uiState, setUiState] = useState({
@@ -209,7 +209,7 @@ export function Player() {
                 onClick={togglePlaylistsExpanded}
               />
             </div>
-            <div className="relative flex items-center justify-between gap-16 px-3 pb-4 pt-1">
+            <div className="relative flex items-center justify-between gap-16 px-3 pt-1 pb-4">
               <TrackInfo
                 currentTrack={currentTrack!}
                 openLyricsView={openFullscreen}
@@ -284,7 +284,7 @@ const TrackInfo = memo(
                 size="icon"
                 title={openLyricsView ? "Hide lyrics" : "Show lyrics"}
                 onClick={onFullScreenToggle}
-                className="absolute bottom-0 right-0 opacity-0 transition-opacity group-hover:opacity-100"
+                className="absolute right-0 bottom-0 opacity-0 transition-opacity group-hover:opacity-100"
               >
                 {<MessageSquareQuote />}
               </Button>
@@ -292,14 +292,14 @@ const TrackInfo = memo(
             <div className="w-[148px] space-y-1 text-nowrap">
               <p
                 title={currentTrack.title}
-                className="overflow-hidden text-ellipsis font-bold"
+                className="overflow-hidden font-bold text-ellipsis"
               >
                 {currentTrack.title}
               </p>
 
               <p
                 title={artists}
-                className="text-foreground/80 overflow-hidden text-ellipsis text-xs"
+                className="text-foreground/80 overflow-hidden text-xs text-ellipsis"
               >
                 {artists}
               </p>
@@ -310,7 +310,7 @@ const TrackInfo = memo(
             className="flex items-end gap-4"
             variants={skeletonVariants}
           >
-            <div className="bg-muted w-18 aspect-square rounded-xl" />
+            <div className="bg-muted aspect-square w-18 rounded-xl" />
             <div className="w-[148px]">
               <Skeleton className="w-full" />
               <Skeleton className="w-full" />
