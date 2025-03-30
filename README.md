@@ -34,3 +34,6 @@ pnpm run dev
 
 [Server README](./apps/server/README.md)
 
+#### TODO
+
+- [ ] Maybe switch to something like electron (though, Tauri or Wails will be my go to)
