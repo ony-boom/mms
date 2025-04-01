@@ -2,6 +2,7 @@
   "name": "@repo/config",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -11,6 +12,7 @@
   },
   "packageManager": "pnpm@10.5.2",
   "devDependencies": {
-    "@types/node": "^22.13.1"
+    "@types/node": "^22.13.1",
+    "@repo/typescript-config": "workspace:*"
   }
 }

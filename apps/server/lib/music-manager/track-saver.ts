@@ -38,7 +38,17 @@ export class TrackSaver {
     const tracksByAlbum = new Map<string, LoadedMetadata[]>();
     for (const metadata of metadataBatch) {
       const trackTitle = metadata.title || basename(metadata.path);
-      const albumIdentifier = `${metadata.album ?? trackTitle}-${metadata.albumartist || metadata.artist || "Various Artists"}`;
+      // More robust album identifier
+      const albumTitle = (metadata.album || trackTitle).trim().toLowerCase();
+      const artistName = (
+        metadata.albumartist ||
+        metadata.artist ||
+        "Various Artists"
+      )
+        .trim()
+        .toLowerCase();
+      const albumIdentifier = `${albumTitle}-${artistName}`;
+
       const tracks = tracksByAlbum.get(albumIdentifier) || [];
       tracks.push(metadata);
       tracksByAlbum.set(albumIdentifier, tracks);

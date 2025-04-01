@@ -8,7 +8,7 @@
     "setup": "pnpm --filter '@repo/bin' run setup",
     "package": "pnpm run setup && nix build",
     "preview": "node ./build/server/index.mjs --cwd ./build/server",
-    "clean": "tsx packages/bin/clean.ts",
+    "clean": "pnpm --filter '@repo/bin' run clean",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
