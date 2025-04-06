@@ -1,7 +1,7 @@
 import * as os from "node:os";
 import * as fs from "node:fs";
 import * as path from "node:path";
-import { type Config, ConfigFile } from "./types";
+import { type Config, ConfigFile } from "./types.js";
 
 export const BASE_CONFIG_DIR = (
   fs.existsSync(process.env.XDG_CONFIG_HOME as fs.PathLike)
@@ -28,6 +28,7 @@ const configFilePath = path.join(
 
 const DEFAULT_CONFIG: ConfigFile = {
   musicPath: "~/Music",
+  lastFmApiKey: "",
 };
 
 const buildConfig = () => {
@@ -43,7 +44,8 @@ const buildConfig = () => {
     coverPath,
     musicPath: sanitizePath(parsedConfig.musicPath),
     defaultCoverExtension: "jpeg",
-    databasePath: path.join(BASE_CONFIG_DIR, "database.db")
+    databasePath: path.join(BASE_CONFIG_DIR, "database.db"),
+    lastFmApiKey: parsedConfig.lastFmApiKey,
   } satisfies Config;
 };
 

@@ -3,31 +3,163 @@ import { Track } from "@/api/types";
 import { LocalController } from "./controller";
 import { Button } from "@/components/ui/button";
 import { Minimize2 as Minimize } from "lucide-react";
-import { LoadingTrackInfo, TrackInfo } from "./track-info";
+import { TrackInfo } from "./track-info";
+import { useState, useEffect, useMemo } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useApiClient } from "@/hooks/use-api-client.ts";
+
+// Spring animation config used throughout the component
+const springTransition = {
+  type: "spring",
+  stiffness: 350,
+  damping: 30,
+  duration: 0.4,
+};
 
 export function Fullscreen({ onClose, track, loadingTrack }: FullscreenProps) {
+  const [showLyrics, setShowLyrics] = useState(true);
+  const apiClient = useApiClient();
+
+  // Use useMemo to prevent unnecessary recalculations
+  const bgSrc = useMemo(
+    () => apiClient.getTrackCoverSrc(track?.id ?? ""),
+    [apiClient, track?.id]
+  );
+
+  const handleLyricBtnClick = () => {
+    setShowLyrics((prev) => !prev);
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [onClose]);
+
   return (
     <div className="relative flex h-full flex-col justify-between">
+      <AnimatePresence>
+        {!showLyrics && bgSrc && (
+          <motion.div
+            data-bg={bgSrc}
+            style={{
+              "--bg-src": `url(${bgSrc})`,
+            } as React.CSSProperties}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fullscreen-bg with-blur"
+          />
+        )}
+      </AnimatePresence>
+
       <Button
-        className="absolute top-6 right-6"
+        className="absolute top-6 right-6 z-20"
         variant="ghost"
         size="icon"
         onClick={onClose}
+        aria-label="Close fullscreen view"
       >
         <Minimize />
       </Button>
-      {track && !loadingTrack ? (
-        <TrackInfo track={track} />
-      ) : (
-        <LoadingTrackInfo />
-      )}
-      <Lyrics className="w-full text-center" />
-      <LocalController />
 
-      <div className="from-background pointer-events-none absolute right-0 bottom-32 left-0 h-44 bg-gradient-to-t to-transparent" />
+      <AnimatePresence mode="wait">
+        {showLyrics && (
+          <motion.div
+            key="track-info-top"
+            layout
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={springTransition}
+            className="z-10"
+          >
+            {track && !loadingTrack ? (
+              <TrackInfo track={track} className="mb-4" />
+            ) : (
+              <LoadingTrackInfo />
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence mode="wait">
+        {showLyrics ? (
+          <motion.div
+            key="lyrics-container"
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.96 }}
+            transition={springTransition}
+            data-scroller={true}
+            className="h-full flex-1 overflow-auto"
+          >
+            <Lyrics className="w-full text-center" />
+          </motion.div>
+        ) : (
+          <motion.div
+            key="placeholder"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="flex-1"
+          />
+        )}
+      </AnimatePresence>
+
+      <motion.div
+        layout
+        transition={springTransition}
+        className="flex w-full flex-col z-10"
+      >
+        <AnimatePresence>
+          {!showLyrics && track && !loadingTrack && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              transition={springTransition}
+              className="mb-4"
+            >
+              <TrackInfo
+                track={track}
+                hideCover={true}
+                className="mx-auto w-[80%] max-w-7xl"
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <motion.div
+          layout
+          transition={springTransition}
+          className="relative z-20"
+        >
+          <LocalController onLyricBtnClick={handleLyricBtnClick} />
+        </motion.div>
+      </motion.div>
     </div>
   );
 }
+
+// Loading skeleton for track info
+const LoadingTrackInfo = () => (
+  <div className="mt-8 flex items-end gap-4 px-8">
+    <Skeleton className="h-36 w-36" />
+    <div className="space-y-1">
+      <Skeleton className="h-8 w-full" />
+      <Skeleton className="h-8 w-[70%]" />
+    </div>
+  </div>
+);
 
 export type FullscreenProps = {
   onClose: () => void;

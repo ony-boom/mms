@@ -1,12 +1,14 @@
+import { cn } from "@/lib/utils";
 import { Track } from "@/api/types";
+import { ComponentProps } from "react";
 import { TrackCover } from "@/components/track-cover";
-import { Skeleton } from "@/components/ui/skeleton";
 
-export const TrackInfo = ({ track }: { track: Track }) => {
+export const TrackInfo = ({ track, className, hideCover, ...rest }: TrackInfoProps) => {
   const artist = track.artists.map((artist) => artist.name).join(", ");
   return (
-    <div className="flex items-end gap-4 px-8 py-4">
+    <div {...rest} className={cn("flex items-end gap-4 px-8 py-4", className)}>
       <TrackCover
+        hidden={hideCover}
         trackId={track.id}
         trackTitle={track.title}
         className="h-36 w-36"
@@ -19,12 +21,7 @@ export const TrackInfo = ({ track }: { track: Track }) => {
   );
 };
 
-export const LoadingTrackInfo = () => (
-  <div className="mt-8 flex items-end gap-4 px-8">
-    <Skeleton className="h-36 w-36" />
-    <div className="space-y-1">
-      <Skeleton className="h-8 w-full" />
-      <Skeleton className="h-8 w-[70%]" />
-    </div>
-  </div>
-);
+export type TrackInfoProps = ComponentProps<"div"> & {
+  track: Track;
+  hideCover?: boolean;
+};

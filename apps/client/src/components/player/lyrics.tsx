@@ -74,7 +74,7 @@ const SyncedLyrics = memo(({ lrc }: SyncedLyricsProps) => {
   );
 
   return (
-    <div ref={containerRef} className="w-full space-y-2">
+    <div ref={containerRef} className="w-max space-y-2">
       {lrc.lyrics.map((lyric, index) => {
         const isActive = index === activeIndex;
 
@@ -104,7 +104,6 @@ const LyricsContainer = ({
   className = "",
 }: LyricsContainerProps) => (
   <div
-    data-scroller={true}
     className={cn("lyrics-gradient p-12 pt-0", className)}
   >
     {children}
@@ -193,7 +192,7 @@ export const Lyrics = memo((props: HTMLProps<HTMLDivElement>) => {
     <LyricsContainer
       {...props}
       className={cn(
-        "flex w-max flex-col items-center space-y-4 overflow-auto pt-0 text-3xl font-black",
+        "flex w-max flex-col items-center space-y-4 pt-0 text-3xl font-black",
         props.className,
       )}
     >

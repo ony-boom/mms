@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { Extra } from "./extra";
 import { Controller } from "./controller";
 import { TrackProgress } from "./track-progress";
-import { MessageSquareQuote } from "lucide-react";
+import { MicVocal } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
 import { Button } from "@/components/ui/button.tsx";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -134,7 +134,7 @@ export function Player() {
             initial="initial"
             animate="animate"
             exit="exit"
-            className="bg-background fixed bottom-0 left-1/2 z-50 overflow-y-hidden border-none"
+            className="with-blur fixed bottom-0 left-1/2 z-50 overflow-y-hidden border-none"
             style={{
               transformOrigin: "bottom center",
               willChange: "transform, opacity",
@@ -286,7 +286,7 @@ const TrackInfo = memo(
                 onClick={onFullScreenToggle}
                 className="absolute right-0 bottom-0 opacity-0 transition-opacity group-hover:opacity-100"
               >
-                {<MessageSquareQuote />}
+                {<MicVocal />}
               </Button>
             </div>
             <div className="w-[148px] space-y-1 text-nowrap">

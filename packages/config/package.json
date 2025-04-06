@@ -7,8 +7,11 @@
   "author": "",
   "license": "ISC",
   "exports": {
-    ".": "./index.ts",
-    "./types": "./types.ts"
+    ".": "./dist/index.js",
+    "./types": "./dist/types.d.ts"
+  },
+  "scripts": {
+    "build": "tsc -b"
   },
   "packageManager": "pnpm@10.5.2",
   "devDependencies": {

@@ -12,9 +12,10 @@ import { usePlayerStore } from "@/stores/player/store";
 import { Controller } from "../controller";
 import { VolumeComp } from "../extra";
 import { useShallow } from "zustand/react/shallow";
-import { TrackProgress } from "../track-progress";
+import { FullscreenProgress } from "./fullscreen-progress";
+import { MicVocal } from "lucide-react";
 
-export const LocalController = () => {
+export const LocalController = ({onLyricBtnClick}: LocalControllerProps) => {
   const audioRef = useAudioRef();
   const { volume, muted } = usePlayerStore(
     useShallow((state) => ({
@@ -34,7 +35,7 @@ export const LocalController = () => {
 
   return (
     <div className="sticky bottom-0 mx-auto w-[80%] max-w-7xl p-8">
-      <Progress />
+      <FullscreenProgress />
       <div className="mt-6 flex items-center">
         <div className="flex-1">
           <FavouriteButton variant="ghost" className="self-start" />
@@ -43,6 +44,13 @@ export const LocalController = () => {
           <Controller />
         </div>
         <div className="flex flex-1 items-center justify-end gap-2">
+          <Button
+            size="icon"
+            variant="ghost"
+            onClick={onLyricBtnClick}
+          >
+            {<MicVocal />}
+          </Button>
           <ShuffleButton />
           <div className="flex items-center gap-1">
             <Button onClick={onVolumeIconClick} variant="ghost" size="icon">
@@ -65,27 +73,7 @@ export const LocalController = () => {
   );
 };
 
-const Progress = () => {
-  const { duration, position } = usePlayerStore(
-    useShallow((state) => ({
-      duration: state.duration,
-      position: state.position,
-    })),
-  );
 
-  return (
-    <>
-      <div className="mb-2 flex justify-between text-xs">
-        <span>{formatPosition(position)}</span>
-        <span>{formatPosition(duration)}</span>
-      </div>
-      <TrackProgress className="mb-4 overflow-hidden rounded-full" />
-    </>
-  );
+export type LocalControllerProps = {
+  onLyricBtnClick?: () => void;
 };
-
-function formatPosition(ms: number) {
-  const minutes = Math.floor(ms / 60);
-  const seconds = Math.round(ms % 60);
-  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
-}

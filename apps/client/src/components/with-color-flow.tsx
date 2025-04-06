@@ -13,6 +13,7 @@ const useCssVarSetter = () => {
     styleElementRef.current = styleElement;
   }
 
+  // code bellow is 100% AI generated
   return useCallback((vars: Record<string, string>) => {
     if (!styleElementRef.current) return;
 
@@ -73,6 +74,7 @@ export function WithColorFlow({ children }: { children: ReactNode }) {
       "--color-accent": Color(colors.primary).alpha(0.1).hsl().string(),
       "--color-input": borderValue,
       "--color-border": borderValue,
+      "--color-primary-container": colors.primaryContainer,
     };
   }, [mdc, mode]);
 
