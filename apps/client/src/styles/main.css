@@ -113,6 +113,10 @@
   background-color: var(--color-primary-container);
 }
 
+.popup-border {
+  @apply border-foreground/10 border shadow-xl;
+}
+
 @keyframes marquee {
   0% {
     transform: translateX(0%);
