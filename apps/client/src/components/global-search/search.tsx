@@ -148,7 +148,7 @@ export function Search() {
           onClick={() => setOpenSearchComponent(false)}
         >
           <div
-            className="with-blur mt-32 h-max overflow-hidden rounded-md"
+            className="bg-background mt-32 h-max overflow-hidden rounded-md"
             onClick={(e) => e.stopPropagation()}
           >
             <SearchForm

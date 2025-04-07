@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "scripts": {
     "dev": "turbo run dev",
-    "build": "pnpm --filter '@repo/bin' package",
+    "build": "turbo run build && pnpm --filter '@repo/bin' package",
     "setup": "pnpm --filter '@repo/bin' run setup",
     "package": "pnpm run setup && nix build",
     "preview": "node ./build/server/index.mjs --cwd ./build/server",

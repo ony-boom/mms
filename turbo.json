@@ -1,8 +1,17 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
+  "globalEnv": [
+    "NODE_ENV"
+  ],
   "tasks": {
     "build": {
+      "passThroughEnv": [
+        "LD_LIBRARY_PATH",
+        "PRISMA_QUERY_ENGINE_LIBRARY",
+        "PRISMA_SCHEMA_ENGINE_BINARY",
+        "PRISMA_SKIP_POSTINSTALL_GENERATE"
+      ],
       "dependsOn": [
         "^build"
       ],

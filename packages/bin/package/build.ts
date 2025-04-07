@@ -1,14 +1,14 @@
 import * as fs from "node:fs";
 import * as rimraf from "rimraf";
 import * as path from "node:path";
-import { spawn } from "node:child_process";
-import { clientDir, rootDir, serverDir, configDir } from "../constants.js";
+// import { spawn } from "node:child_process";
+import { clientDir, rootDir, serverDir} from "../constants.js";
 
-const PM = "pnpm";
+// const PM = "pnpm";
 
 const clientOutputDir = path.join(clientDir, "dist");
 
-const buildApp = (
+/*const buildApp = (
   cwd: string,
   opts?: { preBuild?: () => Promise<void>; postBuild?: () => Promise<void> },
 ) => {
@@ -31,7 +31,7 @@ const buildApp = (
       await opts?.postBuild?.();
     });
   });
-};
+}*/
 
 const moveClientBuildToServerPublicDir = async () => {
   console.info("Copying client output to server public dir");
@@ -54,8 +54,8 @@ const createBuildDirIfNotExists = async () => {
 
 export async function build() {
   await createBuildDirIfNotExists();
-  await buildApp(configDir);
-  await buildApp(clientDir);
+  // await buildApp(configDir);
+  // await buildApp(clientDir);
   await moveClientBuildToServerPublicDir();
-  await buildApp(serverDir);
+  // await buildApp(serverDir);
 }
