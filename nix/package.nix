@@ -42,7 +42,7 @@ pkgs.stdenv.mkDerivation (finalAttrs: {
       src
       prePnpmInstall
       ;
-    hash = "sha256-Z2kaIsMDGlU2yd1nANTjDCC+V0DkVGYkD0ZsOQoaekk=";
+    hash = "sha256-nNhBKPhLVXE98vt5oalwKDqRT66AcLqBFFAi8XoKKzw=";
   };
 
   # Build phase
