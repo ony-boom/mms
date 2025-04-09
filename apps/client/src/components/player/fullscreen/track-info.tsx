@@ -11,7 +11,7 @@ export const TrackInfo = ({ track, className, hideCover, ...rest }: TrackInfoPro
         hidden={hideCover}
         trackId={track.id}
         trackTitle={track.title}
-        className="h-36 w-36"
+        className="h-48 w-48"
       />
       <div className="space-y-1">
         <p className="text-2xl font-black">{track.title}</p>

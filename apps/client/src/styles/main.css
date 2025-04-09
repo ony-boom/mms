@@ -78,6 +78,7 @@
 }
 
 @layer base {
+
   html,
   body {
     overflow: hidden;
@@ -115,36 +116,4 @@
 
 .popup-border {
   @apply border-foreground/10 border shadow-xl;
-}
-
-@keyframes marquee {
-  0% {
-    transform: translateX(0%);
-  }
-
-  100% {
-    transform: translateX(-100%);
-  }
-}
-
-.fullscreen-bg {
-  height: 100vh;
-  width: 100%;
-  position: absolute;
-  overflow: hidden;
-
-
-  &::after {
-    content: "";
-    aspect-ratio: 1/1;
-    position: absolute;
-    top: 5%;
-    left: 50%;
-    transform: translateX(-50%);
-    background-size: cover;
-    background-position: center;
-    background-image: var(--bg-src);
-    @apply rounded-md h-8/12 min-h-[320px];
-    z-index: 1;
-  }
 }
