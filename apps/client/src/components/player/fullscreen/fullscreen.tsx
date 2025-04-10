@@ -82,7 +82,7 @@ export function Fullscreen({
               alt={
                 track?.title ? `${track.title} album artwork` : "Track cover"
               }
-              className="absolute left-1/2 top-8 aspect-square w-full max-w-xl -translate-x-1/2 rounded-md object-cover"
+              className="absolute top-6/12 left-1/2 aspect-square w-full max-w-2xl -translate-x-1/2 -translate-y-9/12 rounded-md object-cover"
               loading="eager"
             />
           </motion.div>
@@ -91,7 +91,7 @@ export function Fullscreen({
 
       {/* Close button */}
       <Button
-        className="absolute right-6 top-6 z-20"
+        className="absolute top-6 right-6 z-20"
         variant="ghost"
         size="icon"
         onClick={onClose}
@@ -106,18 +106,16 @@ export function Fullscreen({
           <motion.div
             key="track-info-top"
             layout
-            initial={{ opacity: 0, y: -10 }}
+            initial={{ opacity: 0 }}
             animate={{
               opacity: 1,
-              y: 0,
               transition: {
                 ...SPRING_TRANSITION,
-                delay: 0.3, // Add delay only to entrance animation
+                delay: 0.4, // Add delay only to entrance animation
               },
             }}
             exit={{
               opacity: 0,
-              y: -20,
               transition: SPRING_TRANSITION, // No delay on exit
             }}
             className="z-10"
@@ -136,7 +134,13 @@ export function Fullscreen({
           <motion.div
             key="lyrics-container"
             initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
+            animate={{
+              opacity: 1,
+              scale: 1,
+              transition: {
+                delay: 0.3,
+              },
+            }}
             exit={{ opacity: 0, scale: 0.96 }}
             transition={SPRING_TRANSITION}
             className="h-full flex-1 overflow-auto"
