@@ -18,6 +18,7 @@ export const Controller = memo(({ shouldPlay }: ControllerProps) => {
       hasPrev: state.hasPrev,
       getCurrentPlaylist: state.getCurrentPlaylist,
       playlistOrder: state.playlistOrder, // just to trigger re-render so hasPrev/hasNext works
+      shuffleOrder: state.shuffleOrder,
     })),
   );
 

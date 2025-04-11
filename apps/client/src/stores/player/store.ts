@@ -3,6 +3,7 @@ import { shuffle as arrayShuffle } from "fast-shuffle";
 import { persist } from "zustand/middleware";
 import { createDebouncedStorage } from "@/stores/player/storage.ts";
 import { PlayerState, PlayerStateProperties } from "./types";
+import { arrayMove } from "@dnd-kit/sortable";
 
 const updateCurrentTrack = (state: PlayerStateProperties, index: number) => {
   const order = state.isShuffle ? state.shuffleOrder : state.playlistOrder;
@@ -215,6 +216,16 @@ export const usePlayerStore = create<PlayerState>()(
           playlists: newPlaylist,
           shuffleOrder: shuffledOrder,
           playlistOrder: playlistOrder,
+        });
+      },
+
+      moveTrack: (from, to) => {
+        const state = get();
+        const orderKey = state.isShuffle ? "shuffleOrder" : "playlistOrder";
+        const newOrder = arrayMove(state[orderKey], from, to);
+
+        set({
+          [orderKey]: newOrder,
         });
       },
 
