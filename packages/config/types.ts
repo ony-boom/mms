@@ -3,7 +3,9 @@
 export type ConfigFile = {
   musicPath: string;
   lastFmApiKey?: string;
-};
+
+  enableTagEditor?: boolean; // still in beta
+}
 
 export type Config = ConfigFile & {
   coverPath: string;

@@ -1,3 +1,4 @@
+// config.ts
 import * as os from "node:os";
 import * as fs from "node:fs";
 import * as path from "node:path";
@@ -9,15 +10,15 @@ export const BASE_CONFIG_DIR = (
     : path.join(os.homedir(), ".config", "mms")
 )!;
 
-const sanitizePath = (path: string) => {
-  return path.replace(/~|\$HOME/g, os.homedir());
+const sanitizePath = (pathStr: string) => {
+  return pathStr.replace(/~|\$HOME/g, os.homedir());
 };
 
-const ensurePathExists = (path: string) => {
-  if (!fs.existsSync(path)) {
-    fs.mkdirSync(path, { recursive: true });
+const ensurePathExists = (p: string) => {
+  if (!fs.existsSync(p)) {
+    fs.mkdirSync(p, { recursive: true });
   }
-  return path;
+  return p;
 };
 
 const coverPath = ensurePathExists(path.join(BASE_CONFIG_DIR, "covers"));
@@ -31,11 +32,11 @@ const DEFAULT_CONFIG: ConfigFile = {
   lastFmApiKey: "",
 };
 
-const buildConfig = () => {
-  if (!fs.existsSync(configFilePath)) {
-    fs.writeFileSync(configFilePath, JSON.stringify(DEFAULT_CONFIG, null, 2));
-  }
+if (!fs.existsSync(configFilePath)) {
+  fs.writeFileSync(configFilePath, JSON.stringify(DEFAULT_CONFIG, null, 2));
+}
 
+const buildConfig = (): Config => {
   const parsedConfig = JSON.parse(
     fs.readFileSync(configFilePath, "utf-8"),
   ) as ConfigFile;
@@ -46,7 +47,17 @@ const buildConfig = () => {
     defaultCoverExtension: "jpeg",
     databasePath: path.join(BASE_CONFIG_DIR, "database.db"),
     lastFmApiKey: parsedConfig.lastFmApiKey,
-  } satisfies Config;
+  };
 };
 
-export const config = buildConfig();
+export const config: Config = {} as Config;
+
+for (const [key] of Object.entries(buildConfig())) {
+  Object.defineProperty(config, key, {
+    get() {
+      return buildConfig()[key as keyof Config];
+    },
+    enumerable: true,
+    configurable: false,
+  });
+}

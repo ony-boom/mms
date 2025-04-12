@@ -71,14 +71,16 @@ export const TrackContextMenu = memo(
               <ListEnd size={16} className="ml-auto" />
             </ContextMenuItem>
 
-            <ContextMenuItem
-              {...itemProps?.editTags}
-              onClick={openTagEditor}
-              className={cn("w-full", itemProps?.editTags?.className)}
-            >
-              Edit tags
-              <Edit2 size={16} className="ml-auto" />
-            </ContextMenuItem>
+            {__APP_CONFIG__.enableTagEditor && (
+              <ContextMenuItem
+                {...itemProps?.editTags}
+                onClick={openTagEditor}
+                className={cn("w-full", itemProps?.editTags?.className)}
+              >
+                Edit tags
+                <Edit2 size={16} className="ml-auto" />
+              </ContextMenuItem>
+            )}
           </ContextMenuContent>
         </ContextMenu>
 

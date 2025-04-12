@@ -18,10 +18,8 @@ import {
 import {
   SortableContext,
   sortableKeyboardCoordinates,
-  useSortable,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 
 export function Playlists() {
@@ -102,27 +100,14 @@ const ItemContent = ({
   index: number;
 }) => {
   const playTrackAtIndex = usePlayerStore((state) => state.playTrackAtIndex);
-  const currentTrackId = usePlayerStore((state) => state.currentTrackId);
-
   const { data: track, isLoading } = useApiClient().useTracks({ id: trackId });
-
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id: trackId, disabled: trackId === currentTrackId });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-  };
 
   return isLoading ? (
     <Skeleton className={"h-[64px] w-full"} />
   ) : track ? (
     <TrackListElement
-      style={style}
-      ref={setNodeRef}
-      {...attributes}
-      {...listeners}
       showWaveBars
+      showAction
       className={"outline-0"}
       index={index}
       track={track.at(0)}

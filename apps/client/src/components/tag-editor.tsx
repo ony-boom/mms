@@ -50,7 +50,7 @@ export const TagEditor = ({ trackId, ...dialogProps }: TagEditorProps) => {
 
   return (
     <Dialog {...dialogProps}>
-      <DialogContent className="with-blur" data-scroller>
+      <DialogContent className="bg-background" data-scroller>
         {isLoading ? (
           <>
             <DialogHeader>
