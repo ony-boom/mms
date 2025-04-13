@@ -1,4 +1,4 @@
-# A music player, web-based
+# A local music player, web-based
 
 This is still a work in progress, yet it is functional.
 

@@ -12,7 +12,7 @@ in {
 
     package = mkOption {
       type = types.package;
-      default = pkgs.mms;
+      default = mms;
       description = "The mms package to use.";
     };
 
