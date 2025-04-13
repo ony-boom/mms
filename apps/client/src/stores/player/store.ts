@@ -156,6 +156,7 @@ export const usePlayerStore = create<PlayerState>()(
           playlists: new Map(state.playlists).set(id, src),
         });
       },
+
       playTrackAtIndex: (index) => {
         const state = get();
         const order = state.isShuffle
@@ -231,16 +232,61 @@ export const usePlayerStore = create<PlayerState>()(
 
       removeFromQueue: (index) => {
         const state = get();
-        const orderKey = state.isShuffle ? "shuffleOrder" : "playlistOrder";
-        const newOrder = structuredClone(state[orderKey]);
-        const removedId = newOrder.splice(index, 1)[0];
+        const { isShuffle, currentTrackId, playingIndex } = state;
+
+        const shuffleOrder = [...state.shuffleOrder];
+        const playlistOrder = [...state.playlistOrder];
+
+        const activeOrder = isShuffle ? shuffleOrder : playlistOrder;
+        const removedId = activeOrder[index];
+
+        activeOrder.splice(index, 1);
+
+        const otherOrder = isShuffle ? playlistOrder : shuffleOrder;
+        const otherOrderIndex = otherOrder.indexOf(removedId);
+
+        if (otherOrderIndex !== -1) {
+          otherOrder.splice(otherOrderIndex, 1);
+        }
+
         const playlists = new Map(state.playlists);
         playlists.delete(removedId);
 
-        set({
+        let stateUpdate: Partial<PlayerState> = {
+          shuffleOrder,
+          playlistOrder,
           playlists,
-          [orderKey]: newOrder,
-        });
+        };
+
+        if (currentTrackId === removedId) {
+          const trackUpdate =
+            activeOrder.length > 0
+              ? {
+                  playingIndex: Math.min(index, activeOrder.length - 1),
+                  currentTrackId:
+                    activeOrder[Math.min(index, activeOrder.length - 1)],
+                  src: playlists.get(
+                    activeOrder[Math.min(index, activeOrder.length - 1)],
+                  ),
+                  position: 0,
+                }
+              : {
+                  isPlaying: false,
+                  playingIndex: 0,
+                  currentTrackId: undefined,
+                  src: undefined,
+                };
+
+          stateUpdate = { ...stateUpdate, ...trackUpdate };
+        } else if (
+          playingIndex > index &&
+          currentTrackId &&
+          isShuffle === shuffleOrder.includes(currentTrackId)
+        ) {
+          stateUpdate.playingIndex = playingIndex - 1;
+        }
+
+        set(stateUpdate);
       },
     }),
     {
