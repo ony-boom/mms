@@ -30,19 +30,8 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [mms];
+    home.packages = [cfg.package];
 
-    nix = {
-      settings = {
-        substituters = [
-          "https://cache.nixos.org"
-          "https://ony-boom.cachix.org"
-        ];
-        trusted-public-keys = [
-          "ony-boom.cachix.org-1:izooku2hlRwUYHwcBo6b6CBYOoGqB7Gga9/EWpE9CW8="
-        ];
-      };
-    };
     # Create systemd user service
     systemd.user.services.mms = {
       Unit = {
