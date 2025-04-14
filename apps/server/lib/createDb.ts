@@ -1,7 +1,6 @@
 import fs from "node:fs";
 import { config } from "@repo/config";
 import { spawn } from "node:child_process";
-import { serverDir } from "@repo/bin/constants";
 
 export async function createDb() {
   console.log("Checking if database exists...");
