@@ -6,11 +6,6 @@
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  nixConfig = {
-    extra-subtituters = ["https://ony-boom.cachix.org"];
-    extra-trusted-public-keys = ["ony-boom.cachix.org-1:izooku2hlRwUYHwcBo6b6CBYOoGqB7Gga9/EWpE9CW8="];
-  };
-
   outputs = {
     self,
     nixpkgs,
