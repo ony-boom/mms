@@ -18,6 +18,7 @@ import { useApiClient } from "@/hooks/use-api-client";
 import { useAudioRef } from "@/hooks/use-audio-ref";
 import { usePlayerStore } from "@/stores/player/store";
 import { memo, useCallback, useEffect, useState, useMemo } from "react";
+import { ArtistName } from "../artist-name";
 
 export function Player() {
   const [uiState, setUiState] = useState({
@@ -209,7 +210,7 @@ export function Player() {
                 onClick={togglePlaylistsExpanded}
               />
             </div>
-            <div className="relative flex items-center justify-between gap-16 px-3 pt-1 pb-4">
+            <div className="relative flex items-center justify-between gap-16 px-3 pb-4 pt-1">
               <TrackInfo
                 currentTrack={currentTrack!}
                 openLyricsView={openFullscreen}
@@ -284,7 +285,7 @@ const TrackInfo = memo(
                 size="icon"
                 title={openLyricsView ? "Hide lyrics" : "Show lyrics"}
                 onClick={onFullScreenToggle}
-                className="absolute right-0 bottom-0 opacity-0 transition-opacity group-hover:opacity-100"
+                className="absolute bottom-0 right-0 opacity-0 transition-opacity group-hover:opacity-100"
               >
                 {<MicVocal />}
               </Button>
@@ -292,16 +293,20 @@ const TrackInfo = memo(
             <div className="w-[148px] space-y-1 text-nowrap">
               <p
                 title={currentTrack.title}
-                className="overflow-hidden font-bold text-ellipsis"
+                className="overflow-hidden text-ellipsis font-bold"
               >
                 {currentTrack.title}
               </p>
 
-              <p
-                title={artists}
-                className="text-foreground/80 overflow-hidden text-xs text-ellipsis"
-              >
-                {artists}
+              <p className="overflow-hidden text-ellipsis text-nowrap">
+                {currentTrack.artists.map((_, index) => (
+                  <span key={index}>
+                    <ArtistName artist={currentTrack.artists[index]!} />
+                    {index !== currentTrack.artists.length - 1 && (
+                      <span className="text-foreground/70">, </span>
+                    )}
+                  </span>
+                ))}
               </p>
             </div>
           </>
@@ -310,7 +315,7 @@ const TrackInfo = memo(
             className="flex items-end gap-4"
             variants={skeletonVariants}
           >
-            <div className="bg-muted aspect-square w-18 rounded-xl" />
+            <div className="bg-muted w-18 aspect-square rounded-xl" />
             <div className="w-[148px]">
               <Skeleton className="w-full" />
               <Skeleton className="w-full" />
