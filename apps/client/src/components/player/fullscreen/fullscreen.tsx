@@ -9,9 +9,6 @@ import { motion, AnimatePresence } from "motion/react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useApiClient } from "@/hooks/use-api-client";
 
-/**
- * Animation configuration for smooth transitions
- */
 const SPRING_TRANSITION = {
   type: "spring",
   stiffness: 350,
@@ -19,9 +16,6 @@ const SPRING_TRANSITION = {
   duration: 0.4,
 };
 
-/**
- * Fade transition for simpler animations
- */
 const FADE_TRANSITION = { duration: 0.3 };
 
 export type FullscreenProps = {
@@ -30,9 +24,6 @@ export type FullscreenProps = {
   loadingTrack?: boolean;
 };
 
-/**
- * Fullscreen view component for displaying track information and lyrics
- */
 export function Fullscreen({
   onClose,
   track,
@@ -41,18 +32,15 @@ export function Fullscreen({
   const [showLyrics, setShowLyrics] = useState(true);
   const apiClient = useApiClient();
 
-  // Get background image source with memoization
   const bgSrc = useMemo(
     () => (track?.id ? apiClient.getTrackCoverSrc(track.id) : ""),
     [apiClient, track?.id],
   );
 
-  // Create a memoized callback for toggling lyrics
   const handleLyricBtnClick = useCallback(() => {
     setShowLyrics((prev) => !prev);
   }, []);
 
-  // Add escape key handler
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -66,7 +54,6 @@ export function Fullscreen({
 
   return (
     <div className="relative flex h-full flex-col justify-between overflow-hidden">
-      {/* Background image - only shown when lyrics are hidden */}
       <AnimatePresence>
         {!showLyrics && bgSrc && (
           <motion.div
@@ -82,14 +69,13 @@ export function Fullscreen({
               alt={
                 track?.title ? `${track.title} album artwork` : "Track cover"
               }
-              className="absolute top-6/12 left-1/2 aspect-square w-full max-w-2xl -translate-x-1/2 -translate-y-9/12 rounded-md object-cover"
+              className="absolute top-6/12 left-1/2 aspect-square w-full max-w-xl -translate-x-1/2 -translate-y-8/12 rounded-md object-cover"
               loading="eager"
             />
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Close button */}
       <Button
         className="absolute top-6 right-6 z-20"
         variant="ghost"
@@ -100,7 +86,6 @@ export function Fullscreen({
         <Minimize />
       </Button>
 
-      {/* Track information - shown at top when lyrics are visible */}
       <AnimatePresence mode="wait">
         {showLyrics && (
           <motion.div
@@ -111,12 +96,12 @@ export function Fullscreen({
               opacity: 1,
               transition: {
                 ...SPRING_TRANSITION,
-                delay: 0.4, // Add delay only to entrance animation
+                delay: 0.4,
               },
             }}
             exit={{
               opacity: 0,
-              transition: SPRING_TRANSITION, // No delay on exit
+              transition: SPRING_TRANSITION,
             }}
             className="z-10"
           >
@@ -128,7 +113,6 @@ export function Fullscreen({
           </motion.div>
         )}
       </AnimatePresence>
-      {/* Main content area - either lyrics or empty space */}
       <AnimatePresence mode="wait">
         {showLyrics ? (
           <motion.div
@@ -160,13 +144,11 @@ export function Fullscreen({
         )}
       </AnimatePresence>
 
-      {/* Bottom controls area */}
       <motion.div
         layout
         transition={SPRING_TRANSITION}
         className="z-10 flex w-full flex-col"
       >
-        {/* Track info shown at bottom when lyrics are hidden */}
         <AnimatePresence>
           {!showLyrics && track && !loadingTrack && (
             <motion.div
