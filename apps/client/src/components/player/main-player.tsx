@@ -258,13 +258,6 @@ const TrackInfo = memo(
     openLyricsView: boolean;
     onFullScreenToggle: () => void;
   }) => {
-    // Memoize artists string to prevent recalculation
-    const artists = useMemo(
-      () =>
-        currentTrack?.artists?.map((artist) => artist.name).join(", ") || "",
-      [currentTrack?.artists],
-    );
-
     return (
       <motion.div
         aria-labelledby="track info"
