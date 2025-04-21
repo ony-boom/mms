@@ -22,27 +22,43 @@ const LocalTrackItem = memo(
     track,
     index,
     data,
+    focused,
     handleResultClick,
   }: {
     track: Track;
     index: number;
     data: Track[];
+    focused?: boolean;
     handleResultClick: (tracks: Track[], index: number) => void;
-  }) => (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.2 }}
-    >
-      <TrackListElement
-        track={track}
-        index={index}
-        showWaveBars
-        onClick={() => handleResultClick(data, index)}
-      />
-    </motion.div>
-  ),
+  }) => {
+    const handleKeyPress = (event: React.KeyboardEvent) => {
+      console.log("key pressed", event.key);
+
+      if (event.key === "Enter" || event.key === " ") {
+        handleResultClick(data, index);
+      }
+    }
+
+
+    return (
+      <motion.div
+        tabIndex={0}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.2 }}
+        onKeyPress={handleKeyPress}
+      >
+        <TrackListElement
+          track={track}
+          index={index}
+          showWaveBars
+          focued={focused}
+          onClick={() => handleResultClick(data, index)}
+        />
+      </motion.div>
+    )
+  }
 );
 
 export const GlobalSearchResult = memo(
@@ -52,10 +68,14 @@ export const GlobalSearchResult = memo(
     data,
     handleResultClick,
   }: GlobalSearchResultProps) => {
+
     if (!localValue) return null;
+
     return (
       <motion.div
         layout
+        role="dialog"
+        tabIndex={0}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}

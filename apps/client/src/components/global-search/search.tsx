@@ -52,6 +52,7 @@ const SearchForm = ({
   <form onSubmit={onSubmit}>
     <Input
       autoFocus
+      tabIndex={0}
       value={value}
       onChange={onValueChange}
       placeholder="Search..."
