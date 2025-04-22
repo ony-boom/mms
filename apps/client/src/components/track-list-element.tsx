@@ -67,7 +67,7 @@ export const TrackListElement = memo(
           className={cn(
             "hover:bg-foreground/[5%] group mt-2 flex cursor-pointer items-center justify-between rounded-md p-2",
             {
-              "bg-foreground/[3%]": isCurrent,
+              "bg-primary/[5%]": isCurrent,
             },
             {
               "bg-foreground/[5%]": focused

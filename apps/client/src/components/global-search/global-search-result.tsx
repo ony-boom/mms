@@ -2,104 +2,30 @@ import { Loader } from "lucide-react";
 import { motion } from "motion/react";
 import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
 import { TrackListElement } from "../track-list-element";
-import { memo, useCallback, useEffect, useRef, useState } from "react";
+import {
+  forwardRef,
+  memo,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+} from "react";
 import { Track } from "@/api/types";
+import { useResultFocusStore } from "@/stores/resultFocus";
 
-const LoadingIndicator = () => (
+const LoadingIndicator = memo(() => (
   <div className="flex w-full justify-center">
     <Loader className="animate-spin" />
   </div>
-);
+));
 
-const EmptyResults = () => (
+const EmptyResults = memo(() => (
   <div className="flex w-full justify-center">
     <p className="text-foreground">No results found</p>
   </div>
-);
+));
 
-export const GlobalSearchResult = memo(
-  ({
-    localValue,
-    isLoading,
-    data,
-    handleResultClick,
-  }: GlobalSearchResultProps) => {
-    const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
-    const ref = useRef<VirtuosoHandle>(null);
-
-    const handleKeyDown = useCallback(
-      (event: React.KeyboardEvent) => {
-        if (!data || data.length === 0) return;
-
-        if (event.key === "ArrowDown") {
-          setFocusedIndex((prev) =>
-            prev === null || prev === data.length - 1 ? 0 : prev + 1
-          );
-        } else if (event.key === "ArrowUp") {
-          setFocusedIndex((prev) =>
-            prev === null || prev === 0 ? data.length - 1 : prev - 1
-          );
-        } else if (event.key === "Enter" && focusedIndex !== null) {
-          handleResultClick(data, focusedIndex);
-        }
-      },
-      [data, focusedIndex, handleResultClick]
-    );
-
-    useEffect(() => {
-      ref.current?.scrollIntoView({
-        index: focusedIndex ?? 0,
-        behavior: "smooth",
-        align: "center",
-      });
-    }, [focusedIndex]);
-
-    if (!localValue) return null;
-
-    return (
-      <motion.div
-        layout
-        role="dialog"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        style={{ height: 400 }}
-        className="flex flex-col rounded-md py-2 shadow-md"
-        onKeyDown={handleKeyDown}
-      >
-        {isLoading ? (
-          <LoadingIndicator />
-        ) : (
-          data &&
-          (data.length ? (
-            <Virtuoso
-              data={data}
-              ref={ref}
-              style={{ height: "100%" }}
-              className="overflow-x-hidden will-change-transform"
-              totalCount={data.length}
-              itemContent={(index, track) => {
-                return (
-                  <LocalTrackItem
-                    track={track}
-                    index={index}
-                    data={data}
-                    focused={index === focusedIndex}
-                    handleResultClick={handleResultClick}
-                  />
-                );
-              }}
-            />
-          ) : (
-            <EmptyResults />
-          ))
-        )}
-      </motion.div>
-    );
-  }
-);
-
-const LocalTrackItem = memo(
+const TrackItem = memo(
   ({
     track,
     index,
@@ -113,35 +39,170 @@ const LocalTrackItem = memo(
     focused?: boolean;
     handleResultClick: (tracks: Track[], index: number) => void;
   }) => {
-    const handleKeyPress = (event: React.KeyboardEvent) => {
-      if (event.key === "Enter" || event.key === " ") {
-        handleResultClick(data, index);
+    const itemRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+      if (focused && itemRef.current) {
+        itemRef.current.focus();
       }
-    };
+    }, [focused]);
+
+    const handleClick = useCallback(() => {
+      handleResultClick(data, index);
+    }, [data, index, handleResultClick]);
 
     return (
       <motion.div
+        ref={itemRef}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.2 }}
-        onKeyPress={handleKeyPress}
+        className="focus:outline-0 focus:ring-0"
+        tabIndex={focused ? 0 : -1}
       >
         <TrackListElement
           track={track}
           index={index}
           showWaveBars
           focused={focused}
-          onClick={() => handleResultClick(data, index)}
+          onClick={handleClick}
         />
       </motion.div>
     );
-  }
+  },
 );
 
 type GlobalSearchResultProps = {
   localValue: string;
   isLoading: boolean;
-  data: Track[] | undefined;
+  data: Track[];
   handleResultClick: (track: Track[], index: number) => void;
+  inputRef?: React.RefObject<HTMLInputElement>;
 };
+
+export const GlobalSearchResult = memo(
+  forwardRef<HTMLDivElement, GlobalSearchResultProps>(
+    (
+      { localValue, isLoading, data = [], handleResultClick, inputRef },
+      ref,
+    ) => {
+      const virtuosoRef = useRef<VirtuosoHandle>(null);
+      const containerRef = useRef<HTMLDivElement>(null);
+
+      // Forward the ref to access the container element
+      useImperativeHandle(ref, () => containerRef.current!);
+
+      const {
+        setToFirst,
+        setShouldFocusResult,
+        current: focusedIndex,
+        shouldFocusResult,
+        setCurrent,
+      } = useResultFocusStore();
+
+      const handleKeyDown = useCallback(
+        (event: React.KeyboardEvent) => {
+          if (!data.length) return;
+
+          switch (event.key) {
+            case "ArrowDown":
+              setCurrent(
+                focusedIndex === null
+                  ? 0
+                  : Math.min(focusedIndex + 1, data.length - 1),
+              );
+              event.preventDefault();
+              break;
+            case "ArrowUp":
+              if (focusedIndex === 0 && inputRef?.current) {
+                inputRef.current.focus();
+                setShouldFocusResult(false);
+              } else {
+                setCurrent(
+                  focusedIndex === null ? 0 : Math.max(focusedIndex - 1, 0),
+                );
+              }
+              event.preventDefault();
+              break;
+            case "Enter":
+              if (focusedIndex !== null) {
+                handleResultClick(data, focusedIndex);
+                event.preventDefault();
+              }
+              break;
+          }
+        },
+        [
+          data,
+          focusedIndex,
+          handleResultClick,
+          setCurrent,
+          inputRef,
+          setShouldFocusResult,
+        ],
+      );
+
+      useEffect(() => {
+        if (focusedIndex !== null && virtuosoRef.current && data.length) {
+          virtuosoRef.current.scrollIntoView({
+            index: focusedIndex,
+            behavior: "auto",
+            align: "center",
+          });
+        }
+      }, [focusedIndex, data]);
+
+      const handleListFocus = useCallback(() => {
+        if (data.length > 0 && focusedIndex === null) {
+          setToFirst();
+          setShouldFocusResult(true);
+        }
+      }, [data.length, focusedIndex, setToFirst, setShouldFocusResult]);
+
+      if (!localValue) return null;
+
+      const renderContent = () => {
+        if (isLoading) return <LoadingIndicator />;
+        if (!data.length) return <EmptyResults />;
+
+        return (
+          <Virtuoso
+            data={data}
+            ref={virtuosoRef}
+            style={{ height: "100%" }}
+            className="overflow-x-hidden will-change-transform"
+            totalCount={data.length}
+            itemContent={(index, track) => (
+              <TrackItem
+                track={track}
+                index={index}
+                data={data}
+                focused={index === focusedIndex && shouldFocusResult}
+                handleResultClick={handleResultClick}
+              />
+            )}
+          />
+        );
+      };
+
+      return (
+        <motion.div
+          ref={containerRef}
+          layout
+          role="dialog"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          style={{ height: 400 }}
+          className="flex flex-col rounded-md py-2 shadow-md outline-0"
+          onKeyDown={handleKeyDown}
+          onFocus={handleListFocus}
+          tabIndex={0}
+        >
+          {renderContent()}
+        </motion.div>
+      );
+    },
+  ),
+);

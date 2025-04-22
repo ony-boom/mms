@@ -3,12 +3,27 @@ import { Track } from "@/api/types";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { AnimatePresence, motion } from "motion/react";
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import {
+  ChangeEvent,
+  FormEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { GlobalSearchResult } from "./global-search-result";
 import { useApiClient } from "@/hooks/use-api-client";
 import { useDebounce } from "@/hooks/use-debounce";
 import { QueryField, useFilterStore } from "@/stores/filter";
 import { usePlayerStore } from "@/stores/player/store";
+import { useResultFocusStore } from "@/stores/resultFocus";
+import { FocusTrap } from "focus-trap-react";
+
+const searchFields = [
+  { label: "All", value: "*" },
+  { label: "Artist", value: "artistName" },
+  { label: "Album", value: "albumTitle" },
+];
 
 const SearchFieldBadges = ({
   activeField,
@@ -18,95 +33,78 @@ const SearchFieldBadges = ({
   onFieldChange: (field: string) => void;
 }) => (
   <div className="flex gap-2 px-2 py-4">
-    {searchFields.map((field) => {
-      const isActive = activeField === field.value;
-      return (
-        <Badge
-          key={field.value}
-          className={clsx("cursor-pointer", {
-            "hover:bg-accent": !isActive,
-          })}
-          onClick={() => onFieldChange(field.value)}
-          variant={isActive ? "default" : "outline"}
-        >
-          {field.label}
-        </Badge>
-      );
-    })}
+    {searchFields.map((field) => (
+      <Badge
+        key={field.value}
+        className={clsx("cursor-pointer", {
+          "hover:bg-accent": activeField !== field.value,
+        })}
+        onClick={() => onFieldChange(field.value)}
+        variant={activeField === field.value ? "default" : "outline"}
+      >
+        {field.label}
+      </Badge>
+    ))}
   </div>
-);
-
-const SearchForm = ({
-  value,
-  onValueChange,
-  activeField,
-  onFieldChange,
-  onSubmit,
-}: {
-  value: string;
-  onValueChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  activeField: QueryField;
-  onFieldChange: (field: string) => void;
-  onSubmit: (e: FormEvent<HTMLFormElement>) => void;
-}) => (
-  <form onSubmit={onSubmit}>
-    <Input
-      autoFocus
-      tabIndex={0}
-      value={value}
-      onChange={onValueChange}
-      placeholder="Search..."
-      className="border-b-foreground/10 focus-visible:border-b-foreground/30 h-12 min-w-[560px] rounded-none border-t-0 border-r-0 border-l-0 focus-visible:ring-0"
-      onClick={(e) => e.stopPropagation()}
-    />
-
-    <div className="flex items-center justify-between gap-2 px-2">
-      <SearchFieldBadges
-        activeField={activeField}
-        onFieldChange={onFieldChange}
-      />
-    </div>
-  </form>
 );
 
 export function Search() {
   const { queryField, query, openSearchComponent, setOpenSearchComponent } =
     useFilterStore();
-
   const { setPlaylists, toggleShuffle, playTrackAtIndex } =
     usePlayerStore.getState();
-  const { getTrackAudioSrc } = useApiClient();
+  const { getTrackAudioSrc, useTracks } = useApiClient();
+  const { setShouldFocusResult, setCurrent, setToFirst } =
+    useResultFocusStore();
 
-  // Local state
+  const inputRef = useRef<HTMLInputElement>(null);
+  const resultsRef = useRef<HTMLDivElement>(null);
+
   const [localValue, setLocalValue] = useState(
     (queryField === "*" ? query?.title : query?.[queryField]) ?? "",
   );
-  const [localSearchField, setLocalSearchField] = useState(queryField);
-
+  const [localSearchField, setLocalSearchField] =
+    useState<QueryField>(queryField);
   const debouncedValue = useDebounce(localValue, 500);
 
-  // Local Search logic
   const filter =
     localSearchField === "*"
       ? { title: debouncedValue }
       : { [localSearchField]: debouncedValue };
 
-  const { data, isLoading } = useApiClient().useTracks(filter, undefined, {
+  const { data = [], isLoading } = useTracks(filter, undefined, {
     enabled: !!localValue,
   });
+
+  const handleInputKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLInputElement>) => {
+      if (event.key === "ArrowDown" && data.length) {
+        event.preventDefault();
+
+        setToFirst();
+        setShouldFocusResult(true);
+
+        if (resultsRef.current) {
+          resultsRef.current.focus();
+        }
+      }
+    },
+    [data.length, setToFirst, setShouldFocusResult],
+  );
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setLocalValue(event.target.value);
   };
 
+  const handleFieldChange = (field: string) => {
+    if (field !== localSearchField) {
+      setLocalSearchField(field as QueryField);
+    }
+  };
+
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setOpenSearchComponent(false);
-  };
-
-  const onBadgeClick = (field: string) => {
-    if (field === localSearchField) return;
-    setLocalSearchField(field as QueryField);
   };
 
   const handleResultClick = (tracks: Track[], index: number) => {
@@ -120,7 +118,15 @@ export function Search() {
     playTrackAtIndex(index);
   };
 
-  // Keyboard shortcuts
+  const handleInputFocus = useCallback(() => {
+    setCurrent(null);
+  }, [setShouldFocusResult]);
+
+  const handleExit = () => {
+    setCurrent(null);
+    setOpenSearchComponent(false);
+  };
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "f" && e.ctrlKey) {
@@ -139,42 +145,54 @@ export function Search() {
   return (
     <AnimatePresence>
       {openSearchComponent && (
-        <motion.div
-          layout
-          aria-modal
-          exit={{ opacity: 0 }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="bg-background/60 fixed top-0 left-0 z-50 grid h-full w-full justify-center"
-          onClick={() => setOpenSearchComponent(false)}
-        >
-          <div
-            className="bg-background popup-border mt-32 h-max overflow-hidden rounded-md"
-            onClick={(e) => e.stopPropagation()}
+        <FocusTrap>
+          <motion.div
+            layout
+            role="dialog"
+            exit={{ opacity: 0 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="bg-background/60 fixed left-0 top-0 z-50 grid h-full w-full justify-center"
+            onClick={handleExit}
           >
-            <SearchForm
-              value={localValue}
-              onValueChange={handleInputChange}
-              activeField={localSearchField}
-              onFieldChange={onBadgeClick}
-              onSubmit={handleSubmit}
-            />
+            <div
+              className="bg-background popup-border mt-32 h-max overflow-hidden rounded-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <form onSubmit={handleSubmit}>
+                <Input
+                  ref={inputRef}
+                  autoFocus
+                  tabIndex={0}
+                  value={localValue}
+                  onFocus={handleInputFocus}
+                  onChange={handleInputChange}
+                  onKeyDown={handleInputKeyDown}
+                  placeholder="Search..."
+                  className="border-b-foreground/10 focus-visible:border-b-foreground/30 h-12 min-w-[560px] rounded-none border-l-0 border-r-0 border-t-0 focus-visible:ring-0"
+                  onClick={(e) => e.stopPropagation()}
+                />
 
-            <GlobalSearchResult
-              localValue={localValue}
-              isLoading={isLoading}
-              data={data ?? []}
-              handleResultClick={handleResultClick}
-            />
-          </div>
-        </motion.div>
+                <div className="flex items-center justify-between gap-2 px-2">
+                  <SearchFieldBadges
+                    activeField={localSearchField}
+                    onFieldChange={handleFieldChange}
+                  />
+                </div>
+              </form>
+
+              <GlobalSearchResult
+                ref={resultsRef}
+                localValue={localValue}
+                isLoading={isLoading}
+                data={data}
+                handleResultClick={handleResultClick}
+                inputRef={inputRef}
+              />
+            </div>
+          </motion.div>
+        </FocusTrap>
       )}
     </AnimatePresence>
   );
 }
-
-const searchFields = [
-  { label: "All", value: "*" },
-  { label: "Artist", value: "artistName" },
-  { label: "Album", value: "albumTitle" },
-];
