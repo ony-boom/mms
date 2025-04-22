@@ -21,7 +21,7 @@ export const TrackListElement = memo(
     onClick,
     showWaveBars,
     showAction,
-    focued,
+    focused,
     contextMenuItemProps,
     ...liProps
   }: TrackListElementProps) => {
@@ -70,7 +70,7 @@ export const TrackListElement = memo(
               "bg-foreground/[3%]": isCurrent,
             },
             {
-              "!hover:bg-foreground/[5%]": focued
+              "bg-foreground/[5%]": focused
             },
             liProps.className,
           )}
@@ -127,7 +127,7 @@ export const TrackListElement = memo(
 type TrackListElementProps = {
   track?: Track;
   index: number;
-  focued?: boolean;
+  focused?: boolean;
   showWaveBars?: boolean;
   showAction?: boolean;
   onClick?: (index: number) => void;
