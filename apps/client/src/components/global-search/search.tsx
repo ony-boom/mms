@@ -17,7 +17,6 @@ import { useDebounce } from "@/hooks/use-debounce";
 import { QueryField, useFilterStore } from "@/stores/filter";
 import { usePlayerStore } from "@/stores/player/store";
 import { useResultFocusStore } from "@/stores/resultFocus";
-import { FocusTrap } from "focus-trap-react";
 
 const searchFields = [
   { label: "All", value: "*" },
@@ -145,7 +144,6 @@ export function Search() {
   return (
     <AnimatePresence>
       {openSearchComponent && (
-        <FocusTrap>
           <motion.div
             layout
             role="dialog"
@@ -191,7 +189,6 @@ export function Search() {
               />
             </div>
           </motion.div>
-        </FocusTrap>
       )}
     </AnimatePresence>
   );

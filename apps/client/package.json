@@ -38,7 +38,6 @@
     "cmdk": "1.0.0",
     "color": "^5.0.0",
     "fast-shuffle": "^6.1.1",
-    "focus-trap-react": "^11.0.3",
     "graphql": "^16.10.0",
     "graphql-sse": "^2.5.4",
     "lodash.debounce": "^4.0.8",
