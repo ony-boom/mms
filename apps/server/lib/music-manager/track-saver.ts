@@ -207,11 +207,18 @@ export class TrackSaver {
         path: true,
         album: {
           select: {
+            id: true,
             coverPath: true,
           },
         },
       },
     });
+
+    const albumTracks = await prisma.track.findMany({
+      where: {
+        albumId: tracks.at(0)?.album.id,
+      }
+    })
 
     await prisma.track.deleteMany({
       where: {
@@ -221,9 +228,11 @@ export class TrackSaver {
       },
     });
 
-    await Promise.all(
-      tracks.map((track) => this.deleteCover(track.album.coverPath)),
-    );
+    if (albumTracks.length === 1) {
+      await Promise.all(
+        tracks.map((track) => this.deleteCover(track.album.coverPath)),
+      );
+    }
 
     await this.cleanUpAfterDelete();
   }
@@ -233,6 +242,6 @@ export class TrackSaver {
     try {
       await fs.promises.access(coverPath);
       await fs.promises.unlink(coverPath);
-    } catch {}
+    } catch { }
   }
 }
