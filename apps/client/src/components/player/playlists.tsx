@@ -104,7 +104,7 @@ const ItemContent = ({
 
   return isLoading ? (
     <Skeleton className={"h-[64px] w-full"} />
-  ) : track ? (
+  ) : track && (
     <TrackListElement
       showWaveBars
       showAction
@@ -118,7 +118,5 @@ const ItemContent = ({
         },
       }}
     />
-  ) : (
-    <div className="h-[64px]"></div>
   );
 };
