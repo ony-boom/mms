@@ -15,6 +15,7 @@ export async function createDb() {
 
     const env = {
       ...process.env,
+      DEBUG: "prisma:engine",
       DATABASE_URL: `file:${config.databasePath}`,
     };
 

@@ -13,12 +13,12 @@
     "@types/lodash.debounce": "^4.0.9",
     "@types/lodash.throttle": "^4.1.9",
     "nitropack": "latest",
-    "prisma": "^6.5.0"
+    "prisma": "^6.6.0"
   },
   "dependencies": {
-    "@prisma/client": "^6.5.0",
-    "@repo/config": "workspace:*",
+    "@prisma/client": "^6.6.0",
     "@repo/bin": "workspace:*",
+    "@repo/config": "workspace:*",
     "glob": "^11.0.1",
     "lodash.debounce": "^4.0.8",
     "lodash.throttle": "^4.1.1",
