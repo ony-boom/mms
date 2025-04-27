@@ -12,12 +12,11 @@ async function packageApp() {
     path.join(rootDir, "build"),
   );
 
-  // Copy prisma directory instead of moving it
-  const prismaDestDir = path.join(rootDir, "build", "server", "prisma");
+  const prismaDestDir = path.join(rootDir, "build");
   fs.mkdirSync(prismaDestDir, { recursive: true });
-  await fs.promises.cp(path.join(serverDir, "prisma"), prismaDestDir, {
-    recursive: true,
-  });
-}
+  await fs.promises.copyFile(
+    path.join(serverDir, "prisma", "schema.prisma"),
+    path.join(prismaDestDir, "schema.prisma")
+  );}
 
 packageApp().catch(console.error);
