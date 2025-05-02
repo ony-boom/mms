@@ -4,11 +4,11 @@
   "version": "0.1.0",
   "scripts": {
     "dev": "turbo run dev",
-    "build": "pnpm --filter '@repo/bin' package",
-    "setup": "pnpm --filter '@repo/bin' run setup",
-    "package": "pnpm run setup && nix build",
+    "build": "pnpm --filter \"@repo/bin\" run package",
+    "setup": "pnpm --filter \"@repo/bin\" run setup",
+    "package": "npm run setup && nix build",
     "preview": "node ./build/server/index.mjs --cwd ./build/server",
-    "clean": "pnpm --filter '@repo/bin' run clean",
+    "clean": "pnpm --filter \"@repo/bin\" run clean",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
