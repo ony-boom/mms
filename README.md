@@ -1,5 +1,6 @@
 # MMS - My Music Server
 
+[mini demo](https://music.ony.world)
 ![Demo](./apps/client/assets/banner.png)
 
 ## Overview
@@ -97,6 +98,7 @@ For more detailed information about the components:
 
 ## Roadmap
 
+- [ ] Make more responsive
 - [ ] Maybe switch to a desktop application framework (Tauri or Wails are preferred over Electron)
 - [ ] Improve mobile responsiveness
 - [ ] Add more advanced music library management features

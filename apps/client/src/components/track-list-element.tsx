@@ -13,6 +13,7 @@ import { Button } from "./ui/button";
 import { GripVertical, ListMinus } from "lucide-react";
 import { CSS } from "@dnd-kit/utilities";
 import { useSortable } from "@dnd-kit/sortable";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export const TrackListElement = memo(
   ({
@@ -31,6 +32,9 @@ export const TrackListElement = memo(
         removeFromQueue: state.removeFromQueue,
       })),
     );
+
+
+    const isMobile = useIsMobile();
 
     const isCurrent = currentTrackId === track?.id;
 
@@ -92,7 +96,9 @@ export const TrackListElement = memo(
           </div>
           <div className="flex items-center">
             {!isCurrent && showAction && (
-              <div className="flex gap-4 opacity-0 transition-opacity group-hover:opacity-100">
+              <div className={cn("flex md:gap-4 gap-0 transition-opacity group-hover:opacity-100", {
+                "opacity-0": !isMobile
+              })}>
                 <Button
                   onClick={handleRemove}
                   title="Remove from queue"
@@ -106,7 +112,7 @@ export const TrackListElement = memo(
                   {...attributes}
                   {...listeners}
                   variant="ghost"
-                  className="cursor-grab opacity-0 transition-opacity group-hover:opacity-100 active:cursor-grabbing"
+                  className="cursor-grab active:cursor-grabbing"
                 >
                   <GripVertical />
                 </Button>

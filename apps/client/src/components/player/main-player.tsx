@@ -155,7 +155,7 @@ export function Player() {
 
         <div
           className={cn(
-            "fixed bottom-2 left-[50%] z-50 translate-x-[-50%] space-y-2",
+            "fixed bottom-2 left-[50%] z-50 translate-x-[-50%] space-y-2 w-[92%] md:w-max",
             {
               "z-0": openFullscreen,
             },
@@ -192,9 +192,8 @@ export function Player() {
               },
               translateY: openFullscreen ? 256 : 0,
             }}
-            className="with-blur flex flex-col overflow-hidden rounded-md"
+            className="with-blur flex flex-col overflow-hidden rounded-md w-full md:w-[560px]"
             style={{
-              width: 560, // FIXME: Remove hardcoded width, but since chrome render some blurry text when the value can not be divided by 2, we need to find a better solution
               willChange: "transform, opacity",
               backfaceVisibility: "hidden",
             }}
@@ -217,8 +216,8 @@ export function Player() {
                 onFullScreenToggle={handleLyricsToggle}
               />
               <div className="flex items-center gap-2">
-                <FavouriteButton variant="ghost" />
-                <ShuffleButton />
+                <FavouriteButton className="hidden md:block" variant="ghost" />
+                <ShuffleButton className="hidden md:block" />
                 <Controller shouldPlay={!currentTrack} />
               </div>
             </div>
@@ -261,7 +260,7 @@ const TrackInfo = memo(
     return (
       <motion.div
         aria-labelledby="track info"
-        className="flex shrink-0 items-end gap-4"
+        className="flex shrink-0 grow items-end gap-4"
         variants={trackInfoVariants}
         initial="initial"
         animate="animate"
@@ -270,7 +269,7 @@ const TrackInfo = memo(
           <>
             <div className="group relative">
               <TrackCover
-                className="w-18 rounded-md"
+                className="md:w-18 w-12 rounded-md"
                 trackId={currentTrack.id}
                 trackTitle={currentTrack.title}
               />
@@ -283,7 +282,7 @@ const TrackInfo = memo(
                 {<MicVocal />}
               </Button>
             </div>
-            <div className="w-[148px] space-y-1 text-nowrap">
+            <div className="max-w-[148px] w-max space-y-1 text-nowrap">
               <p
                 title={currentTrack.title}
                 className="overflow-hidden text-ellipsis font-bold"
@@ -291,7 +290,7 @@ const TrackInfo = memo(
                 {currentTrack.title}
               </p>
 
-              <p className="overflow-hidden text-ellipsis text-nowrap">
+              <p className="overflow-hidden hidden md:block text-ellipsis text-nowrap">
                 {currentTrack.artists.map((_, index) => (
                   <span key={index}>
                     <ArtistName artist={currentTrack.artists[index]!} />
