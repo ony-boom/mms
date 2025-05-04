@@ -37,7 +37,7 @@ function Card({ track, index, onTrackPlay }: TrackCardProps) {
           <div>
             <p
               title={track.title}
-              className="overflow-hidden text-ellipsis text-nowrap font-bold leading-6 w-max"
+              className="overflow-hidden max-w-48 md:max-w-max text-ellipsis text-nowrap font-bold leading-6 w-max"
             >
               {track.title}
             </p>
@@ -58,7 +58,7 @@ function Card({ track, index, onTrackPlay }: TrackCardProps) {
       <Button
         size="icon"
         onClick={onPlayButtonClick}
-        className="absolute bottom-20 right-2 z-20 opacity-0 shadow-xl transition group-hover:opacity-100"
+        className="absolute hidden md:flex md:bottom-20 right-2 z-20 md:opacity-0 shadow-xl transition group-hover:opacity-100"
       >
         {isCurrent && isPlaying ? <Pause /> : <Play />}
       </Button>

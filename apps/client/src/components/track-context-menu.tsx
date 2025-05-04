@@ -46,7 +46,7 @@ export const TrackContextMenu = memo(
     return (
       <>
         <ContextMenu modal>
-          <ContextMenuTrigger>{children}</ContextMenuTrigger>
+          <ContextMenuTrigger className="select-none">{children}</ContextMenuTrigger>
           <ContextMenuContent className="bg-background popup-border z-[60] w-36 space-y-1 p-0 transition-all">
             <ContextMenuItem
               {...itemProps?.playNext}
@@ -77,6 +77,7 @@ export const TrackContextMenu = memo(
                 onClick={openTagEditor}
                 className={cn("w-full", itemProps?.editTags?.className)}
               >
+
                 Edit tags
                 <Edit2 size={16} className="ml-auto" />
               </ContextMenuItem>
@@ -102,4 +103,5 @@ export type TrackContextMenuProps = {
     addToQueue?: ContextMenuItemProps;
     editTags?: ContextMenuItemProps;
   };
+  disabled?: boolean;
 };

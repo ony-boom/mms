@@ -47,11 +47,21 @@ export function Playlists() {
       activationConstraint: {
         distance: 10,
         delay: 100,
+        tolerance: 5,
       },
     }),
-    useSensor(TouchSensor, {}),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 100,
+        tolerance: 5,
+      }
+    }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
+      activationConstraint: {
+        delay: 100,
+        tolerance: 5,
+      },
     }),
   );
 

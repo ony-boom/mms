@@ -26,13 +26,13 @@ export const TrackListElement = memo(
     contextMenuItemProps,
     ...liProps
   }: TrackListElementProps) => {
+
     const { currentTrackId, removeFromQueue } = usePlayerStore(
       useShallow((state) => ({
         currentTrackId: state.currentTrackId,
         removeFromQueue: state.removeFromQueue,
       })),
     );
-
 
     const isMobile = useIsMobile();
 
@@ -62,24 +62,25 @@ export const TrackListElement = memo(
       removeFromQueue(index);
     };
 
+
     return (
-      <TrackContextMenu track={track} itemProps={contextMenuItemProps}>
-        <li
-          {...liProps}
-          style={style}
-          ref={setNodeRef}
-          className={cn(
-            "hover:bg-foreground/[5%] group mt-2 flex cursor-pointer items-center justify-between rounded-md p-2",
-            {
-              "bg-primary/[5%]": isCurrent,
-            },
-            {
-              "bg-foreground/[5%]": focused
-            },
-            liProps.className,
-          )}
-          onClick={handleClick}
-        >
+      <li
+        {...liProps}
+        style={style}
+        ref={setNodeRef}
+        className={cn(
+          "hover:bg-foreground/[5%] group mt-2 flex cursor-pointer items-center justify-between rounded-md p-2",
+          {
+            "bg-primary/[5%]": isCurrent,
+          },
+          {
+            "bg-foreground/[5%]": focused
+          },
+          liProps.className,
+        )}
+        onClick={handleClick}
+      >
+        <TrackContextMenu track={track} itemProps={contextMenuItemProps}>
           <div className="flex items-end gap-3">
             <TrackCover
               className="w-12"
@@ -94,38 +95,39 @@ export const TrackListElement = memo(
               </small>
             </div>
           </div>
-          <div className="flex items-center">
-            {!isCurrent && showAction && (
-              <div className={cn("flex md:gap-4 gap-0 transition-opacity group-hover:opacity-100", {
-                "opacity-0": !isMobile
-              })}>
-                <Button
-                  onClick={handleRemove}
-                  title="Remove from queue"
-                  size="icon"
-                  variant="ghost"
-                >
-                  <ListMinus />
-                </Button>
-                <Button
-                  size="icon"
-                  {...attributes}
-                  {...listeners}
-                  variant="ghost"
-                  className="cursor-grab active:cursor-grabbing"
-                >
-                  <GripVertical />
-                </Button>
-              </div>
-            )}
-            {isCurrent && showWaveBars && (
-              <div className="px-2">
-                <WaveBars />
-              </div>
-            )}
-          </div>
-        </li>
-      </TrackContextMenu>
+        </TrackContextMenu>
+
+        <div className="flex items-center">
+          {!isCurrent && showAction && (
+            <div className={cn("flex md:gap-4 gap-0 transition-opacity group-hover:opacity-100", {
+              "opacity-0": !isMobile
+            })}>
+              <Button
+                onClick={handleRemove}
+                title="Remove from queue"
+                size="icon"
+                variant="ghost"
+              >
+                <ListMinus />
+              </Button>
+              <Button
+                size="icon"
+                {...attributes}
+                {...listeners}
+                variant="ghost"
+                className="cursor-grab active:cursor-grabbing"
+              >
+                <GripVertical />
+              </Button>
+            </div>
+          )}
+          {isCurrent && showWaveBars && (
+            <div className="px-2">
+              <WaveBars />
+            </div>
+          )}
+        </div>
+      </li>
     );
   },
 );

@@ -290,7 +290,7 @@ const TrackInfo = memo(
                 {<MicVocal />}
               </Button>
             </div>
-            <div className="md:space-y-1 w-28 sm:w-36">
+            <div className="md:space-y-1 w-20 sm:w-36">
               <MarqueeContainer
                 className="flex overflow-hidden"
               >
@@ -319,7 +319,7 @@ const TrackInfo = memo(
             className="flex items-end gap-4"
             variants={skeletonVariants}
           >
-            <div className="bg-muted w-18 h-18 aspect-square rounded-xl" />
+            <div className="bg-muted md:w-18 md:h-18 w-10 h-10 aspect-square rounded-xl" />
             <Skeleton className="w-full" />
             <Skeleton className="w-full" />
           </motion.div>
