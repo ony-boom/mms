@@ -55,6 +55,16 @@
   --font-sans: Manrope, sans-serif;
 
   --animate-fade-in: fadeIn 0.3s ease-in-out;
+  --animate-marquee: marquee 2s linear infinite;
+
+  @keyframes marquee {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
 
   @keyframes fadeIn {
     0% {

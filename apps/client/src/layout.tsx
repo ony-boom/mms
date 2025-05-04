@@ -16,7 +16,7 @@ const DEFAULT_API_CLIENT: keyof typeof apiClients =
 function Layout() {
   return (
     <ApiContext.Provider value={{ apiClientName: DEFAULT_API_CLIENT }}>
-      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
         <AppTitle />
         <main className="mx-auto w-full antialiased">
           <AudioProvider>

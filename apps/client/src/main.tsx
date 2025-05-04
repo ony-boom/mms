@@ -9,6 +9,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 if (import.meta.env.DEV) {
   scan({
     log: false,
+    enabled: false,
   });
 }
 

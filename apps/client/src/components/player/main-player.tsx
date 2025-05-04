@@ -17,8 +17,10 @@ import { motion, AnimatePresence, type Variants } from "motion/react";
 import { useApiClient } from "@/hooks/use-api-client";
 import { useAudioRef } from "@/hooks/use-audio-ref";
 import { usePlayerStore } from "@/stores/player/store";
-import { memo, useCallback, useEffect, useState, useMemo } from "react";
+import { memo, useCallback, useEffect, useState, useMemo, Fragment, ComponentProps } from "react";
 import { ArtistName } from "../artist-name";
+import Marquee from "react-fast-marquee";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export function Player() {
   const [uiState, setUiState] = useState({
@@ -216,9 +218,9 @@ export function Player() {
                 onFullScreenToggle={handleLyricsToggle}
               />
               <div className="flex items-center gap-2">
-                <FavouriteButton className="hidden md:block" variant="ghost" />
-                <ShuffleButton className="hidden md:block" />
-                <Controller shouldPlay={!currentTrack} />
+                <FavouriteButton className="hidden sm:flex" variant="ghost" />
+                <ShuffleButton className="hidden sm:flex" />
+                <Controller className="grow shrink-0" shouldPlay={!currentTrack} />
               </div>
             </div>
             <TrackProgress />
@@ -247,6 +249,13 @@ export function Player() {
   );
 }
 
+const MarqueeContainer = ({ children, ...rest }: ComponentProps<'div'>) => {
+  const isMobile = useIsMobile();
+
+  return !isMobile ? <div {...rest}>{children}</div> : <Marquee {...rest}>{children}</Marquee>;
+
+}
+
 const TrackInfo = memo(
   ({
     currentTrack,
@@ -259,7 +268,6 @@ const TrackInfo = memo(
   }) => {
     return (
       <motion.div
-        aria-labelledby="track info"
         className="flex shrink-0 grow items-end gap-4"
         variants={trackInfoVariants}
         initial="initial"
@@ -269,7 +277,7 @@ const TrackInfo = memo(
           <>
             <div className="group relative">
               <TrackCover
-                className="md:w-18 w-12 rounded-md"
+                className="md:w-18 md:h-18 w-10 h-10 rounded-md"
                 trackId={currentTrack.id}
                 trackTitle={currentTrack.title}
               />
@@ -282,24 +290,28 @@ const TrackInfo = memo(
                 {<MicVocal />}
               </Button>
             </div>
-            <div className="max-w-[148px] w-max space-y-1 text-nowrap">
-              <p
-                title={currentTrack.title}
-                className="overflow-hidden text-ellipsis font-bold"
+            <div className="md:space-y-1 w-28 sm:w-36">
+              <MarqueeContainer
+                className="flex overflow-hidden"
               >
-                {currentTrack.title}
-              </p>
+                <div>
+                  <p className="truncate font-bold">
+                    {currentTrack.title}
+                  </p>
 
-              <p className="overflow-hidden hidden md:block text-ellipsis text-nowrap">
-                {currentTrack.artists.map((_, index) => (
-                  <span key={index}>
-                    <ArtistName artist={currentTrack.artists[index]!} />
-                    {index !== currentTrack.artists.length - 1 && (
-                      <span className="text-foreground/70">, </span>
-                    )}
-                  </span>
-                ))}
-              </p>
+                  <p className="truncate hidden md:block">
+                    {currentTrack.artists.map((_, index) => (
+                      <Fragment key={index}>
+                        <ArtistName artist={currentTrack.artists[index]!} />
+                        {index !== currentTrack.artists.length - 1 && (
+                          <span className="text-foreground/70">, </span>
+                        )}
+                      </Fragment>
+                    ))}
+                  </p>
+                </div>
+                <span className="w-4 block h-1" />
+              </MarqueeContainer>
             </div>
           </>
         ) : (
@@ -307,11 +319,9 @@ const TrackInfo = memo(
             className="flex items-end gap-4"
             variants={skeletonVariants}
           >
-            <div className="bg-muted w-18 aspect-square rounded-xl" />
-            <div className="w-[148px]">
-              <Skeleton className="w-full" />
-              <Skeleton className="w-full" />
-            </div>
+            <div className="bg-muted w-18 h-18 aspect-square rounded-xl" />
+            <Skeleton className="w-full" />
+            <Skeleton className="w-full" />
           </motion.div>
         )}
       </motion.div>

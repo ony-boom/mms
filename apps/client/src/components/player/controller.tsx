@@ -1,10 +1,11 @@
 import { Pause, Play, SkipBack, SkipForward } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useShallow } from "zustand/react/shallow";
-import { memo } from "react";
+import { ComponentProps, memo } from "react";
 import { usePlayerStore } from "@/stores/player/store";
+import { cn } from "@/lib/utils";
 
-export const Controller = memo(({ shouldPlay }: ControllerProps) => {
+export const Controller = memo(({ shouldPlay, className, ...rest }: ControllerProps) => {
   const playerState = usePlayerStore(
     useShallow((state) => ({
       isPlaying: state.isPlaying,
@@ -24,8 +25,9 @@ export const Controller = memo(({ shouldPlay }: ControllerProps) => {
 
   return (
     <div
+      {...rest}
       aria-labelledby="controller"
-      className="flex items-center justify-center gap-2"
+      className={cn("flex grow shrink-0 items-center justify-center gap-2", className)}
     >
       <Button
         onClick={playerState.playPrev}
@@ -53,6 +55,7 @@ export const Controller = memo(({ shouldPlay }: ControllerProps) => {
     </div>
   );
 });
-export type ControllerProps = {
+
+export type ControllerProps = ComponentProps<'div'> & {
   shouldPlay?: boolean;
 };
