@@ -175,7 +175,7 @@ export function Search() {
                 onChange={handleInputChange}
                 onKeyDown={handleInputKeyDown}
                 placeholder="Search..."
-                className="border-b-foreground/10 focus-visible:border-b-foreground/30 h-12 rounded-none border-l-0 border-r-0 border-t-0 focus-visible:ring-0"
+                className="border-b-foreground/10 focus-visible:border-b-foreground/30 hadow-none h-12 rounded-none border-l-0 border-r-0 border-t-0 focus-visible:ring-0"
                 onClick={(e) => e.stopPropagation()}
               />
 

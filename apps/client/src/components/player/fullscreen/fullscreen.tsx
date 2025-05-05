@@ -69,7 +69,7 @@ export function Fullscreen({
               alt={
                 track?.title ? `${track.title} album artwork` : "Track cover"
               }
-              className="absolute top-6/12 left-1/2 aspect-square w-full max-w-xl -translate-x-1/2 -translate-y-8/12 rounded-md object-cover"
+              className="top-5/12 md:top-6/12 -translate-y-8/12 absolute left-1/2 aspect-square w-11/12 max-w-xl -translate-x-1/2 rounded-md object-cover md:w-full"
               loading="eager"
             />
           </motion.div>
@@ -77,7 +77,7 @@ export function Fullscreen({
       </AnimatePresence>
 
       <Button
-        className="absolute top-6 right-6 z-20"
+        className="absolute right-6 top-6 z-20"
         variant="ghost"
         size="icon"
         onClick={onClose}
@@ -106,7 +106,7 @@ export function Fullscreen({
             className="z-10"
           >
             {track && !loadingTrack ? (
-              <TrackInfo track={track} className="mb-4" />
+              <TrackInfo track={track} className="mb-4 p-4" />
             ) : (
               <LoadingTrackInfo />
             )}
@@ -161,7 +161,7 @@ export function Fullscreen({
               <TrackInfo
                 track={track}
                 hideCover={true}
-                className="mx-auto w-[80%] max-w-7xl"
+                className="mx-auto max-w-7xl px-4 md:w-[80%]"
               />
             </motion.div>
           )}

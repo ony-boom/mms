@@ -41,7 +41,7 @@ export function TopBar() {
         readOnly
         onClick={handleSearchClick}
         placeholder="Search..."
-        className="block h-12 rounded-none border-0 border-b outline-none md:hidden"
+        className="block h-12 rounded-none border-0 border-b shadow-none outline-none md:hidden"
       />
       <div className="relative flex w-full items-center justify-between gap-2 overflow-hidden rounded-md px-4 py-2">
         <div className="flex gap-2">

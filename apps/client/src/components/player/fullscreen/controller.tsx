@@ -15,7 +15,7 @@ import { useShallow } from "zustand/react/shallow";
 import { FullscreenProgress } from "./fullscreen-progress";
 import { MicVocal } from "lucide-react";
 
-export const LocalController = ({onLyricBtnClick}: LocalControllerProps) => {
+export const LocalController = ({ onLyricBtnClick }: LocalControllerProps) => {
   const audioRef = useAudioRef();
   const { volume, muted } = usePlayerStore(
     useShallow((state) => ({
@@ -34,25 +34,21 @@ export const LocalController = ({onLyricBtnClick}: LocalControllerProps) => {
   const onVolumeIconClick = useVolumeCompClickEventHandler();
 
   return (
-    <div className="sticky bottom-0 mx-auto w-[80%] max-w-7xl p-8">
+    <div className="sticky bottom-0 mx-auto w-full max-w-7xl p-4 md:w-[80%] md:p-8">
       <FullscreenProgress />
-      <div className="mt-6 flex items-center">
-        <div className="flex-1">
+      <div className="mt-6 grid grid-cols-3 items-center">
+        <div className="flex justify-start">
           <FavouriteButton variant="ghost" className="self-start" />
         </div>
-        <div className="flex flex-1 justify-center">
+        <div className="flex justify-center">
           <Controller />
         </div>
-        <div className="flex flex-1 items-center justify-end gap-2">
-          <Button
-            size="icon"
-            variant="ghost"
-            onClick={onLyricBtnClick}
-          >
+        <div className="flex items-center justify-end gap-1 md:gap-2">
+          <Button size="icon" variant="ghost" onClick={onLyricBtnClick}>
             {<MicVocal />}
           </Button>
-          <ShuffleButton />
-          <div className="flex items-center gap-1">
+          <ShuffleButton className="hidden md:flex" />
+          <div className="hidden items-center gap-1 md:flex">
             <Button onClick={onVolumeIconClick} variant="ghost" size="icon">
               <VolumeComp volume={volume * 100} muted={muted} />
             </Button>
@@ -72,7 +68,6 @@ export const LocalController = ({onLyricBtnClick}: LocalControllerProps) => {
     </div>
   );
 };
-
 
 export type LocalControllerProps = {
   onLyricBtnClick?: () => void;

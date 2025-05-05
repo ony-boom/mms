@@ -17,7 +17,14 @@ import { motion, AnimatePresence, type Variants } from "motion/react";
 import { useApiClient } from "@/hooks/use-api-client";
 import { useAudioRef } from "@/hooks/use-audio-ref";
 import { usePlayerStore } from "@/stores/player/store";
-import { memo, useCallback, useEffect, useState, useMemo, Fragment } from "react";
+import {
+  memo,
+  useCallback,
+  useEffect,
+  useState,
+  useMemo,
+  Fragment,
+} from "react";
 import { ArtistName } from "../artist-name";
 
 export function Player() {
@@ -155,7 +162,7 @@ export function Player() {
 
         <div
           className={cn(
-            "fixed bottom-2 left-[50%] z-50 translate-x-[-50%] space-y-2 w-[92%] md:w-max",
+            "fixed bottom-2 left-[50%] z-50 w-[92%] translate-x-[-50%] space-y-2 md:w-max",
             {
               "z-0": openFullscreen,
             },
@@ -192,7 +199,7 @@ export function Player() {
               },
               translateY: openFullscreen ? 256 : 0,
             }}
-            className="with-blur flex flex-col overflow-hidden rounded-md w-full md:w-[560px]"
+            className="with-blur flex w-full flex-col overflow-hidden rounded-md md:w-[560px]"
             style={{
               willChange: "transform, opacity",
               backfaceVisibility: "hidden",
@@ -218,7 +225,10 @@ export function Player() {
               <div className="flex items-center gap-2">
                 <FavouriteButton className="hidden sm:flex" variant="ghost" />
                 <ShuffleButton className="hidden sm:flex" />
-                <Controller className="grow shrink-0" shouldPlay={!currentTrack} />
+                <Controller
+                  className="shrink-0 grow"
+                  shouldPlay={!currentTrack}
+                />
               </div>
             </div>
             <TrackProgress />
@@ -259,7 +269,7 @@ const TrackInfo = memo(
   }) => {
     return (
       <motion.div
-        className="flex items-center sm:items-end gap-2 sm:gap-4"
+        className="flex items-center gap-4 sm:items-end"
         variants={trackInfoVariants}
         initial="initial"
         animate="animate"
@@ -268,7 +278,7 @@ const TrackInfo = memo(
           <>
             <div className="group relative shrink-0">
               <TrackCover
-                className="md:w-18 md:h-18 w-10 h-10 rounded-md"
+                className="md:w-18 md:h-18 h-10 w-10 rounded-md"
                 trackId={currentTrack.id}
                 trackTitle={currentTrack.title}
               />
@@ -281,12 +291,12 @@ const TrackInfo = memo(
                 {<MicVocal />}
               </Button>
             </div>
-            <div className="md:space-y-1 max-w-28 md:max-w-48">
-              <p className="truncate font-bold">
+            <div className="max-w-28 md:max-w-48 md:space-y-1">
+              <p className="truncate text-sm font-bold md:text-base">
                 {currentTrack.title}
               </p>
 
-              <p className="truncate hidden md:block">
+              <p className="hidden truncate md:block">
                 {currentTrack.artists.map((_, index) => (
                   <Fragment key={index}>
                     <ArtistName artist={currentTrack.artists[index]!} />
@@ -303,7 +313,7 @@ const TrackInfo = memo(
             className="flex items-end gap-4"
             variants={skeletonVariants}
           >
-            <div className="bg-muted md:w-18 md:h-18 w-10 h-10 aspect-square rounded-xl" />
+            <div className="bg-muted md:w-18 md:h-18 aspect-square h-10 w-10 rounded-xl" />
             <Skeleton className="w-full" />
             <Skeleton className="w-full" />
           </motion.div>
