@@ -17,6 +17,8 @@ import { useDebounce } from "@/hooks/use-debounce";
 import { QueryField, useFilterStore } from "@/stores/filter";
 import { usePlayerStore } from "@/stores/player/store";
 import { useResultFocusStore } from "@/stores/resultFocus";
+import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const searchFields = [
   { label: "All", value: "*" },
@@ -58,6 +60,7 @@ export function Search() {
 
   const inputRef = useRef<HTMLInputElement>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
 
   const [localValue, setLocalValue] = useState(
     (queryField === "*" ? query?.title : query?.[queryField]) ?? "",
@@ -119,7 +122,7 @@ export function Search() {
 
   const handleInputFocus = useCallback(() => {
     setCurrent(null);
-  }, [setShouldFocusResult]);
+  }, [setCurrent]);
 
   const handleExit = () => {
     setCurrent(null);
@@ -144,51 +147,56 @@ export function Search() {
   return (
     <AnimatePresence>
       {openSearchComponent && (
-          <motion.div
-            layout
-            role="dialog"
-            exit={{ opacity: 0 }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="bg-background/60 fixed left-0 top-0 z-50 grid h-full w-full justify-center"
-            onClick={handleExit}
+        <motion.div
+          layout
+          role="dialog"
+          exit={{ opacity: 0 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="bg-background/60 fixed left-0 top-0 z-50 grid h-full w-full justify-center"
+          onClick={handleExit}
+        >
+          <div
+            className={cn(
+              "bg-background mx-auto h-max w-screen overflow-hidden md:mt-32 md:max-w-[546px] md:rounded-md",
+              {
+                "popup-border": !isMobile,
+              },
+            )}
+            onClick={(e) => e.stopPropagation()}
           >
-            <div
-              className="bg-background popup-border mt-32 h-max overflow-hidden rounded-md"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <form onSubmit={handleSubmit}>
-                <Input
-                  ref={inputRef}
-                  autoFocus
-                  tabIndex={0}
-                  value={localValue}
-                  onFocus={handleInputFocus}
-                  onChange={handleInputChange}
-                  onKeyDown={handleInputKeyDown}
-                  placeholder="Search..."
-                  className="border-b-foreground/10 focus-visible:border-b-foreground/30 h-12 min-w-[560px] rounded-none border-l-0 border-r-0 border-t-0 focus-visible:ring-0"
-                  onClick={(e) => e.stopPropagation()}
-                />
-
-                <div className="flex items-center justify-between gap-2 px-2">
-                  <SearchFieldBadges
-                    activeField={localSearchField}
-                    onFieldChange={handleFieldChange}
-                  />
-                </div>
-              </form>
-
-              <GlobalSearchResult
-                ref={resultsRef}
-                localValue={localValue}
-                isLoading={isLoading}
-                data={data}
-                handleResultClick={handleResultClick}
-                inputRef={inputRef}
+            <form onSubmit={handleSubmit}>
+              <Input
+                ref={inputRef}
+                autoFocus
+                tabIndex={0}
+                value={localValue}
+                onFocus={handleInputFocus}
+                onChange={handleInputChange}
+                onKeyDown={handleInputKeyDown}
+                placeholder="Search..."
+                className="border-b-foreground/10 focus-visible:border-b-foreground/30 h-12 rounded-none border-l-0 border-r-0 border-t-0 focus-visible:ring-0"
+                onClick={(e) => e.stopPropagation()}
               />
-            </div>
-          </motion.div>
+
+              <div className="flex items-center justify-between gap-2 px-2">
+                <SearchFieldBadges
+                  activeField={localSearchField}
+                  onFieldChange={handleFieldChange}
+                />
+              </div>
+            </form>
+
+            <GlobalSearchResult
+              ref={resultsRef}
+              localValue={localValue}
+              isLoading={isLoading}
+              data={data}
+              handleResultClick={handleResultClick}
+              inputRef={inputRef}
+            />
+          </div>
+        </motion.div>
       )}
     </AnimatePresence>
   );

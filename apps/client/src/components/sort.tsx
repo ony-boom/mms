@@ -65,7 +65,7 @@ export function Sort({ value, onValueChange }: TrackMenuSortProps) {
             role="combobox"
             variant={"ghost"}
             aria-expanded={open}
-            className="justify-between bg-transparent"
+            className="justify-between bg-transparent p-0 md:px-3"
           >
             {getSortFieldLabel(value.field)}
           </Button>

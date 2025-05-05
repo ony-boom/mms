@@ -17,10 +17,8 @@ import { motion, AnimatePresence, type Variants } from "motion/react";
 import { useApiClient } from "@/hooks/use-api-client";
 import { useAudioRef } from "@/hooks/use-audio-ref";
 import { usePlayerStore } from "@/stores/player/store";
-import { memo, useCallback, useEffect, useState, useMemo, Fragment, ComponentProps } from "react";
+import { memo, useCallback, useEffect, useState, useMemo, Fragment } from "react";
 import { ArtistName } from "../artist-name";
-import Marquee from "react-fast-marquee";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 export function Player() {
   const [uiState, setUiState] = useState({
@@ -211,7 +209,7 @@ export function Player() {
                 onClick={togglePlaylistsExpanded}
               />
             </div>
-            <div className="relative flex items-center justify-between gap-16 px-3 pb-4 pt-1">
+            <div className="relative flex items-center justify-between gap-4 px-3 pb-4 pt-1">
               <TrackInfo
                 currentTrack={currentTrack!}
                 openLyricsView={openFullscreen}
@@ -249,13 +247,6 @@ export function Player() {
   );
 }
 
-const MarqueeContainer = ({ children, ...rest }: ComponentProps<'div'>) => {
-  const isMobile = useIsMobile();
-
-  return !isMobile ? <div {...rest}>{children}</div> : <Marquee {...rest}>{children}</Marquee>;
-
-}
-
 const TrackInfo = memo(
   ({
     currentTrack,
@@ -268,14 +259,14 @@ const TrackInfo = memo(
   }) => {
     return (
       <motion.div
-        className="flex shrink-0 grow items-end gap-4"
+        className="flex items-center sm:items-end gap-2 sm:gap-4"
         variants={trackInfoVariants}
         initial="initial"
         animate="animate"
       >
         {currentTrack ? (
           <>
-            <div className="group relative">
+            <div className="group relative shrink-0">
               <TrackCover
                 className="md:w-18 md:h-18 w-10 h-10 rounded-md"
                 trackId={currentTrack.id}
@@ -290,28 +281,21 @@ const TrackInfo = memo(
                 {<MicVocal />}
               </Button>
             </div>
-            <div className="md:space-y-1 w-20 sm:w-36">
-              <MarqueeContainer
-                className="flex overflow-hidden"
-              >
-                <div>
-                  <p className="truncate font-bold">
-                    {currentTrack.title}
-                  </p>
+            <div className="md:space-y-1 max-w-28 md:max-w-48">
+              <p className="truncate font-bold">
+                {currentTrack.title}
+              </p>
 
-                  <p className="truncate hidden md:block">
-                    {currentTrack.artists.map((_, index) => (
-                      <Fragment key={index}>
-                        <ArtistName artist={currentTrack.artists[index]!} />
-                        {index !== currentTrack.artists.length - 1 && (
-                          <span className="text-foreground/70">, </span>
-                        )}
-                      </Fragment>
-                    ))}
-                  </p>
-                </div>
-                <span className="w-4 block h-1" />
-              </MarqueeContainer>
+              <p className="truncate hidden md:block">
+                {currentTrack.artists.map((_, index) => (
+                  <Fragment key={index}>
+                    <ArtistName artist={currentTrack.artists[index]!} />
+                    {index !== currentTrack.artists.length - 1 && (
+                      <span className="text-foreground/70">, </span>
+                    )}
+                  </Fragment>
+                ))}
+              </p>
             </div>
           </>
         ) : (

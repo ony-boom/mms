@@ -24,24 +24,21 @@ function Card({ track, index, onTrackPlay }: TrackCardProps) {
   };
 
   return (
-    <div className="group relative">
+    <div className="group relative overflow-hidden">
       <TrackContextMenu track={track}>
-        <div className="flex md:flex-col md:gap-2 gap-4 items-center md:items-start">
+        <div className="flex items-center gap-4 md:flex-col md:items-start md:gap-2">
           <TrackCover
             trackId={track.id}
             trackTitle={track.title}
             onClick={onPlayButtonClick}
-            className="mb-2 hover:cursor-pointer w-16 h-16 md:w-full md:h-full"
+            className="mb-2 h-16 w-16 flex-shrink-0 hover:cursor-pointer md:h-full md:w-full"
           />
 
-          <div>
-            <p
-              title={track.title}
-              className="overflow-hidden max-w-48 md:max-w-max text-ellipsis text-nowrap font-bold leading-6 w-max"
-            >
+          <div className="min-w-0 flex-1 pr-4 md:w-full md:pr-0">
+            <p title={track.title} className="truncate font-bold leading-6">
               {track.title}
             </p>
-            <p className="overflow-hidden text-ellipsis text-nowrap w-max">
+            <div className="truncate text-sm">
               {artistNames.map((_, index) => (
                 <span key={index}>
                   <ArtistName artist={track.artists[index]!} />
@@ -50,15 +47,14 @@ function Card({ track, index, onTrackPlay }: TrackCardProps) {
                   )}
                 </span>
               ))}
-            </p>
-
+            </div>
           </div>
         </div>
       </TrackContextMenu>
       <Button
         size="icon"
         onClick={onPlayButtonClick}
-        className="absolute hidden md:flex md:bottom-20 right-2 z-20 md:opacity-0 shadow-xl transition group-hover:opacity-100"
+        className="absolute right-2 top-1/2 z-20 hidden -translate-y-1/2 shadow-xl transition md:bottom-20 md:top-auto md:flex md:opacity-0 md:group-hover:opacity-100"
       >
         {isCurrent && isPlaying ? <Pause /> : <Play />}
       </Button>
