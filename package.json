@@ -1,7 +1,7 @@
 {
   "name": "mms",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "scripts": {
     "dev": "turbo run dev",
     "build": "pnpm --filter \"@repo/bin\" run package",
