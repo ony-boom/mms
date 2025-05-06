@@ -54,7 +54,7 @@ function Card({ track, index, onTrackPlay }: TrackCardProps) {
       <Button
         size="icon"
         onClick={onPlayButtonClick}
-        className="absolute right-2 top-1/2 z-20 hidden -translate-y-1/2 shadow-xl transition md:bottom-20 md:top-auto md:flex md:opacity-0 md:group-hover:opacity-100"
+        className="absolute right-2 top-1/2 z-20 hidden -translate-y-1/2 shadow-xl transition md:bottom-12 md:top-auto md:flex md:opacity-0 md:group-hover:opacity-100"
       >
         {isCurrent && isPlaying ? <Pause /> : <Play />}
       </Button>
