@@ -74,7 +74,7 @@ const SyncedLyrics = memo(({ lrc }: SyncedLyricsProps) => {
   );
 
   return (
-    <div ref={containerRef} className="w-max space-y-2">
+    <div ref={containerRef} className="space-y-2 md:space-y-4">
       {lrc.lyrics.map((lyric, index) => {
         const isActive = index === activeIndex;
 
@@ -85,8 +85,8 @@ const SyncedLyrics = memo(({ lrc }: SyncedLyricsProps) => {
             }}
             title={isActive ? "" : "Click to seek to this position"}
             className={cn(
-              "text-foreground/50 cursor-pointer leading-10 transition-all",
-              { "text-foreground text-4xl": isActive },
+              "text-foreground/50 cursor-pointer transition-all md:leading-10",
+              { "text-foreground md:text-4xl": isActive },
             )}
             key={`lyric-${index}-${lyric.timestamp}`}
             onClick={() => !isActive && handleLyricsClick(lyric.timestamp)}
@@ -103,9 +103,7 @@ const LyricsContainer = ({
   children,
   className = "",
 }: LyricsContainerProps) => (
-  <div
-    className={cn("lyrics-gradient p-12 pt-0", className)}
-  >
+  <div className={cn("lyrics-gradient p-4 pt-0 md:p-12", className)}>
     {children}
   </div>
 );
@@ -192,7 +190,7 @@ export const Lyrics = memo((props: HTMLProps<HTMLDivElement>) => {
     <LyricsContainer
       {...props}
       className={cn(
-        "flex w-max flex-col items-center space-y-4 pt-0 text-3xl font-black",
+        "flex w-max flex-col items-center pt-0 text-xl font-black md:space-y-4 md:text-3xl",
         props.className,
       )}
     >

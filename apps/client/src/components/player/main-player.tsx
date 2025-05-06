@@ -333,8 +333,8 @@ const fullscreenVariants: Variants = {
   initial: {
     x: "-50%",
     width: "100vw",
-    height: "100vh",
-    bottom: "-100vh",
+    height: "100dvh",
+    bottom: "-100dvh",
   },
   animate: {
     bottom: 0,

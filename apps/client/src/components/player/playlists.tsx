@@ -52,8 +52,8 @@ export function Playlists() {
     }),
     useSensor(TouchSensor, {
       activationConstraint: {
-        delay: 100,
-        tolerance: 5,
+        delay: 0,
+        tolerance: 10,
       }
     }),
     useSensor(KeyboardSensor, {
