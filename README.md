@@ -5,25 +5,9 @@
 
 ## Overview
 
-MMS is a web-based local music player that allows you to manage and play your music collection from your browser. It consists of a client-server architecture that provides a seamless music listening experience.
+MMS is a web-based local music player that allows you to manage and play your music collection from your browser.
 
 **Status**: Work in progress, but fully functional for basic music playback.
-
-## Features
-
-- 🎵 **Local Music Playback**: Stream your music collection from your local server
-- 🌐 **Web-Based Interface**: Access your music from any device with a web browser
-- 🔍 **Search Functionality**: Find tracks in your music library
-- 📋 **Playlist Management**: Create and manage playlists. (40% complete)
-- 🎨 **Modern UI**: Clean and responsive interface built with React
-
-## Architecture
-
-MMS is structured as a monorepo using Turborepo and pnpm, consisting of:
-
-- **Client**: A React-based web application for the user interface
-- **Server**: A TypeScript backend that manages your music library and serves audio files
-- **Shared Packages**: Common utilities and types shared between client and server
 
 ## Installation
 
@@ -77,15 +61,6 @@ You can use the home-manager module in this repo to install:
    pnpm run dev
    ```
 
-## Development
-
-The project uses:
-- TypeScript for type safety
-- React for the client UI
-- SQL (SQLite) database (via Prisma) for data storage
-- pnpm for package management
-- Turborepo for monorepo management
-
 For more detailed information about the components:
 
 - [Client Documentation](./apps/client/README.md)
@@ -98,8 +73,6 @@ For more detailed information about the components:
 
 ## Roadmap
 
-- [ ] Make more responsive
 - [ ] Maybe switch to a desktop application framework (Tauri or Wails are preferred over Electron)
-- [ ] Improve mobile responsiveness
 - [ ] Add more advanced music library management features
 - [ ] Nix remote binary cache
