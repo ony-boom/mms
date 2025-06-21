@@ -69,7 +69,7 @@ export function Fullscreen({
               alt={
                 track?.title ? `${track.title} album artwork` : "Track cover"
               }
-              className="top-5/12 md:top-6/12 -translate-y-8/12 absolute left-1/2 aspect-square w-11/12 max-w-xl -translate-x-1/2 rounded-md object-cover md:w-full"
+              className="top-5/12 md:top-6/12 -translate-y-8/12 absolute left-1/2 aspect-square w-11/12 max-w-2xl -translate-x-1/2 rounded-md object-cover md:w-full"
               loading="eager"
             />
           </motion.div>
