@@ -1,11 +1,14 @@
-{pkgs ? import <nixpkgs> {}}: let
+{
+  pkgs,
+  self,
+}: let
   pkgJson = builtins.fromJSON (builtins.readFile ../package.json);
   pname = pkgJson.name;
   version = pkgJson.version;
 in
   pkgs.stdenv.mkDerivation (finalAttrs: {
-  inherit pname version;
-    src = ../.;
+    inherit pname version;
+    src = self;
 
     # included in the final package
     buildInputs = [
