@@ -3,14 +3,16 @@ import { musicLibrary } from ".";
 import { config } from "@repo/config";
 import debounce from "lodash.debounce";
 
+const DEBOUNCE_DELAY = 500;
+
 export const startWatcher = () => {
   const handleUpdate = debounce(async (path: string) => {
     musicLibrary.emit("update", path);
-  }, 1000);
+  }, DEBOUNCE_DELAY);
 
   const handleRemove = debounce(async (path: string) => {
     musicLibrary.emit("remove", path);
-  }, 1000);
+  }, DEBOUNCE_DELAY);
 
   const watcher = watch(
     config.musicPath,
