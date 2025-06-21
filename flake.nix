@@ -23,8 +23,9 @@
     )
     // {
       # Home Manager module for linux
-      homeManagerModules.x86_64-linux = import ./nix/modules/home-manager.nix {mms = self.packages.x86_64-linux.default;};
-      nixosModules.x86_64-linux = import ./nix/modules/nixos.nix {mms = self.packages.x86_64-linux.default;};
+      homeManagerModules.x86_64-linux =
+        import ./nix/modules/home-manager.nix {inherit self;};
+      nixosModules.x86_64-linux = import ./nix/modules/nixos.nix {inherit self;};
 
       # For convenience, expose the module as an overlay too
       overlays.default = final: prev: {
