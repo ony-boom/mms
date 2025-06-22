@@ -35,6 +35,20 @@ You can use the home-manager module in this repo to install:
 }
 ```
 
+And optional but useful, add this to your flake or any method you prefer for extra subtituters, this way you avoid re-building the package:
+
+```nix
+  nixConfig = {
+    extra-substituters = [
+      "https://ony-boom.cachix.org"
+    ];
+    extra-trusted-public-keys = [
+      "ony-boom.cachix.org-1:rPOTyyOCiAhLarertCrNnZLxsBFpcirEekoohcCZt10="
+    ];
+  };
+
+```
+
 > [!NOTE]
 > For other installation methods, I haven't done anything with them yet.s
 
