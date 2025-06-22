@@ -89,4 +89,3 @@ For more detailed information about the components:
 
 - [ ] Maybe switch to a desktop application framework (Tauri or Wails are preferred over Electron)
 - [ ] Add more advanced music library management features
-- [ ] Nix remote binary cache
