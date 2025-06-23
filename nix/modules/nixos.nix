@@ -31,35 +31,25 @@ in {
 
     user = mkOption {
       type = types.str;
-      default = "mms";
       description = "User to run the MMS service as.";
     };
   };
 
-  config =
-    mkIf cfg.enable {
-      systemd.services.mms = {
-        description = "MMS Service";
-        after = ["network.target"];
-        wantedBy = ["multi-user.target"];
+  config = mkIf cfg.enable {
+    systemd.services.mms = {
+      description = "MMS Service";
+      after = ["network.target"];
+      wantedBy = ["multi-user.target"];
 
-        serviceConfig = {
-          User = cfg.user;
-          ExecStart = "${cfg.package}/bin/mms";
-          Restart = "on-failure";
-          Environment = [
-            "PORT=${toString cfg.port}"
-            "HOST=${toString cfg.host}"
-          ];
-        };
+      serviceConfig = {
+        User = cfg.user;
+        ExecStart = "${cfg.package}/bin/mms";
+        Restart = "on-failure";
+        Environment = [
+          "PORT=${toString cfg.port}"
+          "HOST=${toString cfg.host}"
+        ];
       };
-    }
-    // (
-      lib.mkIf (cfg.user == "mms") {
-        users.users.${cfg.user} = {
-          isSystemUser = true;
-          description = "User for MMS service";
-        };
-      }
-    );
+    };
+  };
 }
