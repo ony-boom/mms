@@ -31,6 +31,7 @@ in {
 
     user = mkOption {
       type = types.str;
+      default = "root";
       description = "User to run the MMS service as.";
     };
   };
