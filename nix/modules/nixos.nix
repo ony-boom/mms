@@ -28,10 +28,19 @@ in {
       default = "localhost";
       description = "Host on which MMS will listen.";
     };
+
+    user = mkOption {
+      type = types.str;
+      default = "mms";
+      description = "User to run the MMS service as.";
+    };
   };
 
   config = mkIf cfg.enable {
-    environment.systemPackages = [cfg.package];
+    users.users.${cfg.user} = {
+      isSystemUser = true;
+      description = "User for MMS service";
+    };
 
     systemd.services.mms = {
       description = "MMS Service";
@@ -39,6 +48,7 @@ in {
       wantedBy = ["multi-user.target"];
 
       serviceConfig = {
+        User = cfg.user;
         ExecStart = "${cfg.package}/bin/mms";
         Restart = "on-failure";
         Environment = [
