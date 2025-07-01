@@ -67,13 +67,13 @@ in
 
       cp ${pkgs.prisma}/bin/prisma $out/bin/
 
-      makeWrapper ${pkgs.nodejs}/bin/node $out/bin/mms \
+      makeWrapper ${node}/bin/node $out/bin/mms \
         --add-flags "$out/lib/server/index.mjs" \
-        --set NODE_PATH "$out/lib:${pkgs.nodejs}/lib/node_modules" \
+        --set NODE_PATH "$out/lib:${node}/lib/node_modules" \
         --set PRISMA_QUERY_ENGINE_LIBRARY "$out/lib/prisma-engines/libquery_engine.node" \
         --set PRISMA_SCHEMA_ENGINE_BINARY "$out/lib/prisma-engines/query-engine" \
         --set PRISMA_SCHEMA_PATH "$out/lib/schema.prisma" \
-        --set PATH "$out/bin:${pkgs.prisma}/bin:${pkgs.nodejs}/bin:$PATH" \
+        --set PATH "$out/bin:${pkgs.prisma}/bin:${node}/bin:$PATH" \
         --set LD_LIBRARY_PATH "${pkgs.openssl.out}/lib"
 
       runHook postInstall
