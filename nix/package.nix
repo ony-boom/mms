@@ -5,6 +5,8 @@
   pkgJson = builtins.fromJSON (builtins.readFile ../package.json);
   pname = pkgJson.name;
   version = pkgJson.version;
+
+  node = pkgs.nodejs_22;
 in
   pkgs.stdenv.mkDerivation (finalAttrs: {
     inherit pname version;
@@ -12,13 +14,13 @@ in
 
     # included in the final package
     buildInputs = [
-      pkgs.nodejs
+      node
       pkgs.openssl
     ];
 
     # only at build
     nativeBuildInputs = [
-      pkgs.nodejs
+      node
       pkgs.pnpm
       pkgs.pnpm.configHook
       pkgs.makeWrapper
