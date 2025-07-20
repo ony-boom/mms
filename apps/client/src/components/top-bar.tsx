@@ -1,4 +1,4 @@
-import { Sort } from "./sort";
+import { Sort } from "./sort-button";
 import { Input } from "./ui/input";
 import { useCallback } from "react";
 import { Button } from "./ui/button";

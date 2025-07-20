@@ -103,7 +103,7 @@ const LyricsContainer = ({
   children,
   className = "",
 }: LyricsContainerProps) => (
-  <div className={cn("lyrics-gradient p-4 pt-0 md:p-12", className)}>
+  <div className={cn("lyrics-gradient p-8 pt-0", className)}>
     {children}
   </div>
 );
@@ -142,7 +142,7 @@ export const Lyrics = memo((props: HTMLProps<HTMLDivElement>) => {
       <LyricsContainer
         {...props}
         className={cn(
-          "flex h-full w-full place-items-center text-xl font-black",
+          "flex h-full place-items-center text-xl font-black",
           props.className,
         )}
       >
@@ -158,7 +158,7 @@ export const Lyrics = memo((props: HTMLProps<HTMLDivElement>) => {
       <LyricsContainer
         {...props}
         className={cn(
-          "flex h-full w-full place-items-center text-xl font-black",
+          "flex h-full place-items-center text-xl font-black",
           props.className,
         )}
       >
@@ -190,7 +190,7 @@ export const Lyrics = memo((props: HTMLProps<HTMLDivElement>) => {
     <LyricsContainer
       {...props}
       className={cn(
-        "flex w-max flex-col items-center pt-0 text-xl font-black md:space-y-4 md:text-3xl",
+        "flex mx-auto flex-col md:w-[80%] max-w-7xl pt-0 text-xl font-black md:space-y-4 md:text-3xl",
         props.className,
       )}
     >

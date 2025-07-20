@@ -106,7 +106,7 @@ export function Fullscreen({
             className="z-10"
           >
             {track && !loadingTrack ? (
-              <TrackInfo track={track} className="mb-4 p-4" />
+              <TrackInfo track={track} className="mb-4 p-4 md:w-[80%] max-w-7xl mx-auto" />
             ) : (
               <LoadingTrackInfo />
             )}
@@ -130,7 +130,7 @@ export function Fullscreen({
             className="h-full flex-1 overflow-auto"
             data-scroller
           >
-            <Lyrics className="w-full text-center" />
+            <Lyrics />
           </motion.div>
         ) : (
           <motion.div
@@ -180,9 +180,6 @@ export function Fullscreen({
   );
 }
 
-/**
- * Loading skeleton for track info
- */
 const LoadingTrackInfo = () => (
   <div className="mt-8 flex items-end gap-4 px-8">
     <Skeleton className="h-36 w-36" aria-label="Loading track artwork" />

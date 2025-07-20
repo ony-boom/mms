@@ -11,10 +11,10 @@ const components: GridComponents = {
       <div
         ref={ref}
         {...props}
+        className="md:gap-8 gap-2"
         style={{
           ...style,
           display: "grid",
-          gap: "32px",
           paddingInline: "16px",
           paddingBottom: "230px",
           gridTemplateColumns: `repeat(auto-fill, minmax(${ITEM_SIZE}px, 1fr))`,

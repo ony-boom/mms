@@ -208,9 +208,9 @@ export function Player() {
             <div className="mt-2 flex justify-center">
               <button
                 className={cn(
-                  "bg-foreground/10 hover:bg-foreground/20 w-16 cursor-pointer rounded py-1 transition-all hover:w-20",
+                  "bg-foreground/10 hover:bg-foreground/20 w-20 cursor-pointer rounded-xl py-[6px] transition-all hover:w-20",
                   {
-                    "w-24": playlistsExpanded,
+                    "w-28": playlistsExpanded,
                   },
                 )}
                 onClick={togglePlaylistsExpanded}

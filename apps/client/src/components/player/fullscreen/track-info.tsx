@@ -11,7 +11,7 @@ export const TrackInfo = ({
 }: TrackInfoProps) => {
   const artist = track.artists.map((artist) => artist.name).join(", ");
   return (
-    <div {...rest} className={cn("flex items-end gap-4 md:px-8", className)}>
+    <div {...rest} className={cn("flex gap-4 md:px-8", className)}>
       <TrackCover
         hidden={hideCover}
         trackId={track.id}
@@ -19,8 +19,8 @@ export const TrackInfo = ({
         className="h-24 w-24 md:h-48 md:w-48"
       />
       <div className="space-y-1">
-        <p className="text-2xl font-black">{track.title}</p>
-        <p className="text-foreground/80">{artist}</p>
+        <p className="text-2xl md:text-4xl font-black">{track.title}</p>
+        <p className="text-foreground/80 md:text-lg">{artist}</p>
       </div>
     </div>
   );
