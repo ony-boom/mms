@@ -177,7 +177,7 @@ export const Lyrics = memo((props: HTMLProps<HTMLDivElement>) => {
     return (
       <LyricsContainer
         {...props}
-        className={cn("space-y-2 overflow-auto text-xl", props.className)}
+        className={cn("space-y-2 overflow-auto text-xl md:w-[80%] max-w-7xl mx-auto", props.className)}
       >
         {lyrics.text.split("\n").map((line, index) => (
           <p key={index}>{line}</p>
