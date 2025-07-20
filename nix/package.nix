@@ -22,7 +22,6 @@ in
     # only at build
     nativeBuildInputs = [
       node
-      pnpm
       pnpm.configHook
       pkgs.makeWrapper
     ];
@@ -36,8 +35,8 @@ in
       pnpm config set dedupe-peer-dependents false
     '';
 
-    pnpmDeps = pnpm.fetchDeps {
-      fetcherVersion = "6.7.0";
+    pnpmDeps = pkgs.pnpm.fetchDeps {
+      fetcherVersion = 1;
       inherit
         (finalAttrs)
         pname
@@ -45,7 +44,7 @@ in
         src
         prePnpmInstall
         ;
-      hash = "sha256-WsVwt2IYxyfIDYmOwUMafyScI5XecCD3Q8j/yMSx/d8=";
+      hash = "sha256-iO/V7Z3k5ZOnU95T9FKbywKXPJV8jfCwyjOr6Q3mSHk=";
     };
 
     buildPhase = ''
