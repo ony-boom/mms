@@ -1,6 +1,7 @@
 {
   pkgs,
   self,
+  prisma-6-pkgs,
 }: let
   pkgJson = builtins.fromJSON (builtins.readFile ../package.json);
   pname = pkgJson.name;
@@ -8,6 +9,9 @@
 
   node = pkgs.nodejs_22;
   pnpm = pkgs.pnpm_9;
+
+  prisma = prisma-6-pkgs.prisma;
+  prismaEngines = prisma-6-pkgs.prisma-engines;
 in
   pkgs.stdenv.mkDerivation (finalAttrs: {
     inherit pname version;
@@ -27,15 +31,15 @@ in
     ];
 
     LD_LIBRARY_PATH = "${pkgs.openssl.out}/lib";
-    PRISMA_QUERY_ENGINE_LIBRARY = "${pkgs.prisma-engines}/lib/libquery_engine.node";
-    PRISMA_SCHEMA_ENGINE_BINARY = "${pkgs.prisma-engines}/bin/query-engine";
+    PRISMA_QUERY_ENGINE_LIBRARY = "${prismaEngines}/lib/libquery_engine.node";
+    PRISMA_SCHEMA_ENGINE_BINARY = "${prismaEngines}/bin/query-engine";
     PRISMA_SKIP_POSTINSTALL_GENERATE = "1";
 
     prePnpmInstall = ''
       pnpm config set dedupe-peer-dependents false
     '';
 
-    pnpmDeps = pkgs.pnpm.fetchDeps {
+    pnpmDeps = pnpm.fetchDeps {
       fetcherVersion = 1;
       inherit
         (finalAttrs)
@@ -44,7 +48,7 @@ in
         src
         prePnpmInstall
         ;
-      hash = "sha256-iO/V7Z3k5ZOnU95T9FKbywKXPJV8jfCwyjOr6Q3mSHk=";
+      hash = "sha256-CURF8ogQ+5gN/myC6y0aqHi8zvelJgWPCpREdfSI8sE=";
     };
 
     buildPhase = ''
@@ -63,10 +67,10 @@ in
       cp -r build/* $out/lib
 
       mkdir -p $out/lib/prisma-engines
-      cp ${pkgs.prisma-engines}/bin/* $out/lib/prisma-engines
-      cp ${pkgs.prisma-engines}/lib/* $out/lib/prisma-engines
+      cp ${prismaEngines}/bin/* $out/lib/prisma-engines
+      cp ${prismaEngines}/lib/* $out/lib/prisma-engines
 
-      cp ${pkgs.prisma}/bin/prisma $out/bin/
+      cp ${prisma}/bin/prisma $out/bin/
 
       makeWrapper ${node}/bin/node $out/bin/mms \
         --add-flags "$out/lib/server/index.mjs" \
@@ -74,7 +78,7 @@ in
         --set PRISMA_QUERY_ENGINE_LIBRARY "$out/lib/prisma-engines/libquery_engine.node" \
         --set PRISMA_SCHEMA_ENGINE_BINARY "$out/lib/prisma-engines/query-engine" \
         --set PRISMA_SCHEMA_PATH "$out/lib/schema.prisma" \
-        --set PATH "$out/bin:${pkgs.prisma}/bin:${node}/bin:$PATH" \
+        --set PATH "$out/bin:${prisma}/bin:${node}/bin:$PATH" \
         --set LD_LIBRARY_PATH "${pkgs.openssl.out}/lib"
 
       runHook postInstall

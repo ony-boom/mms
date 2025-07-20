@@ -34,10 +34,27 @@
         "type": "github"
       }
     },
+    "nixpkgs-prisma-6": {
+      "locked": {
+        "lastModified": 1745110259,
+        "narHash": "sha256-osRYbqUkNcf0K+7Ss0wB8gqUEEOrxfJOOXJ2jXtd+tA=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "7db9cd9d3f2a6a257d5e52d3173200b1c8650782",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "7db9cd9d3f2a6a257d5e52d3173200b1c8650782",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "flake-utils": "flake-utils",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs",
+        "nixpkgs-prisma-6": "nixpkgs-prisma-6"
       }
     },
     "systems": {
