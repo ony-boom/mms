@@ -7,6 +7,7 @@
   version = pkgJson.version;
 
   node = pkgs.nodejs_22;
+  pnpm = pkgs.pnpm_9;
 in
   pkgs.stdenv.mkDerivation (finalAttrs: {
     inherit pname version;
@@ -21,8 +22,8 @@ in
     # only at build
     nativeBuildInputs = [
       node
-      pkgs.pnpm
-      pkgs.pnpm.configHook
+      pnpm
+      pnpm.configHook
       pkgs.makeWrapper
     ];
 
@@ -35,7 +36,8 @@ in
       pnpm config set dedupe-peer-dependents false
     '';
 
-    pnpmDeps = pkgs.pnpm.fetchDeps {
+    pnpmDeps = pnpm.fetchDeps {
+      fetcherVersion = "6.7.0";
       inherit
         (finalAttrs)
         pname
@@ -43,7 +45,7 @@ in
         src
         prePnpmInstall
         ;
-      hash = "sha256-iO/V7Z3k5ZOnU95T9FKbywKXPJV8jfCwyjOr6Q3mSHk=";
+      hash = "sha256-WsVwt2IYxyfIDYmOwUMafyScI5XecCD3Q8j/yMSx/d8=";
     };
 
     buildPhase = ''

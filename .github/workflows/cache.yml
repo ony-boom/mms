@@ -17,11 +17,7 @@ jobs:
         name: ony-boom
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
 
-    - name: Build package
-      run: |
-        nix build .#default
-
-    - name: Push to cachix
+    - name: Build and push to cachix
       run: |
         nix build .#default --print-build-logs
         cachix push ony-boom ./result
