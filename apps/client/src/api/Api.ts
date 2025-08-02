@@ -17,6 +17,7 @@ export type GetTrackWhereInput = {
   title?: string;
   artistName?: string;
   albumTitle?: string;
+  isFavorite?: boolean;
 };
 
 export type GetTrackSortByInput = {
@@ -52,7 +53,7 @@ export interface Api {
     options?: Omit<UseQueryOptions, "queryFn" | "queryKey">,
   ) => UseQueryResult<LyricsResponse>;
 
-  useFavoriteTrack: <TError = DefaultError>() => UseMutationResult<
+  useFavoriteTrackMutation: <TError = DefaultError>() => UseMutationResult<
     Partial<Track>,
     TError,
     {

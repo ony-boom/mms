@@ -23,6 +23,8 @@ export const TrackContextMenu = memo(
         addToQueue: state.addToQueue,
       })),
     );
+
+    const [disabled, setDisabled] = useState(false);
     const [isTagEditorOpen, setIsTagEditorOpen] = useState(false);
     const { getTrackAudioSrc } = useApiClient();
 
@@ -43,10 +45,16 @@ export const TrackContextMenu = memo(
 
     const openTagEditor = () => setIsTagEditorOpen(true);
 
+    const handleOpenChange = (open: boolean) => {
+      setDisabled(!open);
+    };
+
     return (
       <>
-        <ContextMenu modal>
-          <ContextMenuTrigger className="select-none">{children}</ContextMenuTrigger>
+        <ContextMenu onOpenChange={handleOpenChange} modal>
+          <ContextMenuTrigger disabled={disabled} className="select-none">
+            {children}
+          </ContextMenuTrigger>
           <ContextMenuContent className="bg-background popup-border z-[60] w-36 space-y-1 p-0 transition-all">
             <ContextMenuItem
               {...itemProps?.playNext}
@@ -77,7 +85,6 @@ export const TrackContextMenu = memo(
                 onClick={openTagEditor}
                 className={cn("w-full", itemProps?.editTags?.className)}
               >
-
                 Edit tags
                 <Edit2 size={16} className="ml-auto" />
               </ContextMenuItem>
@@ -103,5 +110,4 @@ export type TrackContextMenuProps = {
     addToQueue?: ContextMenuItemProps;
     editTags?: ContextMenuItemProps;
   };
-  disabled?: boolean;
 };

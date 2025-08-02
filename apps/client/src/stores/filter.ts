@@ -31,6 +31,7 @@ export const useFilterStore = create<FilterStore>()(
     (set, get) => ({
       query: undefined,
       sort: undefined,
+
       queryField: "*",
       openSearchComponent: false,
       searchValue: "",

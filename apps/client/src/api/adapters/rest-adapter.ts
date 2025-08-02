@@ -69,10 +69,18 @@ export const restApi: Api = {
             title: "*",
             albumTitle: "album",
             artistName: "artist",
+            isFavorite: "isFavorite",
           };
 
           for (const key of Object.keys(fields)) {
             const typedKey = key as keyof typeof where;
+            if (typedKey === "isFavorite") {
+              if (where.isFavorite) {
+                newUrl.searchParams.append("isFavorite", "true");
+              }
+              continue;
+            }
+
             if (where[typedKey]) {
               newUrl.searchParams.append("field", fields[typedKey] ?? "*");
               newUrl.searchParams.append("query", where[typedKey] ?? "");
@@ -144,7 +152,7 @@ export const restApi: Api = {
     return state;
   },
 
-  useFavoriteTrack: () => {
+  useFavoriteTrackMutation: () => {
     return useMutation({
       mutationFn: async ({ trackId, value }) => {
         const response = await fetch(

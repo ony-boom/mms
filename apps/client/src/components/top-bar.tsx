@@ -2,19 +2,21 @@ import { Sort } from "./sort-button";
 import { Input } from "./ui/input";
 import { useCallback } from "react";
 import { Button } from "./ui/button";
-import { Search, Shuffle } from "lucide-react";
-import { TrackLoadToast } from "./track-load-toast";
-import { ModeToggle } from "@/components/mode-toggle";
+import { Search, Shuffle, Heart } from "lucide-react";
+// import { TrackLoadToast } from "./track-load-toast";
+// import { ModeToggle } from "@/components/mode-toggle";
 import { SortOrder, TrackSortField } from "@/api/types";
 import { useApiClient } from "@/hooks/use-api-client";
 import { useTrackList } from "@/hooks/use-track-list";
 import { useFilterStore } from "@/stores/filter";
 import { usePlayerStore } from "@/stores/player/store";
+import { cn } from "@/lib/utils";
+import { SettingsButton } from "./settings-button";
 
 export function TopBar() {
   const { resetPlaylist, trackList } = useTrackList();
-  const { setSort, sort } = useFilterStore();
-  const { setOpenSearchComponent } = useFilterStore();
+  const { setSort, sort, setOpenSearchComponent, setQuery, query } =
+    useFilterStore();
 
   const { toggleShuffle, playTrackAtIndex } = usePlayerStore.getState();
 
@@ -33,6 +35,13 @@ export function TopBar() {
 
   const handleSearchClick = () => {
     setOpenSearchComponent(true);
+  };
+
+  const handleFavoritesClick = () => {
+    setQuery({
+      ...query,
+      isFavorite: query?.isFavorite === true ? false : true,
+    });
   };
 
   return (
@@ -73,13 +82,23 @@ export function TopBar() {
             <Search />
           </Button>
 
-          <TrackLoadToast variant={"ghost"} className="hidden md:flex" />
+          <Button onClick={handleFavoritesClick} variant="ghost" size="icon">
+            <Heart
+              className={cn("transition-all", {
+                "fill-destructive stroke-destructive": query?.isFavorite,
+              })}
+            />
+          </Button>
 
-          <div className="hidden md:flex">
-            <ModeToggle />
-          </div>
+          <SettingsButton />
         </div>
       </div>
     </div>
   );
 }
+
+// <TrackLoadToast variant={"ghost"} className="hidden md:flex" />
+
+// <div className="hidden md:flex">
+//   <ModeToggle />
+// </div>
