@@ -191,9 +191,6 @@ importers:
       react-hook-form:
         specifier: ^7.55.0
         version: 7.55.0(react@18.3.1)
-      react-router:
-        specifier: ^7.5.0
-        version: 7.5.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-virtuoso:
         specifier: ^4.12.6
         version: 4.12.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -7925,7 +7922,8 @@ snapshots:
     dependencies:
       '@babel/types': 7.27.0
 
-  '@types/cookie@0.6.0': {}
+  '@types/cookie@0.6.0':
+    optional: true
 
   '@types/eslint-config-prettier@6.11.3': {}
 
@@ -10908,6 +10906,7 @@ snapshots:
       turbo-stream: 2.4.0
     optionalDependencies:
       react-dom: 18.3.1(react@18.3.1)
+    optional: true
 
   react-scan@0.2.14(@types/react@18.3.20)(react-dom@18.3.1(react@18.3.1))(react-router@7.5.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(rollup@4.44.0):
     dependencies:
@@ -11204,7 +11203,8 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  set-cookie-parser@2.7.1: {}
+  set-cookie-parser@2.7.1:
+    optional: true
 
   set-function-length@1.2.2:
     dependencies:
@@ -11534,7 +11534,8 @@ snapshots:
   turbo-linux-arm64@2.5.4:
     optional: true
 
-  turbo-stream@2.4.0: {}
+  turbo-stream@2.4.0:
+    optional: true
 
   turbo-windows-64@2.5.4:
     optional: true

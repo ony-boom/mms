@@ -1,8 +1,8 @@
 import { useEffect } from "react";
-import { useApiClient } from "@/hooks/use-api-client";
+import { useApiClient } from "./use-api-client";
 import { usePlayerStore } from "@/stores/player/store";
 
-export function AppTitle() {
+export function useAppTitle() {
   const { useTracks } = useApiClient();
   const { currentTrackId } = usePlayerStore();
   const { data } = useTracks({ id: currentTrackId });
@@ -13,6 +13,4 @@ export function AppTitle() {
       document.title = `${title} - ${artists.map((artist) => artist.name).join(", ")}`;
     }
   }, [currentTrackId, data]);
-
-  return null;
 }

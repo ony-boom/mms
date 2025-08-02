@@ -18,8 +18,8 @@ export const TrackInfo = ({
         trackTitle={track.title}
         className="h-24 w-24 md:h-48 md:w-48"
       />
-      <div className="space-y-1">
-        <p className="text-2xl md:text-4xl font-black">{track.title}</p>
+      <div className="animate-fade-in space-y-1">
+        <p className="text-2xl font-black md:text-4xl">{track.title}</p>
         <p className="text-foreground/80 md:text-lg">{artist}</p>
       </div>
     </div>
