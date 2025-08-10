@@ -3,15 +3,13 @@ import { Input } from "./ui/input";
 import { useCallback } from "react";
 import { Button } from "./ui/button";
 import { Search, Shuffle, Heart } from "lucide-react";
-// import { TrackLoadToast } from "./track-load-toast";
-// import { ModeToggle } from "@/components/mode-toggle";
 import { SortOrder, TrackSortField } from "@/api/types";
 import { useApiClient } from "@/hooks/use-api-client";
 import { useTrackList } from "@/hooks/use-track-list";
 import { useFilterStore } from "@/stores/filter";
 import { usePlayerStore } from "@/stores/player/store";
 import { cn } from "@/lib/utils";
-import { SettingsButton } from "./settings-button";
+import { SettingsButton } from "./settings/settings-button";
 
 export function TopBar() {
   const { resetPlaylist, trackList } = useTrackList();
@@ -96,9 +94,3 @@ export function TopBar() {
     </div>
   );
 }
-
-// <TrackLoadToast variant={"ghost"} className="hidden md:flex" />
-
-// <div className="hidden md:flex">
-//   <ModeToggle />
-// </div>

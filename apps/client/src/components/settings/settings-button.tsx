@@ -1,6 +1,6 @@
-import { ComponentProps, useState } from "react";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { Settings } from "lucide-react";
+import { ComponentProps, useState } from "react";
 import { SettingsDialog } from "./settings-dilog";
 
 export function SettingsButton(props: SettingsButtonProps) {

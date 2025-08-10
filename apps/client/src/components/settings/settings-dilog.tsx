@@ -3,9 +3,11 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "./ui/accordion";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
+} from "../ui/accordion";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { ComponentProps } from "react";
+import { ThemeSettings } from "./appearance/theme";
+import { DbReloadButton } from "./general/db-reload-button";
 
 export function SettingsDialog(props: SettingsDialogProps) {
   return (
@@ -21,7 +23,16 @@ export function SettingsDialog(props: SettingsDialogProps) {
               <h3 className="font-bold">Appearance</h3>
             </AccordionTrigger>
             <AccordionContent>
-              Appearance settings will go here.
+              <ThemeSettings />
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem value="general">
+            <AccordionTrigger>
+              <h3 className="font-bold">General</h3>
+            </AccordionTrigger>
+            <AccordionContent>
+              <DbReloadButton />
             </AccordionContent>
           </AccordionItem>
         </Accordion>
