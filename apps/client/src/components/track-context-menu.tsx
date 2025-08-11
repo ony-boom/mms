@@ -58,7 +58,7 @@ export const TrackContextMenu = memo(
         {
           onSuccess: async () => {
             await queryClient.refetchQueries({
-              queryKey: [CACHE_KEY.TRACKS, track.id],
+              queryKey: [CACHE_KEY.TRACKS],
             });
           },
         },
