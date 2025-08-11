@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useState } from "react";
 import { Track } from "@/api/types.ts";
 import { Pause, Play } from "lucide-react";
 import { Button } from "@/components/ui/button.tsx";
@@ -9,6 +9,7 @@ import { TrackContextMenu } from "@/components/track-context-menu";
 import { ArtistName } from "@/components/artist-name.tsx";
 
 function Card({ track, index, onTrackPlay }: TrackCardProps) {
+  const [disableContextMenu, setDisableContextMenu] = useState(false);
   const artistNames = track.artists.map((artist) => artist.name);
   const { currentTrackId, isPlaying } = usePlayerStore(
     useShallow((state) => ({
@@ -19,29 +20,36 @@ function Card({ track, index, onTrackPlay }: TrackCardProps) {
 
   const isCurrent = track.id === currentTrackId;
 
-  const onPlayButtonClick = () => {
+  const handlePlay = () => {
     onTrackPlay(index, track.id);
+  };
+
+  const handleArtistDialogOpen = (state: boolean) => {
+    setDisableContextMenu(state);
   };
 
   return (
     <div className="group relative overflow-hidden">
-      <TrackContextMenu track={track}>
+      <TrackContextMenu disabled={disableContextMenu} track={track}>
         <div className="flex items-center gap-4 md:flex-col md:items-start md:gap-2">
           <TrackCover
             trackId={track.id}
             trackTitle={track.title}
-            onClick={onPlayButtonClick}
+            onClick={handlePlay}
             className="mb-2 h-16 w-16 flex-shrink-0 hover:cursor-pointer md:h-full md:w-full"
           />
 
           <div className="min-w-0 flex-1 pr-4 md:w-full md:pr-0">
-            <p title={track.title} className="truncate font-bold leading-6">
+            <p title={track.title} className="truncate leading-6 font-bold">
               {track.title}
             </p>
             <div className="truncate text-sm">
               {artistNames.map((_, index) => (
                 <span key={index}>
-                  <ArtistName artist={track.artists[index]!} />
+                  <ArtistName
+                    onDialogOpenStateChange={handleArtistDialogOpen}
+                    artist={track.artists[index]!}
+                  />
                   {index !== artistNames.length - 1 && (
                     <span className="text-foreground/70">, </span>
                   )}
@@ -53,8 +61,8 @@ function Card({ track, index, onTrackPlay }: TrackCardProps) {
       </TrackContextMenu>
       <Button
         size="icon"
-        onClick={onPlayButtonClick}
-        className="absolute right-2 top-1/2 z-20 hidden -translate-y-1/2 shadow-xl transition md:bottom-12 md:top-auto md:flex md:opacity-0 md:group-hover:opacity-100"
+        onClick={handlePlay}
+        className="absolute top-1/2 right-2 z-20 hidden -translate-y-1/2 shadow-xl transition md:top-auto md:bottom-12 md:flex md:opacity-0 md:group-hover:opacity-100"
       >
         {isCurrent && isPlaying ? <Pause /> : <Play />}
       </Button>

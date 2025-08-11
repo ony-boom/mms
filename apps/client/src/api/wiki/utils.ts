@@ -1,5 +1,5 @@
 export const WIKI_API_URL = "https://en.wikipedia.org/api/rest_v1";
-const lastFmApiKey = __APP_CONFIG__.lastFmApiKey || import.meta.env.VITE_LASTFM_API_KEY;
+const lastFmApiKey = import.meta.env.VITE_LASTFM_API_KEY;
 
 export const lasFmBaseUrl = (() => {
   const baseUrl = new URL("https://ws.audioscrobbler.com/2.0/");

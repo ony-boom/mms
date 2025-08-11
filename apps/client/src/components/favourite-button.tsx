@@ -10,13 +10,13 @@ import { usePlayerStore } from "@/stores/player/store";
 
 export function FavouriteButton(props: ButtonProps) {
   const currentTrackId = usePlayerStore((state) => state.currentTrackId);
-  const { useFavoriteTrackMutation: useFavoriteTrack, useTracks } =
+  const { useFavoriteTrackMutation, useTracks } =
     useApiClient();
   const queryClient = useQueryClient();
   const { data, isLoading } = useTracks({ id: currentTrackId });
   const track = data?.length === 1 ? data[0] : undefined;
 
-  const { mutate } = useFavoriteTrack();
+  const { mutate } = useFavoriteTrackMutation();
 
   const handleFavoriteClick = useCallback(() => {
     if (!currentTrackId) return;
@@ -25,7 +25,7 @@ export function FavouriteButton(props: ButtonProps) {
       {
         onSuccess: async () => {
           await queryClient.refetchQueries({
-            queryKey: [CACHE_KEY.TRACKS],
+            queryKey: [CACHE_KEY.TRACKS, currentTrackId],
           });
         },
       },
