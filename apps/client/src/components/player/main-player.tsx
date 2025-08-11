@@ -1,4 +1,4 @@
-import { Track } from "@/api/types";
+import { ImageSize, Track } from "@/api/types";
 import { Audio } from "./audio";
 import { cn } from "@/lib/utils";
 import { Extra } from "./extra";
@@ -216,8 +216,9 @@ export function Player() {
                 onClick={togglePlaylistsExpanded}
               />
             </div>
-            <div className="relative flex items-center justify-between gap-4 px-3 pb-4 pt-1">
+            <div className="relative flex items-center justify-between gap-4 px-3 pt-1 pb-4">
               <TrackInfo
+                coverSize="thumb"
                 currentTrack={currentTrack!}
                 openLyricsView={openFullscreen}
                 onFullScreenToggle={handleLyricsToggle}
@@ -259,10 +260,12 @@ export function Player() {
 
 const TrackInfo = memo(
   ({
+    coverSize,
     currentTrack,
     openLyricsView,
     onFullScreenToggle,
   }: {
+    coverSize?: ImageSize;
     currentTrack: Track;
     openLyricsView: boolean;
     onFullScreenToggle: () => void;
@@ -278,15 +281,16 @@ const TrackInfo = memo(
           <>
             <div className="group relative shrink-0">
               <TrackCover
-                className="md:w-18 md:h-18 h-10 w-10 rounded-md"
+                className="h-10 w-10 rounded-md md:h-18 md:w-18"
                 trackId={currentTrack.id}
                 trackTitle={currentTrack.title}
+                coverSize={coverSize}
               />
               <Button
                 size="icon"
                 title={openLyricsView ? "Hide lyrics" : "Show lyrics"}
                 onClick={onFullScreenToggle}
-                className="absolute bottom-0 right-0 opacity-0 transition-opacity group-hover:opacity-100"
+                className="absolute right-0 bottom-0 opacity-0 transition-opacity group-hover:opacity-100"
               >
                 {<MicVocal />}
               </Button>
@@ -313,7 +317,7 @@ const TrackInfo = memo(
             className="flex items-end gap-4"
             variants={skeletonVariants}
           >
-            <div className="bg-muted md:w-18 md:h-18 aspect-square h-10 w-10 rounded-xl" />
+            <div className="bg-muted aspect-square h-10 w-10 rounded-xl md:h-18 md:w-18" />
             <Skeleton className="w-full" />
             <Skeleton className="w-full" />
           </motion.div>

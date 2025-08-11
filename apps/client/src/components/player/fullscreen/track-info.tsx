@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { Track } from "@/api/types";
+import type { ImageSize, Track } from "@/api/types";
 import { ComponentProps } from "react";
 import { TrackCover } from "@/components/track-cover";
 
@@ -7,12 +7,14 @@ export const TrackInfo = ({
   track,
   className,
   hideCover,
+  coverSize,
   ...rest
 }: TrackInfoProps) => {
   const artist = track.artists.map((artist) => artist.name).join(", ");
   return (
     <div {...rest} className={cn("flex gap-4 md:px-8", className)}>
       <TrackCover
+        coverSize={coverSize}
         hidden={hideCover}
         trackId={track.id}
         trackTitle={track.title}
@@ -29,4 +31,5 @@ export const TrackInfo = ({
 export type TrackInfoProps = ComponentProps<"div"> & {
   track: Track;
   hideCover?: boolean;
+  coverSize?: ImageSize;
 };

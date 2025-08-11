@@ -5,6 +5,7 @@ import type {
   UseQueryOptions,
 } from "@tanstack/react-query";
 import {
+  ImageSize,
   LoadedTracks,
   LyricsResponse,
   SortOrder,
@@ -77,7 +78,7 @@ export interface Api {
     options?: Omit<UseQueryOptions<string>, "queryFn" | "queryKey">,
   ) => UseQueryResult<string>;
 
-  getTrackCoverSrc: (trackId: string) => string;
+  getTrackCoverSrc: (trackId: string, size?: ImageSize) => string;
   getTrackAudioSrc: (trackIds: string[]) => string[];
   useTrackLoadEvent: (debounce?: number) => LoadedTracks;
 }

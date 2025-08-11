@@ -20,8 +20,8 @@ const mapTrackSortField = (field: TrackSortField) => {
 };
 
 export const restApi: Api = {
-  getTrackCoverSrc: (trackId: string) => {
-    return `${BASE_URL}/api/cover/${trackId}`;
+  getTrackCoverSrc: (trackId, size) => {
+    return `${BASE_URL}/api/cover/${trackId}${size ? `?size=${size}` : ""}`;
   },
 
   getTrackAudioSrc: (trackIds: string[]) => {

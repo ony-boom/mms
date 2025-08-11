@@ -42,8 +42,8 @@ export const graphqlApi: Api = {
     });
   },
 
-  getTrackCoverSrc: (trackId) => {
-    return `${BASE_URL}/api/cover/${trackId}`;
+  getTrackCoverSrc: (trackId, size) => {
+    return `${BASE_URL}/api/cover/${trackId}${size ? `?size=${size}` : ""}`;
   },
 
   getTrackAudioSrc: (trackIds) => {

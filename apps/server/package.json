@@ -10,9 +10,9 @@
     "db:push": "prisma db push"
   },
   "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
     "@types/lodash.debounce": "^4.0.9",
     "@types/lodash.throttle": "^4.1.9",
-    "@repo/eslint-config": "workspace:*",
     "nitropack": "latest",
     "prisma": "^6.6.0"
   },
@@ -23,10 +23,12 @@
     "glob": "^11.0.1",
     "lodash.debounce": "^4.0.8",
     "lodash.throttle": "^4.1.1",
+    "lru-cache": "^11.1.0",
     "music-metadata": "^10.7.0",
     "node-id3": "^0.2.8",
     "node-watch": "^0.7.4",
     "p-limit": "^6.2.0",
+    "sharp": "^0.34.3",
     "uuid": "^11.0.5",
     "zod": "^3.24.2"
   }

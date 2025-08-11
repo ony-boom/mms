@@ -45,7 +45,7 @@ export function Fullscreen({
   const apiClient = useApiClient();
 
   const coverArt = useMemo(
-    () => (track?.id ? apiClient.getTrackCoverSrc(track.id) : ""),
+    () => (track?.id ? apiClient.getTrackCoverSrc(track.id, "original") : ""),
     [apiClient, track?.id],
   );
 
@@ -76,6 +76,7 @@ export function Fullscreen({
             className="with-blur absolute inset-0 z-10 h-full w-full overflow-hidden"
           >
             <motion.img
+              id="fullscreen-cover"
               src={coverArt}
               alt={
                 track?.title ? `${track.title} album artwork` : "Track cover"
@@ -84,7 +85,7 @@ export function Fullscreen({
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0.6, scale: 0.95 }}
               transition={IMAGE_TRANSITION}
-              className="top-5/12 md:top-6/12 -translate-y-8/12 absolute left-1/2 aspect-square w-11/12 max-w-2xl -translate-x-1/2 rounded-md object-cover shadow-xl md:w-full"
+              className="absolute top-5/12 left-1/2 aspect-square w-11/12 max-w-2xl -translate-x-1/2 -translate-y-8/12 rounded-md object-cover shadow-xl md:top-6/12 md:w-full"
               loading="eager"
             />
           </motion.div>
@@ -92,7 +93,7 @@ export function Fullscreen({
       </AnimatePresence>
 
       <Button
-        className="absolute right-6 top-6 z-20"
+        className="absolute top-6 right-6 z-20"
         variant="ghost"
         size="icon"
         onClick={onClose}

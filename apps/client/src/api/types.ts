@@ -38,3 +38,5 @@ export enum TrackSortField {
   ALBUM_TITLE = "ALBUM_TITLE",
   NONE = "",
 }
+
+export type ImageSize = "small" | "medium" | "large" | "thumb" | "original";
