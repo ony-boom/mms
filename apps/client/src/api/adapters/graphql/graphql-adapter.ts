@@ -127,4 +127,10 @@ export const graphqlApi: Api = {
   useArtistImage: function (): UseQueryResult<string> {
     throw new Error("Function not implemented.");
   },
+  useLogin: () => {
+    throw new Error("Function not implemented");
+  },
+  usePing: () => {
+    throw new Error("Function not implemented");
+  }
 };

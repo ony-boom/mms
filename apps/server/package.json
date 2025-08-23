@@ -4,23 +4,26 @@
   "scripts": {
     "build": "prisma generate && nitro build",
     "dev": "nitro dev",
-    "lint": "eslint .",
     "prepare": "nitro prepare",
     "preview": "node .output/server/index.mjs",
     "db:push": "prisma db push"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/lodash.debounce": "^4.0.9",
     "@types/lodash.throttle": "^4.1.9",
     "nitropack": "latest",
-    "prisma": "^6.6.0"
+    "prisma": "^6.14.0"
   },
   "dependencies": {
-    "@prisma/client": "^6.6.0",
+    "@prisma/client": "^6.14.0",
     "@repo/bin": "workspace:*",
     "@repo/config": "workspace:*",
+    "bcryptjs": "^3.0.2",
+    "cookie": "^1.0.2",
     "glob": "^11.0.1",
+    "jsonwebtoken": "^9.0.2",
     "lodash.debounce": "^4.0.8",
     "lodash.throttle": "^4.1.1",
     "lru-cache": "^11.1.0",

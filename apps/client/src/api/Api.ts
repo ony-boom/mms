@@ -8,9 +8,11 @@ import {
   ImageSize,
   LoadedTracks,
   LyricsResponse,
+  PingResponse,
   SortOrder,
   Track,
   TrackSortField,
+  User,
 } from "@/api/types.ts";
 
 export type GetTrackWhereInput = {
@@ -77,6 +79,19 @@ export interface Api {
     artistName: string,
     options?: Omit<UseQueryOptions<string>, "queryFn" | "queryKey">,
   ) => UseQueryResult<string>;
+
+  usePing: (
+    options?: Omit<UseQueryOptions<PingResponse>, "queryFn" | "queryKey">,
+  ) => UseQueryResult<PingResponse>;
+
+  useLogin: <TError = DefaultError>() => UseMutationResult<
+    User,
+    TError,
+    {
+      username: string;
+      password: string;
+    }
+  >;
 
   getTrackCoverSrc: (trackId: string, size?: ImageSize) => string;
   getTrackAudioSrc: (trackIds: string[]) => string[];

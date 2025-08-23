@@ -1,4 +1,4 @@
-import { restApi } from "./adapters/rest-adapter";
+import { restApi } from "./adapters/rest/rest-adapter";
 import { graphqlApi } from "./adapters/graphql/graphql-adapter";
 
 export const apiClients = {

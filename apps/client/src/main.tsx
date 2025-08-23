@@ -1,8 +1,9 @@
 import { scan } from "react-scan";
 import { StrictMode } from "react";
-import Layout from "./layout";
+import { Router } from "@/routes.tsx";
+import { BrowserRouter } from "react-router";
 import { createRoot } from "react-dom/client";
-import { Tracks } from "@/pages/Tracks/page";
+import { AuthProvider } from "@/context/auth/auth-provider.tsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 if (import.meta.env.DEV) {
@@ -20,9 +21,11 @@ if (root) {
   createRoot(root).render(
     <StrictMode>
       <QueryClientProvider client={queryClient}>
-        <Layout>
-          <Tracks />
-        </Layout>
+        <AuthProvider>
+          <BrowserRouter>
+            <Router />
+          </BrowserRouter>
+        </AuthProvider>
       </QueryClientProvider>
     </StrictMode>,
   );

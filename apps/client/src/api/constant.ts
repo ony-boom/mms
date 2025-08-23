@@ -6,4 +6,5 @@ export const CACHE_KEY = {
   ARTIST_IMAGE: "artist-image",
   CONNECT: "connect",
   SEARCH_REMOTE_TRACKS: "search-remote-tracks",
+  PING: "ping",
 };

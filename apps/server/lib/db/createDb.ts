@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import { seed } from "./seed";
 import { config } from "@repo/config";
 import { execSync } from "node:child_process";
 
@@ -6,6 +7,7 @@ export async function createDb() {
   console.log("Checking if database exists...");
 
   if (fs.existsSync(config.databasePath)) {
+    await seed();
     console.log("Database already exists, skipping creation");
     return;
   }
@@ -29,6 +31,8 @@ export async function createDb() {
       stdio: "inherit",
       env,
     });
+
+    await seed();
 
     console.log("Database created successfully");
   } catch (error) {

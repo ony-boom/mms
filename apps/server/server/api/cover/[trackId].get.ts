@@ -162,8 +162,8 @@ export default defineEventHandler(async (event) => {
 
     setResponseStatus(event, 500);
     setResponseHeader(event, "Content-Type", "image/png");
-    const fallbackImage = await getFallbackImage(size);
-    return fallbackImage;
+
+    return await getFallbackImage(size);
   }
 });
 

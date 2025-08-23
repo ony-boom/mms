@@ -14,7 +14,13 @@ export const useColorFlow = () => {
     if (!currentTrackId) return;
     const src = getTrackCoverSrc(currentTrackId);
 
-    materialDynamicColors(src).then((mdc) => setTheme(mdc));
+    (async () => {
+      const file = await fetch(src, {
+        credentials: "include",
+      }).then((res) => res.blob());
+      const mdc = await  materialDynamicColors(file);
+      setTheme(mdc)
+    })();
   }, [currentTrackId, getTrackCoverSrc]);
 
   return theme;

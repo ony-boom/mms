@@ -50,14 +50,48 @@ const buildConfig = (): Config => {
   };
 };
 
-export const config: Config = {} as Config;
+let cachedConfig: Config | null = null;
+let cachedMtimeMs = -1;
 
-for (const [key] of Object.entries(buildConfig())) {
-  Object.defineProperty(config, key, {
-    get() {
-      return buildConfig()[key as keyof Config];
-    },
-    enumerable: true,
-    configurable: false,
-  });
+const readConfigIfStale = (): Config => {
+  let mtimeMs = cachedMtimeMs;
+  try {
+    mtimeMs = fs.statSync(configFilePath).mtimeMs;
+  } catch {
+    // If stat fails (unlikely), rebuild to be safe
+    cachedConfig = buildConfig();
+    cachedMtimeMs = Date.now();
+    return cachedConfig;
+  }
+
+  if (!cachedConfig || mtimeMs !== cachedMtimeMs) {
+    cachedConfig = buildConfig();
+    cachedMtimeMs = mtimeMs;
+  }
+  return cachedConfig;
+};
+
+export function getConfig(): Config {
+  return readConfigIfStale();
 }
+
+export const config: Config = new Proxy({} as Config, {
+  get(_target, prop, _receiver) {
+    const current = getConfig();
+    return (current as any)[prop];
+  },
+  ownKeys() {
+    return Reflect.ownKeys(getConfig());
+  },
+  getOwnPropertyDescriptor(_target, prop) {
+    const current = getConfig();
+    const desc = Object.getOwnPropertyDescriptor(current, prop);
+    if (desc) return desc;
+    return {
+      configurable: true,
+      enumerable: true,
+      value: (current as any)[prop],
+      writable: false,
+    };
+  },
+});

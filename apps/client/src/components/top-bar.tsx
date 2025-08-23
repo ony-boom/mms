@@ -38,7 +38,7 @@ export function TopBar() {
   const handleFavoritesClick = () => {
     setQuery({
       ...query,
-      isFavorite: query?.isFavorite === true ? false : true,
+      isFavorite: query?.isFavorite !== true,
     });
   };
 

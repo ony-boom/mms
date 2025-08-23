@@ -12,6 +12,12 @@ model State {
   value String
 }
 
+model User {
+  id       String @id @default(uuid())
+  name     String @unique
+  password String
+}
+
 model Track {
   id          String      @id @default(uuid())
   title       String

@@ -1,7 +1,6 @@
 {
   pkgs,
   self,
-  prisma-6-pkgs,
 }: let
   pkgJson = builtins.fromJSON (builtins.readFile ../package.json);
   pname = pkgJson.name;
@@ -10,8 +9,8 @@
   node = pkgs.nodejs_22;
   pnpm = pkgs.pnpm_9;
 
-  prisma = prisma-6-pkgs.prisma;
-  prismaEngines = prisma-6-pkgs.prisma-engines;
+  prisma = pkgs.prisma;
+  prismaEngines = pkgs.prisma-engines;
 in
   pkgs.stdenv.mkDerivation (finalAttrs: {
     inherit pname version;

@@ -4,7 +4,7 @@ import * as mm from "music-metadata";
 import { basename } from "node:path";
 import { config } from "@repo/config";
 import { prisma } from "~~/prisma";
-import type { LoadedMetadata } from ".";
+import { type LoadedMetadata } from ".";
 
 export class TrackSaver {
   async getCoverPath(

@@ -27,6 +27,11 @@ export type Artist = {
   name: string;
 };
 
+export type User = {
+  id: string;
+  name: string;
+};
+
 export enum SortOrder {
   ASC = "ASC",
   DESC = "DESC",
@@ -38,5 +43,11 @@ export enum TrackSortField {
   ALBUM_TITLE = "ALBUM_TITLE",
   NONE = "",
 }
+
+export type PingResponse = {
+  user?: User;
+  message?: string;
+  isAuthenticated: boolean;
+};
 
 export type ImageSize = "small" | "medium" | "large" | "thumb" | "original";
