@@ -1,6 +1,7 @@
 {
   pkgs,
   self,
+  prisma-6-pkgs,
 }: let
   pkgJson = builtins.fromJSON (builtins.readFile ../package.json);
   pname = pkgJson.name;
@@ -9,8 +10,8 @@
   node = pkgs.nodejs_22;
   pnpm = pkgs.pnpm_9;
 
-  prisma = pkgs.prisma;
-  prismaEngines = pkgs.prisma-engines;
+  prisma = prisma-6-pkgs.prisma;
+  prismaEngines = prisma-6-pkgs.prisma-engines;
 in
   pkgs.stdenv.mkDerivation (finalAttrs: {
     inherit pname version;
@@ -29,7 +30,6 @@ in
       pkgs.makeWrapper
     ];
 
-    NODE_ENV = "production";
     LD_LIBRARY_PATH = "${pkgs.openssl.out}/lib";
     PRISMA_QUERY_ENGINE_LIBRARY = "${prismaEngines}/lib/libquery_engine.node";
     PRISMA_SCHEMA_ENGINE_BINARY = "${prismaEngines}/bin/query-engine";
@@ -48,7 +48,7 @@ in
         src
         prePnpmInstall
         ;
-      hash = "sha256-38zQwnPQ9+0GlO0RfXKWqcUhrtC9treaOnPZDyhfKB0=";
+      hash = "sha256-ExAsdIrRlRlifwozG/svIcxUe9Lrom4J0VRq/7lUORg=";
     };
 
     buildPhase = ''
@@ -79,6 +79,7 @@ in
         --set PRISMA_SCHEMA_ENGINE_BINARY "$out/lib/prisma-engines/query-engine" \
         --set PRISMA_SCHEMA_PATH "$out/lib/schema.prisma" \
         --set PATH "$out/bin:${prisma}/bin:${node}/bin:$PATH" \
+        --set NODE_ENV "production" \
         --set LD_LIBRARY_PATH "${pkgs.openssl.out}/lib"
 
       runHook postInstall
