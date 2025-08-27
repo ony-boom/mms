@@ -34,9 +34,35 @@ in {
       default = "root";
       description = "User to run the MMS service as.";
     };
+
+    sessionSecretFile = mkOption {
+      type = types.nullOr (
+        types.str
+        // {
+          # We don't want users to be able to pass a path literal here but
+          # it should look like a path.
+          check = it: isString it && types.path.check it;
+        }
+      );
+      default = null;
+      example = "/run/secrets/mmsSecret";
+      description = ''
+        A file containing a secure random string. This is used for signing user sessions.
+        The contents of the file are read through systemd credentials, therefore the
+        user running mms does not need permissions to read the file.
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
+
+    assertions = [
+      {
+        assertion = cfg.sessionSecretFile != null;
+        message = "You must set services.mms.sessionSecretFile when services.mms.enable = true.";
+      }
+    ];
+
     systemd.services.mms = {
       description = "MMS Service";
       after = ["network.target"];
@@ -46,9 +72,17 @@ in {
         User = cfg.user;
         ExecStart = "${cfg.package}/bin/mms";
         Restart = "on-failure";
-        Environment = [
-          "PORT=${toString cfg.port}"
-          "HOST=${toString cfg.host}"
+        Environment =
+          [
+            "PORT=${toString cfg.port}"
+            "HOST=${toString cfg.host}"
+          ]
+          ++ optionals (cfg.sessionSecretFile != null) [
+            "SESSION_SECRET=${"\${CREDENTIALS_DIRECTORY}"}/sessionSecret"
+          ];
+        LoadCredential = optionals (cfg.sessionSecretFile != null) [
+          # Provide the secret file to systemd as a credential named "sessionSecret"
+          "sessionSecret:${cfg.sessionSecretFile}"
         ];
       };
     };

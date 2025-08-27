@@ -2,7 +2,7 @@
 
 ![Demo](./apps/client/assets/banner.png)
 
-⚠️ **This project is archived and no longer maintained.**
+⚠️ **This project is no longer maintained.**
 
 ## About
 
@@ -10,11 +10,13 @@ MMS (*My Music Server*) was a personal project to build a web-based local music 
 It allowed managing and playing a personal music collection directly in the browser.
 
 The project was primarily a **learning exercise** in building both client and server components for music playback.
-However, the server component does not follow existing standards (such as the Subsonic API) and was only designed for **local use**.
+However, the server component does not follow existing standards (such as the Subsonic API) and was only designed for *
+*local use**.
 
-## Why Archived?
+## Why unmaintained?
 
-After experimenting with MMS, I decided not to continue development and instead use existing, feature-rich music servers such as:
+After experimenting with MMS, I decided not to continue development and instead use existing, feature-rich music servers
+such as:
 
 * [Gonic](https://github.com/sentriz/gonic)
 * [Navidrome](https://www.navidrome.org/)
