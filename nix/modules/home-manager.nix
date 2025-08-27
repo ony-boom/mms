@@ -30,14 +30,7 @@ in {
     };
 
     sessionSecretFile = mkOption {
-      type = types.nullOr (
-        types.str
-        // {
-          # We don't want users to be able to pass a path literal here but
-          # it should look like a path.
-          check = it: isString it && types.path.check it;
-        }
-      );
+      type = types.nullOr types.str;
       default = null;
       example = "/run/secrets/mmsSecret";
       description = ''
