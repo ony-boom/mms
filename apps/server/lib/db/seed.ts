@@ -10,9 +10,13 @@ export async function seed() {
     password: hashedPassword,
   };
 
-  await prisma.user.upsert({
-    where: { name: defaultUser.name },
-    update: {},
-    create: defaultUser,
-  });
+  const hasUsers = await prisma.user.count();
+
+  if (!hasUsers) {
+    await prisma.user.upsert({
+      where: { name: defaultUser.name },
+      update: {},
+      create: defaultUser,
+    });
+  }
 }

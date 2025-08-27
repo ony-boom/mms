@@ -11,26 +11,21 @@ export function Login() {
   const navigate = useNavigate();
 
   const { isPending: loadingAuthData, data } = usePing();
-  const { mutate, isPending, error } = useLogin();
+  const { mutateAsync, isPending, error } = useLogin();
 
-  const handleLogin: FormEventHandler<HTMLFormElement> = (event) => {
+  const handleLogin: FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const username = data.get("username") as string;
     const password = data.get("password") as string;
 
-    mutate(
-      {
-        username,
-        password,
-      },
-      {
-        onSuccess: (data) => {
-          setUser(data);
-          navigate("/");
-        },
-      },
-    );
+    const userData = await mutateAsync({
+      username,
+      password,
+    });
+
+    setUser(userData);
+    navigate("/", { replace: true });
   };
 
   if (data?.isAuthenticated) {
