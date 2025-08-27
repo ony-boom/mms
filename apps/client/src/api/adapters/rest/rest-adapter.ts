@@ -1,7 +1,7 @@
 import { Api } from "@/api/Api";
 import { CACHE_KEY } from "@/api/constant";
 import { useEffect, useState } from "react";
-import { BASE_URL, http } from "./http-client";
+import { http } from "./http-client";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { LoadedTracks, TrackSortField } from "@/api/types";
 
@@ -18,10 +18,10 @@ const mapTrackSortField = (field: TrackSortField) => {
 
 export const restApi: Api = {
   getTrackCoverSrc: (trackId, size) =>
-    `${BASE_URL}/api/cover/${trackId}${size ? `?size=${size}` : ""}`,
+    `/api/cover/${trackId}${size ? `?size=${size}` : ""}`,
 
   getTrackAudioSrc: (trackIds) =>
-    trackIds.map((trackId) => `${BASE_URL}/api/tracks/audio/${trackId}`),
+    trackIds.map((trackId) => `/api/tracks/audio/${trackId}`),
 
   useArtistImage: (artistName, options) =>
     useQuery({
@@ -49,7 +49,7 @@ export const restApi: Api = {
     useQuery({
       queryKey: [CACHE_KEY.TRACKS, where, sortBy],
       queryFn: async () => {
-        const url = new URL("/api/tracks", BASE_URL);
+        const url = new URL("/api/tracks", window.location.origin);
 
         if (where) {
           const fields: Record<string, string> = {
@@ -103,14 +103,16 @@ export const restApi: Api = {
         }),
     }),
 
-  useTrackLoadEvent: () => {
+  useTrackLoadEvent: ({ enabled }) => {
     const [state, setState] = useState<LoadedTracks>({
       current: 0,
       total: 0,
     });
 
     useEffect(() => {
-      const eventSource = new EventSource(`${BASE_URL}/api/tracks/load/sse`, {
+      if (!enabled) return;
+
+      const eventSource = new EventSource(`/api/tracks/load/sse`, {
         withCredentials: true,
       });
 
@@ -125,7 +127,7 @@ export const restApi: Api = {
       return () => {
         eventSource.close();
       };
-    }, []);
+    }, [enabled]);
 
     return state;
   },
@@ -182,4 +184,27 @@ export const restApi: Api = {
         return data;
       },
     }),
+
+  useLogout: () => {
+    return useMutation({
+      mutationFn: async () => {
+        const { data } = await http("/api/auth/logout", {
+          method: "POST",
+        });
+        return data;
+      },
+    });
+  },
+
+  useUpdateProfile: () => {
+    return useMutation({
+      mutationFn: async (profile) => {
+        const { data } = await http(`/api/user/${profile.id}`, {
+          method: "PUT",
+          body: JSON.stringify(profile),
+        });
+        return data;
+      },
+    });
+  },
 };

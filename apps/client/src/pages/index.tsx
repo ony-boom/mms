@@ -4,16 +4,21 @@ import { WithColorFlow } from "@/components/with-color-flow.tsx";
 import { Player } from "@/components/player/main-player.tsx";
 import { Toaster } from "sonner";
 import { useAppTitle } from "@/hooks/use-app-title.ts";
+import { memo } from "react";
 
-export function Index() {
+export const Index = memo(() => {
   useAppTitle();
+
   return (
-    <AudioProvider>
-      <WithColorFlow>
-        <Tracks />
-        <Player />
-        <Toaster />
-      </WithColorFlow>
-    </AudioProvider>
+    <>
+      <AudioProvider>
+        <WithColorFlow>
+          <Tracks />
+          <Player />
+        </WithColorFlow>
+      </AudioProvider>
+
+      <Toaster />
+    </>
   );
-}
+});

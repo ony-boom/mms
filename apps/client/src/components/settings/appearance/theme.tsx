@@ -5,7 +5,8 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 export function ThemeSettings() {
   const { setTheme, theme } = useTheme();
 
-  const handleThemeChange = (value: typeof theme) => {
+  const handleThemeChange = (value: typeof theme | "") => {
+    if (!value) return;
     setTheme(value);
   };
 

@@ -6,10 +6,14 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Button, type ButtonProps } from "@/components/ui/button.tsx";
 import { cn } from "@/lib/utils.ts";
 import { useApiClient } from "@/hooks/use-api-client";
+import { useAuth } from "@/hooks/use-auth.ts";
 
 export const TrackLoadToast = (props: ButtonProps) => {
+  const { isAuthenticated } = useAuth();
   const { useTrackLoadEvent, useLoadTracks } = useApiClient();
-  const { total, current } = useTrackLoadEvent();
+  const { total, current } = useTrackLoadEvent({
+    enabled: isAuthenticated,
+  });
   const loadTrackMutation = useLoadTracks();
   const [toastId, setToastId] = useState<string | number | null>(null);
   const queryClient = useQueryClient();

@@ -69,12 +69,6 @@ export function LoginForm({
                 </Button>
               </div>
             </div>
-            <div className="mt-4 text-center text-sm">
-              <span className="mr-2">Don&apos;t have an account? </span>
-              <a href="#" className="underline underline-offset-4">
-                Sign up
-              </a>
-            </div>
           </form>
         </CardContent>
       </Card>

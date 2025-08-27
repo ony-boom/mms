@@ -1,10 +1,10 @@
-export const BASE_URL = import.meta.env.DEV
-  ? (import.meta.env.VITE_DEFAULT_REST_API_URL ?? "http://localhost:3000")
-  : window.location.origin; // production served from same domain
-
-async function http<T = any>(path: string, options: RequestInit = {}): Promise<T> {
-  const response = await fetch(`${BASE_URL}${path}`, {
-    credentials: "include", // 👈 allow cookies/session
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function http<T = any>(
+  path: string,
+  options: RequestInit = {},
+): Promise<T> {
+  const response = await fetch(path, {
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
       ...(options.headers || {}),
@@ -16,7 +16,7 @@ async function http<T = any>(path: string, options: RequestInit = {}): Promise<T
     throw new Error(`HTTP error ${response.status}`);
   }
 
-  return (await response.json()) as Promise<T>;
+  return (await response.json()) as T;
 }
 
 export { http };

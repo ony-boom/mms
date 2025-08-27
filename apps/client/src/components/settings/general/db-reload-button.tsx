@@ -4,10 +4,16 @@ import { useApiClient } from "@/hooks/use-api-client";
 import { useQueryClient } from "@tanstack/react-query";
 import { Loader } from "lucide-react";
 import { toast } from "sonner";
+import { useAuth } from "@/hooks/use-auth.ts";
 
 export function DbReloadButton() {
+  const { loading, isAuthenticated } = useAuth();
   const { useTrackLoadEvent, useLoadTracks } = useApiClient();
-  const { total, current } = useTrackLoadEvent();
+
+  const { total, current } = useTrackLoadEvent({
+    enabled: isAuthenticated && !loading,
+  });
+
   const loadTrackMutation = useLoadTracks();
   const queryClient = useQueryClient();
 

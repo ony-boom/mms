@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router";
 import Layout from "@/layout.tsx";
 import { Index } from "@/pages";
-import { Login } from "@/pages/Auth/page.tsx";
+import { Login } from "@/pages/Auth/login-page.tsx";
 import { ProtectedPages } from "@/pages/protected.tsx";
 
 export function Router() {

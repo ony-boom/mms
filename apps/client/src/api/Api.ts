@@ -93,7 +93,22 @@ export interface Api {
     }
   >;
 
+  useUpdateProfile: <TError = DefaultError>() => UseMutationResult<
+    User,
+    TError,
+    {
+      id: string;
+      username: string;
+      password: string;
+    }
+  >;
+
+  useLogout: <TError = DefaultError>() => UseMutationResult<void, TError, void>;
+
   getTrackCoverSrc: (trackId: string, size?: ImageSize) => string;
   getTrackAudioSrc: (trackIds: string[]) => string[];
-  useTrackLoadEvent: (debounce?: number) => LoadedTracks;
+  useTrackLoadEvent: (params: {
+    debounce?: number;
+    enabled: boolean;
+  }) => LoadedTracks;
 }

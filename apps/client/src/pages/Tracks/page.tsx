@@ -26,7 +26,7 @@ export function Tracks() {
     [resetPlaylist, currentTrackId, toggle, toggleShuffle, playTrackAtIndex],
   );
 
-  if (tracksQuery.isLoading) {
+  if (tracksQuery.isPending) {
     return (
       <div className="px-4">
         <Loading />
