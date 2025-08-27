@@ -5,13 +5,8 @@ import { Player } from "@/components/player/main-player.tsx";
 import { Toaster } from "sonner";
 import { useAppTitle } from "@/hooks/use-app-title.ts";
 import { memo } from "react";
-import { useAuth } from "@/hooks/use-auth";
-import { useApiClient } from "@/hooks/use-api-client";
 
 export const Index = memo(() => {
-  const {} = useApiClient();
-  const { user, setUser } = useAuth();
-
   useAppTitle();
   return (
     <>
