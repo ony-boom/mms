@@ -1,7 +1,7 @@
 import { scan } from "react-scan";
 import { StrictMode } from "react";
 import { Router } from "@/routes.tsx";
-import { BrowserRouter } from "react-router";
+import { HashRouter } from "react-router";
 import { createRoot } from "react-dom/client";
 import { AuthProvider } from "@/context/auth/auth-provider.tsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -22,9 +22,9 @@ if (root) {
     <StrictMode>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
-          <BrowserRouter>
+          <HashRouter>
             <Router />
-          </BrowserRouter>
+          </HashRouter>
         </AuthProvider>
       </QueryClientProvider>
     </StrictMode>,
