@@ -1,4 +1,4 @@
-# MMS - My Music Server (Archived)
+# MMS - My Music Server
 
 ![Demo](./apps/client/assets/banner.png)
 
