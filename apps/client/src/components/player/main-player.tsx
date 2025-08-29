@@ -27,7 +27,7 @@ import {
 } from "react";
 import { ArtistName } from "../artist-name";
 
-export function Player() {
+export const Player = memo(() => {
   const [uiState, setUiState] = useState({
     openExtra: false,
     openFullscreen: false,
@@ -256,7 +256,7 @@ export function Player() {
       </motion.div>
     </>
   );
-}
+});
 
 const TrackInfo = memo(
   ({

@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { memo, useCallback } from "react";
 import { Loading } from "./loading";
 import { TracksGrid } from "./tracks-grid";
 import { TopBar } from "@/components/top-bar";
@@ -6,7 +6,7 @@ import { useTrackList } from "@/hooks/use-track-list";
 import { usePlayerStore } from "@/stores/player/store";
 import { Search } from "@/components/global-search/search";
 
-export function Tracks() {
+export const Tracks = memo(() => {
   const { toggleShuffle, playTrackAtIndex, currentTrackId, toggle } =
     usePlayerStore.getState();
 
@@ -44,4 +44,4 @@ export function Tracks() {
       />
     </>
   );
-}
+});

@@ -1,7 +1,14 @@
 import { useColorFlow } from "@/hooks/use-color-flow";
 import { useTheme } from "@/hooks/use-theme";
 import Color from "color";
-import { ReactNode, useEffect, useMemo, useRef, useCallback } from "react";
+import {
+  ReactNode,
+  useEffect,
+  useMemo,
+  useRef,
+  useCallback,
+  memo,
+} from "react";
 
 const useCssVarSetter = () => {
   const styleElementRef = useRef<HTMLStyleElement | null>(null);
@@ -46,7 +53,7 @@ const useSystemTheme = () => {
 
 type ColorMode = "light" | "dark";
 
-export function WithColorFlow({ children }: { children: ReactNode }) {
+export const WithColorFlow = memo(({ children }: { children: ReactNode }) => {
   const mdc = useColorFlow();
   const { theme } = useTheme();
   const systemTheme = useSystemTheme();
@@ -85,4 +92,4 @@ export function WithColorFlow({ children }: { children: ReactNode }) {
   }, [cssVars, setCssVars]);
 
   return <>{children}</>;
-}
+});
