@@ -198,7 +198,7 @@ export function Fullscreen({
             ...SPRING_TRANSITION,
             velocity: 1,
           }}
-          className="with-blur relative z-20"
+          className="relative z-20"
         >
           <LocalController onLyricBtnClick={handleLyricBtnClick} />
         </motion.div>
