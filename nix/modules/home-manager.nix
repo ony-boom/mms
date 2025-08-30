@@ -11,7 +11,7 @@ with lib; let
   normalizeSecretPath = path:
     if path == null
     then null
-    else lib.replaceStrings ["${XDG_RUNTIME_DIR}"] ["%t"] path;
+    else lib.replaceStrings ["$${XDG_RUNTIME_DIR}"] ["%t"] path;
 in {
   options.services.mms = {
     enable = mkEnableOption "mms service";
