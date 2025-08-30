@@ -7,6 +7,11 @@
 with lib; let
   cfg = config.services.mms;
   mms = self.packages.${pkgs.system}.default;
+
+  normalizeSecretPath = path:
+    if path == null
+    then null
+    else lib.replaceStrings ["${XDG_RUNTIME_DIR}"] ["%t"] path;
 in {
   options.services.mms = {
     enable = mkEnableOption "mms service";
@@ -32,11 +37,12 @@ in {
     sessionSecretFile = mkOption {
       type = types.nullOr types.str;
       default = null;
-      example = "/run/secrets/mmsSecret";
+      example = "%t/agenix/mms";
       description = ''
         A file containing a secure random string. This is used for signing user sessions.
         The contents of the file are read through systemd credentials, therefore the
         user running mms does not need permissions to read the file.
+        Use systemd specifiers like %t (runtime dir), not ${XDG_RUNTIME_DIR}.
       '';
     };
   };
@@ -49,7 +55,6 @@ in {
       }
     ];
 
-    # Create systemd user service
     systemd.user.services.mms = {
       Unit = {
         Description = "MMS Service";
@@ -68,7 +73,7 @@ in {
             "SESSION_SECRET=${"\${CREDENTIALS_DIRECTORY}"}/sessionSecret"
           ];
         LoadCredential = optionals (cfg.sessionSecretFile != null) [
-          "sessionSecret:${cfg.sessionSecretFile}"
+          "sessionSecret:${normalizeSecretPath cfg.sessionSecretFile}"
         ];
       };
 
