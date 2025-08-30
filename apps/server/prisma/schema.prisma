@@ -29,6 +29,11 @@ model Track {
   dateAdded   DateTime    @default(now())
   playHistory PlayEvent[]
   isFavorite  Boolean     @default(false)
+
+  @@index([albumId])
+  @@index([dateAdded])
+  @@index([isFavorite])
+  @@index([title])
 }
 
 model Artist {
@@ -36,6 +41,8 @@ model Artist {
   name   String
   tracks Track[]
   albums Album[]
+
+  @@index([name])
 }
 
 model Album {
@@ -44,12 +51,16 @@ model Album {
   tracks    Track[]
   artists   Artist[]
   coverPath String?
+
+  @@index([title])
 }
 
 model PlayList {
   id     String  @id @default(uuid())
   name   String
   tracks Track[]
+
+  @@index([name])
 }
 
 model PlayEvent {
@@ -57,4 +68,7 @@ model PlayEvent {
   track    Track    @relation(fields: [trackId], references: [id])
   trackId  String
   playedAt DateTime @default(now())
+
+  @@index([trackId, playedAt])
+  @@index([playedAt])
 }
