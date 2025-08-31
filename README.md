@@ -2,62 +2,94 @@
 
 ![Demo](./apps/client/assets/banner.png)
 
-⚠️ **This project is no longer maintained.**
+## Overview
 
-## About
+MMS is a web-based local music player that allows you to manage and play your music collection from your browser.
 
-MMS (*My Music Server*) was a personal project to build a web-based local music player.
-It allowed managing and playing a personal music collection directly in the browser.
+**Status**: Work in progress, but fully functional for basic music playback.
 
-The project was primarily a **learning exercise** in building both client and server components for music playback.
-However, the server component does not follow existing standards (such as the Subsonic API) and was only designed for *
-*local use**.
+> [!IMPORTANT]
+> MMS is designed for **local use only** and is not intended for deployment on public-facing servers. The client application works well, but the server component is not optimized for production environments, lacks user management capabilities, and doesn't include the security hardening required for public internet exposure.
 
-## Why unmaintained?
+## Installation
 
-After experimenting with MMS, I decided not to continue development and instead use existing, feature-rich music servers
-such as:
+### Nix/home-manager users
 
-* [Gonic](https://github.com/sentriz/gonic)
-* [Navidrome](https://www.navidrome.org/)
+You can use the home-manager module in this repo to install:
 
-I’m now focusing my efforts on building a modern client for Subsonic-compatible servers (see: **Cadence**, WIP).
+```nix
+# in your flake input
+{
+    inputs = {
+        mms = {
+            url = "github:ony-boom/mms";
+            inputs.nixpkgs.follows = "nixpkgs";
+       };
+    };
+}
 
-## Status
+# then somewhere in your config:
+{
+     services.mms = {
+        enable = true;
+        # see /nix/modules/home-manager.nix for the other options
+    };
+}
+```
 
-This repository remains as an archive of the learning journey.
-No further development is planned.
+And optional but useful, add this to your flake or any method you prefer for extra subtituters, this way you avoid re-building the package:
 
-## How to Run (for archival purposes)
+```nix
+  nixConfig = {
+    extra-substituters = [
+      "https://ony-boom.cachix.org"
+    ];
+    extra-trusted-public-keys = [
+      "ony-boom.cachix.org-1:rPOTyyOCiAhLarertCrNnZLxsBFpcirEekoohcCZt10="
+    ];
+  };
 
-If you’d like to try it locally:
+```
+
+> [!NOTE]
+> For other installation methods, I haven't done anything with them yet.
+
+### Manual Installation
 
 1. Clone the repository:
-
    ```sh
    git clone https://github.com/ony-boom/mms.git
    cd mms
    ```
 
-2. Install dependencies (requires **Node.js ≥ 20** and **pnpm**):
-
+2. Install dependencies (requires Node.js ≥ 20 and pnpm):
    ```sh
    pnpm install
    ```
 
 3. Set up the project:
-
    ```sh
    pnpm run setup
    ```
 
 4. Start the development server:
-
    ```sh
    pnpm run dev
    ```
 
-For more details on the client and server components:
+For more detailed information about the components:
 
-* [Client Documentation](./apps/client/README.md)
-* [Server Documentation](./apps/server/README.md)
+- [Client Documentation](./apps/client/README.md)
+- [Server Documentation](./apps/server/README.md)
+
+> [!NOTE]
+> The client should support using other servers, but the server is only compatible with the client.
+> If you want to use the client with another server, you can implement the same API as the server.
+> See `apps/client/src/clients/rest` for an example.
+
+## Roadmap
+
+- [ ] Maybe switch to a desktop application framework (Tauri or Wails are preferred over Electron)
+- [ ] Add more advanced music library management features
+- [ ] Implement user management and authentication for multi-user scenarios
+- [ ] Optimize server performance for larger music libraries
