@@ -8,9 +8,6 @@ MMS is a web-based local music player that allows you to manage and play your mu
 
 **Status**: Work in progress, but fully functional for basic music playback.
 
-> [!IMPORTANT]
-> MMS is designed for **local use only** and is not intended for deployment on public-facing servers. The client application works well, but the server component is not optimized for production environments, lacks user management capabilities, and doesn't include the security hardening required for public internet exposure.
-
 ## Installation
 
 ### Nix/home-manager users
