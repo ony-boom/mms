@@ -29,6 +29,7 @@ You can use the home-manager module in this repo to install:
 {
      services.mms = {
         enable = true;
+        sessionSecretFile = "<path to session secret file>";
         # see /nix/modules/home-manager.nix for the other options
     };
 }
@@ -86,7 +87,5 @@ For more detailed information about the components:
 
 ## Roadmap
 
-- [ ] Maybe switch to a desktop application framework (Tauri or Wails are preferred over Electron)
 - [ ] Add more advanced music library management features
-- [ ] Implement user management and authentication for multi-user scenarios
 - [ ] Optimize server performance for larger music libraries
