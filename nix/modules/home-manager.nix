@@ -1,4 +1,4 @@
-self: {
+mms: {
   config,
   lib,
   pkgs,
@@ -6,7 +6,7 @@ self: {
 }:
 with lib; let
   cfg = config.services.mms;
-  defaultMMSPackage = self.packages.${pkgs.hostPlatform.system}.default;
+  defaultMMSPackage = mms;
 
   normalizeSecretPath = path:
     if path == null
