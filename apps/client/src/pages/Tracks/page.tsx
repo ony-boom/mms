@@ -1,10 +1,9 @@
 import { memo, useCallback } from "react";
-import { Loading } from "./loading";
-import { TracksGrid } from "./tracks-grid";
-import { TopBar } from "@/components/top-bar";
+import { Search } from "@/components/global-search/search";
 import { useTrackList } from "@/hooks/use-track-list";
 import { usePlayerStore } from "@/stores/player/store";
-import { Search } from "@/components/global-search/search";
+import { Loading } from "./loading";
+import { TracksGrid } from "./tracks-grid";
 
 export const Tracks = memo(() => {
   const { toggleShuffle, playTrackAtIndex, currentTrackId, toggle } =
@@ -37,7 +36,6 @@ export const Tracks = memo(() => {
   return (
     <>
       <Search />
-      <TopBar />
       <TracksGrid
         onTrackPlay={handleTrackPlay}
         tracks={tracksQuery.data ?? []}

@@ -13,26 +13,26 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/lodash.debounce": "^4.0.9",
     "@types/lodash.throttle": "^4.1.9",
-    "nitropack": "latest",
-    "prisma": "^6.14.0"
+    "nitropack": "^2.12.8",
+    "prisma": "^6.18.0"
   },
   "dependencies": {
-    "@prisma/client": "^6.14.0",
+    "@prisma/client": "^6.18.0",
     "@repo/bin": "workspace:*",
     "@repo/config": "workspace:*",
     "bcryptjs": "^3.0.2",
     "cookie": "^1.0.2",
-    "glob": "^11.0.1",
+    "glob": "^11.0.3",
     "jsonwebtoken": "^9.0.2",
     "lodash.debounce": "^4.0.8",
     "lodash.throttle": "^4.1.1",
-    "lru-cache": "^11.1.0",
+    "lru-cache": "^11.2.2",
     "music-metadata": "^10.7.0",
-    "node-id3": "^0.2.8",
+    "node-id3": "^0.2.9",
     "node-watch": "^0.7.4",
     "p-limit": "^6.2.0",
-    "sharp": "^0.34.3",
+    "sharp": "^0.34.4",
     "uuid": "^11.0.5",
-    "zod": "^3.24.2"
+    "zod": "^3.25.76"
   }
 }

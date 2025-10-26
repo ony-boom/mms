@@ -1,14 +1,14 @@
-import { useColorFlow } from "@/hooks/use-color-flow";
-import { useTheme } from "@/hooks/use-theme";
 import Color from "color";
 import {
-  ReactNode,
+  memo,
+  type ReactNode,
+  useCallback,
   useEffect,
   useMemo,
   useRef,
-  useCallback,
-  memo,
 } from "react";
+import { useColorFlow } from "@/hooks/use-color-flow";
+import { useTheme } from "@/hooks/use-theme";
 
 const useCssVarSetter = () => {
   const styleElementRef = useRef<HTMLStyleElement | null>(null);
@@ -22,16 +22,15 @@ const useCssVarSetter = () => {
 
   // code bellow is 100% AI generated
   return useCallback((vars: Record<string, string>) => {
-    if (!styleElementRef.current) return;
-
     requestAnimationFrame(() => {
+      if (!styleElementRef.current) return;
       let cssText = ":root {";
       Object.entries(vars).forEach(([key, value]) => {
         cssText += `${key}: ${value};`;
       });
       cssText += "}";
 
-      styleElementRef.current!.textContent = cssText;
+      styleElementRef.current.textContent = cssText;
     });
   }, []);
 };

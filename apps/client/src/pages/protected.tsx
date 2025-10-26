@@ -1,6 +1,7 @@
-import { useAuth } from "@/hooks/use-auth";
 import { Loader } from "lucide-react";
 import { Navigate, Outlet, useLocation } from "react-router";
+import { useAuth } from "@/hooks/use-auth";
+import { TopBar } from "@/components/top-bar";
 
 export function ProtectedPages() {
   const { isAuthenticated, loading } = useAuth();
@@ -16,5 +17,10 @@ export function ProtectedPages() {
   if (!isAuthenticated)
     return <Navigate to="/login" replace state={{ from: location }} />;
 
-  return <Outlet />;
+  return (
+    <>
+      <TopBar />
+      <Outlet />
+    </>
+  );
 }
