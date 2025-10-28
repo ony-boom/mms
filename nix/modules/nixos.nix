@@ -1,4 +1,4 @@
-mms: {
+self: {
   config,
   lib,
   pkgs,
@@ -6,7 +6,7 @@ mms: {
 }:
 with lib; let
   cfg = config.services.mms;
-  defaultMMSPackage = mms;
+  defaultMMSPackage = self.packages.${pkgs.system}.default;
 in {
   options.services.mms = {
     enable = mkEnableOption "Enable the MMS system service.";

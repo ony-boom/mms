@@ -1,3 +1,4 @@
+import type { ComponentProps } from "react";
 import {
   Accordion,
   AccordionContent,
@@ -11,9 +12,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../ui/dialog";
-import { ComponentProps } from "react";
 import { ThemeSettings } from "./appearance/theme";
 import { DbReloadButton } from "./general/db-reload-button";
+import { UseBlur } from "./use-blur/use-blur";
 
 export function SettingsDialog(props: SettingsDialogProps) {
   return (
@@ -33,8 +34,9 @@ export function SettingsDialog(props: SettingsDialogProps) {
             <AccordionTrigger>
               <h3 className="font-bold">Appearance</h3>
             </AccordionTrigger>
-            <AccordionContent>
+            <AccordionContent className="space-y-6 pl-2">
               <ThemeSettings />
+              <UseBlur />
             </AccordionContent>
           </AccordionItem>
 
@@ -42,7 +44,7 @@ export function SettingsDialog(props: SettingsDialogProps) {
             <AccordionTrigger>
               <h3 className="font-bold">General</h3>
             </AccordionTrigger>
-            <AccordionContent>
+            <AccordionContent className="space-y-6 pl-2">
               <DbReloadButton />
             </AccordionContent>
           </AccordionItem>

@@ -1,31 +1,37 @@
-import { ImageSize, Track } from "@/api/types";
-import { Audio } from "./audio";
-import { cn } from "@/lib/utils";
-import { Extra } from "./extra";
-import { Controller } from "./controller";
-import { TrackProgress } from "./track-progress";
 import { MicVocal } from "lucide-react";
-import { useShallow } from "zustand/react/shallow";
-import { Button } from "@/components/ui/button.tsx";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Fullscreen } from "./fullscreen/fullscreen";
-import { TrackCover } from "@/components/track-cover";
-import { Playlists } from "@/components/player/playlists";
-import { ShuffleButton } from "@/components/player/shuffle-button";
-import { FavouriteButton } from "@/components/favourite-button";
-import { motion, AnimatePresence, type Variants } from "motion/react";
-import { useApiClient } from "@/hooks/use-api-client";
-import { useAudioRef } from "@/hooks/use-audio-ref";
-import { usePlayerStore } from "@/stores/player/store";
+import { AnimatePresence, motion, type Variants } from "motion/react";
 import {
+  Fragment,
   memo,
   useCallback,
   useEffect,
-  useState,
+  useId,
   useMemo,
-  Fragment,
+  useState,
 } from "react";
+import { useShallow } from "zustand/react/shallow";
+import type { ImageSize, Track } from "@/api/types";
+import { FavouriteButton } from "@/components/favourite-button";
+import { Playlists } from "@/components/player/playlists";
+import { ShuffleButton } from "@/components/player/shuffle-button";
+import { TrackCover } from "@/components/track-cover";
+import { Button } from "@/components/ui/button.tsx";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useApiClient } from "@/hooks/use-api-client";
+import { useAudioRef } from "@/hooks/use-audio-ref";
+import { cn } from "@/lib/utils";
+import { usePlayerStore } from "@/stores/player/store";
 import { ArtistName } from "../artist-name";
+import { withPlayerBg } from "../with-player-bg";
+import { Audio } from "./audio";
+import { Controller } from "./controller";
+import { Extra } from "./extra";
+import { Fullscreen } from "./fullscreen/fullscreen";
+import { TrackProgress } from "./track-progress";
+
+const PlayerBg = withPlayerBg((props) => (
+  <motion.div {...props}>{props.children}</motion.div>
+));
 
 export const Player = memo(() => {
   const [uiState, setUiState] = useState({
@@ -132,17 +138,19 @@ export const Player = memo(() => {
 
   const { openExtra, openFullscreen, playlistsExpanded } = uiState;
 
+  const playerId = useId();
+
   return (
     <>
       <AnimatePresence>
         {openFullscreen && (
-          <motion.div
+          <PlayerBg
             key="lyrics"
             variants={fullscreenVariants}
             initial="initial"
             animate="animate"
             exit="exit"
-            className="with-blur fixed bottom-0 left-1/2 z-50 overflow-y-hidden border-none"
+            className="fixed bottom-0 left-1/2 z-50 overflow-y-hidden border-none"
             style={{
               transformOrigin: "bottom center",
               willChange: "transform, opacity",
@@ -153,7 +161,7 @@ export const Player = memo(() => {
               track={currentTrack}
               onClose={closeFullscreenView}
             />
-          </motion.div>
+          </PlayerBg>
         )}
       </AnimatePresence>
 
@@ -190,8 +198,8 @@ export const Player = memo(() => {
               </motion.div>
             )}
           </AnimatePresence>
-          <motion.div
-            id="player"
+          <PlayerBg
+            id={playerId}
             layout
             animate={{
               transition: {
@@ -199,7 +207,7 @@ export const Player = memo(() => {
               },
               translateY: openFullscreen ? 256 : 0,
             }}
-            className="with-blur flex w-full flex-col overflow-hidden rounded-md md:w-[560px]"
+            className="flex w-full flex-col overflow-hidden rounded-md md:w-[560px]"
             style={{
               willChange: "transform, opacity",
               backfaceVisibility: "hidden",
@@ -207,6 +215,7 @@ export const Player = memo(() => {
           >
             <div className="mt-2 flex justify-center">
               <button
+                type="button"
                 className={cn(
                   "bg-foreground/10 hover:bg-foreground/20 w-20 cursor-pointer rounded-xl py-[6px] transition-all hover:w-20",
                   {
@@ -216,9 +225,10 @@ export const Player = memo(() => {
                 onClick={togglePlaylistsExpanded}
               />
             </div>
-            <div className="relative flex items-center justify-between gap-4 px-3 pt-1 pb-4">
+            <div className="relative flex items-center justify-between gap-4 px-3 pb-4 pt-1">
               <TrackInfo
                 coverSize="thumb"
+                // biome-ignore lint/style/noNonNullAssertion: I am sure currentTrack is not null here
                 currentTrack={currentTrack!}
                 openLyricsView={openFullscreen}
                 onFullScreenToggle={handleLyricsToggle}
@@ -251,7 +261,7 @@ export const Player = memo(() => {
                 </motion.div>
               )}
             </AnimatePresence>
-          </motion.div>
+          </PlayerBg>
         </div>
       </motion.div>
     </>
@@ -281,7 +291,7 @@ const TrackInfo = memo(
           <>
             <div className="group relative shrink-0">
               <TrackCover
-                className="h-10 w-10 rounded-md md:h-18 md:w-18"
+                className="md:h-18 md:w-18 h-10 w-10 rounded-md"
                 trackId={currentTrack.id}
                 trackTitle={currentTrack.title}
                 coverSize={coverSize}
@@ -290,7 +300,7 @@ const TrackInfo = memo(
                 size="icon"
                 title={openLyricsView ? "Hide lyrics" : "Show lyrics"}
                 onClick={onFullScreenToggle}
-                className="absolute right-0 bottom-0 opacity-0 transition-opacity group-hover:opacity-100"
+                className="absolute bottom-0 right-0 opacity-0 transition-opacity group-hover:opacity-100"
               >
                 {<MicVocal />}
               </Button>
@@ -301,9 +311,9 @@ const TrackInfo = memo(
               </p>
 
               <p className="hidden truncate md:block">
-                {currentTrack.artists.map((_, index) => (
-                  <Fragment key={index}>
-                    <ArtistName artist={currentTrack.artists[index]!} />
+                {currentTrack.artists.map((artist, index) => (
+                  <Fragment key={artist.id}>
+                    <ArtistName artist={currentTrack.artists[index]} />
                     {index !== currentTrack.artists.length - 1 && (
                       <span className="text-foreground/70">, </span>
                     )}
@@ -317,7 +327,7 @@ const TrackInfo = memo(
             className="flex items-end gap-4"
             variants={skeletonVariants}
           >
-            <div className="bg-muted aspect-square h-10 w-10 rounded-xl md:h-18 md:w-18" />
+            <div className="bg-muted md:h-18 md:w-18 aspect-square h-10 w-10 rounded-xl" />
             <Skeleton className="w-full" />
             <Skeleton className="w-full" />
           </motion.div>

@@ -1,11 +1,16 @@
-import { motion } from "motion/react";
-import { Progress } from "../ui/progress";
 import { Volume, Volume1, Volume2, VolumeOff } from "lucide-react";
+import { motion } from "motion/react";
 import {
   useVolumeCompClickEventHandler,
   useVolumeCompWheelEventHandler,
 } from "@/hooks/use-volume-comp-event-handler";
 import { usePlayerStore } from "@/stores/player/store";
+import { Progress } from "../ui/progress";
+import { withPlayerBg } from "../with-player-bg";
+
+const VolumeContainer = withPlayerBg((props) => (
+  <div {...props}>{props.children}</div>
+));
 
 export const Extra = () => {
   const volume = usePlayerStore((state) => state.volume);
@@ -17,11 +22,11 @@ export const Extra = () => {
 
   return (
     <motion.div className="flex w-full justify-end">
-      <div
+      <VolumeContainer
         onWheel={handleMouseWheel}
-        className="with-blur flex w-max items-center gap-1 rounded-md p-2"
+        className="flex w-max items-center gap-1 rounded-md p-2"
       >
-        <button onClick={handleIconClick}>
+        <button type="button" onClick={handleIconClick}>
           <VolumeComp muted={muted} volume={volumeValue} />
         </button>
         <motion.div
@@ -32,7 +37,7 @@ export const Extra = () => {
         >
           <Progress value={volumeValue} className="w-20" />
         </motion.div>
-      </div>
+      </VolumeContainer>
     </motion.div>
   );
 };

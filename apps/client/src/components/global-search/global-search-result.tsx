@@ -11,7 +11,7 @@ import {
   useRef,
 } from "react";
 import { Track } from "@/api/types";
-import { useResultFocusStore } from "@/stores/resultFocus";
+import { useResultFocusStore } from "@/stores/result-focus";
 
 const LoadingIndicator = memo(() => (
   <div className="flex w-full justify-center">
