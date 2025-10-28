@@ -115,7 +115,7 @@ const ItemContent = ({
 	const { data: track, isLoading } = useApiClient().useTracks({ id: trackId });
 
 	return isLoading ? (
-		<Skeleton className={"h-[64px] mb-4 w-full"} />
+		<Skeleton className={"h-[62px] mb-2 w-full"} />
 	) : (
 		track && (
 			<TrackListElement
