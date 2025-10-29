@@ -87,5 +87,6 @@ For more detailed information about the components:
 
 ## Roadmap
 
+- [ ] Improve the way the client handle playback and loading the playlist (currently verry bad)
 - [ ] Add more advanced music library management features
 - [ ] Optimize server performance for larger music libraries
