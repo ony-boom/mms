@@ -150,10 +150,16 @@ export const usePlayerStore = create<PlayerState>()(
         shuffleOrder.splice(currentIndex + 1, 0, id);
         playlistOrder.splice(currentIndex + 1, 0, id);
 
+        // Avoid creating new Map if track already exists
+        const needsMapUpdate = !state.playlists.has(id);
+        const playlists = needsMapUpdate
+          ? new Map(state.playlists).set(id, src)
+          : state.playlists;
+
         set({
           shuffleOrder,
           playlistOrder,
-          playlists: new Map(state.playlists).set(id, src),
+          playlists,
         });
       },
 

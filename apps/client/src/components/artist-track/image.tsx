@@ -21,4 +21,3 @@ type ArtistImageProps = {
   alt: string;
   isLoading: boolean;
 };
-

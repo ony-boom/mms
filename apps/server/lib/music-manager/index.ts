@@ -112,22 +112,29 @@ class MusicLibraryManager extends EventEmitter {
 
   async getDirectoryHash() {
     const hash = crypto.createHash("sha256");
+    const limit = pLimit(20); // Limit concurrent file operations
 
     async function traverseDirectory(directory: string) {
       const entries = await fs.promises.readdir(directory, {
         withFileTypes: true,
       });
 
-      for (const entry of entries) {
-        const entryPath = path.join(directory, entry.name);
+      // Process entries in parallel with limit
+      const promises = entries.map((entry) =>
+        limit(async () => {
+          const entryPath = path.join(directory, entry.name);
 
-        if (entry.isDirectory()) {
-          await traverseDirectory(entryPath);
-        } else {
-          const stats = await fs.promises.stat(entryPath);
-          hash.update(entryPath + stats.mtimeMs);
-        }
-      }
+          if (entry.isDirectory()) {
+            await traverseDirectory(entryPath);
+          } else if (this.isMusicFile(entryPath)) {
+            // Only hash music files, not all files
+            const stats = await fs.promises.stat(entryPath);
+            hash.update(entryPath + stats.mtimeMs);
+          }
+        }),
+      );
+
+      await Promise.all(promises);
     }
 
     await traverseDirectory(config.musicPath);

@@ -11,7 +11,7 @@ const components: GridComponents = {
       <div
         ref={ref}
         {...props}
-        className="md:gap-8 gap-2"
+        className="gap-2 md:gap-8"
         style={{
           ...style,
           display: "grid",

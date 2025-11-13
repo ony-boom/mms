@@ -40,7 +40,7 @@ function Card({ track, index, onTrackPlay }: TrackCardProps) {
           />
 
           <div className="min-w-0 flex-1 pr-4 md:w-full md:pr-0">
-            <p title={track.title} className="truncate leading-6 font-bold">
+            <p title={track.title} className="truncate font-bold leading-6">
               {track.title}
             </p>
             <div className="truncate text-sm">
@@ -62,7 +62,7 @@ function Card({ track, index, onTrackPlay }: TrackCardProps) {
       <Button
         size="icon"
         onClick={handlePlay}
-        className="absolute top-1/2 right-2 z-20 hidden -translate-y-1/2 shadow-xl transition md:top-auto md:bottom-12 md:flex md:opacity-0 md:group-hover:opacity-100"
+        className="absolute right-2 top-1/2 z-20 hidden -translate-y-1/2 shadow-xl transition md:bottom-12 md:top-auto md:flex md:opacity-0 md:group-hover:opacity-100"
       >
         {isCurrent && isPlaying ? <Pause /> : <Play />}
       </Button>

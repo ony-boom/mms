@@ -170,12 +170,22 @@ export class TrackSaver {
   }
 
   async deleteDeletedTracks(tracksPath: string[]) {
-    const existingTracks = await prisma.track.findMany();
-    const existingPaths = existingTracks.map((track) => track.path);
-    const deletedPaths = existingPaths.filter(
-      (path) => !tracksPath.includes(path),
-    );
-    await Promise.all(deletedPaths.map((path) => this.removeTrack(path)));
+    // Use Set for O(1) lookup instead of O(n) with array.includes()
+    const trackPathSet = new Set(tracksPath);
+
+    // Only select the path field to reduce memory usage
+    const existingTracks = await prisma.track.findMany({
+      select: { path: true },
+    });
+
+    const deletedPaths = existingTracks
+      .map((track) => track.path)
+      .filter((path) => !trackPathSet.has(path));
+
+    // Batch delete to reduce number of queries
+    if (deletedPaths.length > 0) {
+      await Promise.all(deletedPaths.map((path) => this.removeTrack(path)));
+    }
   }
 
   private async cleanUpAfterDelete() {
@@ -205,20 +215,38 @@ export class TrackSaver {
       },
       select: {
         path: true,
+        albumId: true,
         album: {
           select: {
             id: true,
             coverPath: true,
+            _count: {
+              select: {
+                tracks: true,
+              },
+            },
           },
         },
       },
     });
 
-    const albumTracks = await prisma.track.findMany({
-      where: {
-        albumId: tracks.at(0)?.album.id,
+    if (tracks.length === 0) {
+      return;
+    }
+
+    // Group tracks by album to avoid redundant queries
+    const albumsToCheck = new Map<
+      string,
+      { coverPath: string | null; trackCount: number }
+    >();
+    for (const track of tracks) {
+      if (!albumsToCheck.has(track.album.id)) {
+        albumsToCheck.set(track.album.id, {
+          coverPath: track.album.coverPath,
+          trackCount: track.album._count.tracks,
+        });
       }
-    })
+    }
 
     await prisma.track.deleteMany({
       where: {
@@ -228,10 +256,22 @@ export class TrackSaver {
       },
     });
 
-    if (albumTracks.length === 1) {
-      await Promise.all(
-        tracks.map((track) => this.deleteCover(track.album.coverPath)),
-      );
+    // Only delete covers for albums that will have no tracks left after deletion
+    const coverDeletions: Promise<void>[] = [];
+    for (const [albumId, albumInfo] of albumsToCheck) {
+      const tracksToDeleteFromThisAlbum = tracks.filter(
+        (t) => t.albumId === albumId,
+      ).length;
+      if (
+        albumInfo.trackCount === tracksToDeleteFromThisAlbum &&
+        albumInfo.coverPath
+      ) {
+        coverDeletions.push(this.deleteCover(albumInfo.coverPath));
+      }
+    }
+
+    if (coverDeletions.length > 0) {
+      await Promise.all(coverDeletions);
     }
 
     await this.cleanUpAfterDelete();
@@ -242,6 +282,6 @@ export class TrackSaver {
     try {
       await fs.promises.access(coverPath);
       await fs.promises.unlink(coverPath);
-    } catch { }
+    } catch {}
   }
 }

@@ -19,8 +19,8 @@ export const useResultFocusStore = create<{
     reset: () => set({ current: null }),
     setToFirst: () => {
       set((state) => ({
-        current: state.current === null ? 0 : state.current
+        current: state.current === null ? 0 : state.current,
       }));
-    }
+    },
   };
 });

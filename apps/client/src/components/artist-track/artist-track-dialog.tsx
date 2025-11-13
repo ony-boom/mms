@@ -31,9 +31,12 @@ export function ArtistTrackDialog({
       enabled: dialogProps.open,
     },
   );
-  const { data: bioData, isLoading: loadingBioData } = useArtistBio(artist.name, {
-    enabled: dialogProps.open,
-  });
+  const { data: bioData, isLoading: loadingBioData } = useArtistBio(
+    artist.name,
+    {
+      enabled: dialogProps.open,
+    },
+  );
 
   const { data: tracks } = useArtistTracks(artist.id, {
     enabled: Boolean(artist.id) && dialogProps.open,
@@ -63,7 +66,10 @@ export function ArtistTrackDialog({
 
         <DialogDescription asChild>
           <div>
-            <ArtistBio loading={loadingBioData} description={bioData?.htmlSummary} />
+            <ArtistBio
+              loading={loadingBioData}
+              description={bioData?.htmlSummary}
+            />
           </div>
         </DialogDescription>
 

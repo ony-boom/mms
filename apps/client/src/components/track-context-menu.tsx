@@ -74,7 +74,7 @@ export const TrackContextMenu = memo(
           >
             {children}
           </ContextMenuTrigger>
-          <ContextMenuContent className="bg-background popup-border z-[60] w-max min-w-42 space-y-1 p-0 transition-all">
+          <ContextMenuContent className="bg-background popup-border min-w-42 z-[60] w-max space-y-1 p-0 transition-all">
             <ContextMenuItem
               {...itemProps?.playNext}
               onClick={handlePlayNextClick}
