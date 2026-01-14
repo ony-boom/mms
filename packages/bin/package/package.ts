@@ -16,7 +16,8 @@ async function packageApp() {
   fs.mkdirSync(prismaDestDir, { recursive: true });
   await fs.promises.copyFile(
     path.join(serverDir, "prisma", "schema.prisma"),
-    path.join(prismaDestDir, "schema.prisma")
-  );}
+    path.join(prismaDestDir, "schema.prisma"),
+  );
+}
 
 packageApp().catch(console.error);

@@ -18,8 +18,8 @@ export const useColorFlow = () => {
       const file = await fetch(src, {
         credentials: "include",
       }).then((res) => res.blob());
-      const mdc = await  materialDynamicColors(file);
-      setTheme(mdc)
+      const mdc = await materialDynamicColors(file);
+      setTheme(mdc);
     })();
   }, [currentTrackId, getTrackCoverSrc]);
 

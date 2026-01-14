@@ -2,7 +2,10 @@ import { Track } from "@/api/types";
 import { Virtuoso } from "react-virtuoso";
 import { TrackListElement } from "@/components/track-list-element";
 
-export function ArtistTrackList({ tracks, onTrackClick }: ArtistTrackListProps) {
+export function ArtistTrackList({
+  tracks,
+  onTrackClick,
+}: ArtistTrackListProps) {
   if (!tracks) return null;
 
   return (

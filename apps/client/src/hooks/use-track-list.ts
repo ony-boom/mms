@@ -23,9 +23,14 @@ export const useTrackList = () => {
 
   const trackList = useMemo(() => {
     if (!tracks) return [];
-    return tracks.map((track) => ({
+
+    // Get all sources in one call instead of one per track
+    const trackIds = tracks.map((track) => track.id);
+    const sources = getTrackAudioSrc(trackIds);
+
+    return tracks.map((track, index) => ({
       id: track.id,
-      src: getTrackAudioSrc([track.id])[0]!,
+      src: sources[index]!,
     }));
   }, [tracks, getTrackAudioSrc]);
 

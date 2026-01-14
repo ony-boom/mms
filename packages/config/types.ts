@@ -5,7 +5,7 @@ export type ConfigFile = {
   lastFmApiKey?: string;
 
   enableTagEditor?: boolean; // still in beta
-}
+};
 
 export type Config = ConfigFile & {
   coverPath: string;

@@ -55,17 +55,20 @@ And optional but useful, add this to your flake or any method you prefer for ext
 ### Manual Installation
 
 1. Clone the repository:
+
    ```sh
    git clone https://github.com/ony-boom/mms.git
    cd mms
    ```
 
 2. Install dependencies (requires Node.js ≥ 20 and pnpm):
+
    ```sh
    pnpm install
    ```
 
 3. Set up the project:
+
    ```sh
    pnpm run setup
    ```

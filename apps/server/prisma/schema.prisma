@@ -38,11 +38,9 @@ model Track {
 
 model Artist {
   id     String  @id @default(uuid())
-  name   String
+  name   String  @unique
   tracks Track[]
   albums Album[]
-
-  @@index([name])
 }
 
 model Album {

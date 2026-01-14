@@ -16,7 +16,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [data]);
 
-
   const contextValue = {
     user,
     setUser,
